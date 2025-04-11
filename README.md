@@ -10,7 +10,7 @@ YOU MUST HAVE llama-server running
 ![Screenshot From 2025-04-11 17-17-13](https://github.com/user-attachments/assets/bb74768e-a79a-48a2-a909-aa68b1f44342)
 
 
-## LlamaHTML (Streaming) Documentation
+## LlamaHTML Documentation
 
 This web app provides a user interface for interacting with a local llama.cpp server, supporting streaming responses.
 
