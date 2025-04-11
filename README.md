@@ -6,52 +6,65 @@ I dislike the built-in html interface, so I made my own.
 simply download the html file, and open in a web browser.
 
 YOU MUST HAVE llama-server running 
-Features: code blocks that you can copy, source code highlighting, cht bubble interface
 
 
 
-# LlamaHTML User Guide 
-## 1. Overview
+## LlamaHTML (Streaming) Documentation
 
-LlamaHTML is a single-file web interface to chat with a locally running `llama.cpp` server. It provides a chat UI, Markdown rendering for responses, code highlighting with copy function, theme switching, and generation parameter controls.
+This web app provides a user interface for interacting with a local llama.cpp server, supporting streaming responses.
 
-**Requires:** A running `llama.cpp` server with a loaded model. LlamaHTML is just the frontend.
+**Features:**
 
-## 2. Setup
+* **Streaming Responses:**  Receives and renders model output in real-time as it's generated.
+* **Markdown Rendering:**  Displays model responses formatted with Markdown, including code highlighting.
+* **Code Block Actions:** Copy and download code blocks from model output.
+* **Configurable Parameters:** Adjust temperature, max tokens, top-p, top-k, and stop sequences.
+* **Theme Switching:** Toggle between light and dark modes.
+* **Server URL Management:**  Specify the server URL and optionally save it to local storage.
+* **Clear Chat:**  Clears the conversation history.
+* **Abort Request:** Cancel in-progress requests.
 
-1.  **Run Server:** Start your `llama.cpp` server (e.g., `./server -m model.gguf --port 8080`). Note its URL (e.g., `http://127.0.0.1:8080`).
-2.  **Open LlamaHTML:** Save the LlamaHTML code as an `.html` file and open it in your browser.
-3.  **Enter URL:** Input your server's URL into the "Llama Server URL" field. Optionally check "Remember URL" to save it locally.
 
-## 3. Using the Interface
+**Setup:**
 
-*   **Server URL:** Connects LlamaHTML to your backend server. The "Send" button activates when the URL format is valid.
-*   **Configuration Options:** Expand this section to adjust model generation parameters (see below).
-*   **Conversation History:** Displays the chat. Your messages are on the right (blue), model responses on the left (grey).
-    *   **Markdown:** Model responses are formatted (lists, bold, etc.).
-    *   **Code Blocks:** Code is highlighted. Hover to reveal a "Copy" button.
-*   **Status Bar:** Shows loading indicators, success messages, or errors (e.g., connection issues).
-*   **Input Area:**
-    *   **Your Message:** Type prompts here. `Ctrl+Enter` (or `Cmd+Enter`) sends.
-    *   **Send Button:** Submits your message.
-    *   **Clear Chat Button:** Clears the displayed conversation history.
-*   **Theme Switcher:** Toggles between Light and Dark modes (preference saved locally).
+1. **Run llama.cpp server:** Start your llama.cpp server locally (or remotely).  Ensure the `/completion` endpoint is accessible. Use `--host 0.0.0.0` if accessing the server from a different machine.
+2. **Enter Server URL:**  Provide the full URL of your server in the "Llama Server URL" field.
+3. **(Optional) Remember URL:** Check "Remember URL" to store the server URL in your browser's local storage.
 
-## 4. Configuration Options (Advanced)
+**Usage:**
 
-Adjust these before sending a message to control the next response:
+1. **Enter your message:** Type your prompt in the input area.
+2. **Send:** Click "Send" or press Ctrl+Enter (Cmd+Enter on macOS) to submit your prompt.
+3. **View Response:**  The model's response will stream into the conversation history area.
+4. **Configure (Optional):** Use the "Configuration Options" to adjust parameters like temperature and max tokens.
+5. **Clear Chat:** Click "Clear Chat" to reset the conversation.
+6. **Switch Theme:** Click "Dark"/"Light" to toggle the theme.
+7. **Copy/Download Code:** Click the "Copy" or "Download" buttons on code blocks to copy or download code.
 
-*   **Temperature (0-2):** Controls randomness. Lower = more focused, Higher = more creative. (Default: 0.7)
-*   **Max Predict Tokens:** Max length of the model's reply. `-1` for (potentially) infinite. (Default: 512)
-*   **Top P (0-1):** Nucleus sampling. Considers tokens with cumulative probability >= `top_p`. (Default: 0.95)
-*   **Top K (int):** Considers only the `top_k` most likely tokens. (Default: 40)
-*   **Stop Sequences:** Comma-separated text. Generation stops if the model outputs one of these strings (e.g., `USER:`).
 
-## 5. Troubleshooting
+**Configuration Options:**
 
-*   **"Connection Error..."**: Check Server URL, ensure `llama.cpp` server is running, check firewalls.
-*   **"API Error..."**: Check the Status Bar and the `llama.cpp` server's terminal output for details.
-*   **No Response / Stuck:** Server might be slow or processing a long request. Check server terminal. Try a shorter prompt.
-*   **Weird Output:** Model-dependent. Try adjusting configuration parameters or prompt phrasing. Check the server's expected prompt format.
-*   **UI Glitches:** Check the browser's Developer Console (F12) for errors.
+* **Temperature:** Controls randomness (0 - ~2). Higher values = more random output. Default: 0.7
+* **Max Predict Tokens (n_predict):** Maximum number of tokens to generate. -1 for infinite. Default: 2048.
+* **Top P (0-1):** Nucleus sampling parameter. Default: 0.95
+* **Top K (integer):** Top-k sampling parameter. Default: 40
+* **Stop Sequences:** Comma-separated strings to stop generation. Default: `USER:, \nUSER:, <|user|>`
+
+
+**Troubleshooting:**
+
+* **Connection Errors:** Ensure the server is running and the URL is correct. Check the browser console for network errors.
+* **Invalid URL Format:** The URL must be a valid HTTP or HTTPS URL (e.g., `http://127.0.0.1:8080`).
+* **Empty Message:**  You cannot send empty messages.
+
+
+**Dependencies:**
+
+* llama-server
+
+
+
+**Development:**
+
+The app is built with HTML, CSS, and JavaScript.  The source code is available in the provided HTML file.  You can modify and extend it as needed.
 
