@@ -6,6 +6,9 @@ I dislike the built-in html interface, so I made my own.
 simply download the html file, and open in a web browser.
 
 YOU MUST HAVE llama-server running 
+Features: code blocks that you can copy, source code highlighting, cht bubble interface
+
+
 
 # LlamaHTML User Guide 
 ## 1. Overview
