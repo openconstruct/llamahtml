@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LlamaHTML</title>
+    <!-- Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="highlight-theme">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <style>
+        /* Basic Reset & Root Variables */
+        :root {
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --transition-speed: 0.3s ease;
+            /* Light Theme (Default) */
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --primary-color: #007bff;
+            --primary-color-rgb: 0, 123, 255;
+            --secondary-color: #6c757d;
+            --card-bg: #ffffff;
+            --input-bg: #ffffff;
+            --input-border: #ced4da;
+            --button-bg: #007bff;
+            --button-text: #ffffff;
+            --button-hover-bg: #0056b3;
+            --error-color: #dc3545;
+            --warning-color: #ffc107;
+            --code-bg: #e9ecef;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --highlight-style-light: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+            --highlight-style-dark: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+            --highlight-bg: var(--code-bg);
+            --user-bubble-bg: #e7f5ff;
+            --model-bubble-bg: #f1f3f5;
+            --copy-button-bg: rgba(108, 117, 125, 0.1);
+            --copy-button-hover-bg: rgba(108, 117, 125, 0.2);
+            --copy-button-text: var(--secondary-color);
+            --copy-button-copied-bg: #28a745;
+            --copy-button-copied-text: #ffffff;
+        }
+
+        html[data-theme='dark'] {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --primary-color: #4dabf7;
+            --primary-color-rgb: 77, 171, 247;
+            --secondary-color: #a0a0a0;
+            --card-bg: #2c2c2c;
+            --input-bg: #333;
+            --input-border: #555;
+            --button-bg: #4dabf7;
+            --button-text: #111;
+            --button-hover-bg: #2196f3;
+            --error-color: #f44336;
+            --warning-color: #ffca28;
+            --code-bg: #222;
+            --border-color: #444;
+            --shadow-color: rgba(255, 255, 255, 0.1);
+            --highlight-bg: var(--code-bg);
+            --user-bubble-bg: #1c3b5e;
+            --model-bubble-bg: #383838;
+            --copy-button-bg: rgba(160, 160, 160, 0.15);
+            --copy-button-hover-bg: rgba(160, 160, 160, 0.3);
+            --copy-button-text: var(--secondary-color);
+            --copy-button-copied-bg: #34c759;
+            --copy-button-copied-text: #111;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding: 20px; transition: background-color var(--transition-speed), color var(--transition-speed); display: flex; flex-direction: column; min-height: 100vh; }
+        .container { max-width: 900px; margin: 20px auto; padding: 30px; background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-color); transition: background-color var(--transition-speed), box-shadow var(--transition-speed); flex-grow: 1; display: flex; flex-direction: column; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; transition: border-color var(--transition-speed); }
+        h1 { color: var(--primary-color); font-size: 1.8em; transition: color var(--transition-speed); }
+        h2 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+            color: var(--text-color);
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .theme-switcher {
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            padding: 3px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            background-color: transparent;
+            transition: color var(--transition-speed), border-color var(--transition-speed), background-color var(--transition-speed);
+            user-select: none;
+        }
+        .theme-switcher:hover {
+            background-color: var(--code-bg);
+            border-color: var(--secondary-color);
+        }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--secondary-color); transition: color var(--transition-speed); }
+        .input-group input[type="text"], .input-group input[type="password"], .input-group input[type="number"], .input-group input[type="url"], .input-group textarea, .input-group select { width: 100%; padding: 12px 15px; border: 1px solid var(--input-border); border-radius: 6px; font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); transition: border-color var(--transition-speed), background-color var(--transition-speed), color var(--transition-speed); }
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25); }
+        textarea { resize: vertical; min-height: 120px; }
+        .button-group { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        button { padding: 12px 20px; background-color: var(--button-bg); color: var(--button-text); border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background-color var(--transition-speed), transform 0.1s ease; }
+        button:hover:not(:disabled) { background-color: var(--button-hover-bg); transform: translateY(-1px); }
+        button:active:not(:disabled) { transform: translateY(0px); }
+        button:disabled { background-color: var(--secondary-color); cursor: not-allowed; opacity: 0.7; }
+        #clearButton { background-color: var(--secondary-color); }
+        #clearButton:hover:not(:disabled) { background-color: #5a6268; }
+
+        #status { margin: 20px 0; font-weight: bold; min-height: 1.6em; display: flex; align-items: center; gap: 10px; transition: color var(--transition-speed); }
+        #status.error { color: var(--error-color); }
+        #status.warning { color: var(--warning-color); }
+        .loader { border: 4px solid var(--input-border); border-top: 4px solid var(--primary-color); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- Chat History Area --- */
+        .response-area {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 10px;
+            overflow-y: auto;
+            flex-grow: 1;
+            min-height: 200px;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+        }
+        #chatContainer {
+            width: 100%;
+            word-wrap: break-word;
+            font-size: 0.95em;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .chat-placeholder {
+            color: var(--secondary-color);
+            text-align: center;
+            margin: auto;
+            font-style: italic;
+        }
+
+        /* --- Chat Bubbles --- */
+        .chat-bubble {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 85%;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: 0 1px 2px var(--shadow-color);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            line-height: 1.5;
+        }
+        .user-bubble {
+            background-color: var(--user-bubble-bg);
+            color: var(--text-color);
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .model-bubble {
+            background-color: var(--model-bubble-bg);
+            color: var(--text-color);
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        .chat-bubble :first-child { margin-top: 0; }
+        .chat-bubble :last-child { margin-bottom: 0; }
+
+        /* Markdown Styles within Bubbles */
+        .model-bubble h1, .model-bubble h2, .model-bubble h3 { margin-top: 0.8em; margin-bottom: 0.4em; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.2em; transition: border-color var(--transition-speed); }
+        .model-bubble h1 { font-size: 1.3em; } .model-bubble h2 { font-size: 1.15em; } .model-bubble h3 { font-size: 1.05em; }
+        .model-bubble p { margin-bottom: 0.8em; }
+        .model-bubble ul, .model-bubble ol { margin-left: 20px; margin-bottom: 0.8em; }
+        .model-bubble li { margin-bottom: 0.3em; }
+        .model-bubble blockquote { border-left: 3px solid var(--primary-color); padding-left: 12px; margin: 0.8em 0; color: var(--secondary-color); font-style: italic; transition: border-color var(--transition-speed), color var(--transition-speed); }
+        .model-bubble code:not(pre code) { background-color: var(--code-bg); color: var(--text-color); padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.85em; transition: background-color var(--transition-speed), color var(--transition-speed); }
+        .model-bubble pre {
+            background-color: var(--highlight-bg);
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.8em 0;
+            transition: background-color var(--transition-speed);
+            position: relative;
+            padding-top: 30px; /* Space for copy button */
+        }
+        .model-bubble pre code { background-color: transparent; padding: 0; font-family: 'Courier New', Courier, monospace; font-size: 0.85em; color: inherit; white-space: pre; }
+
+        /* --- Copy Code Button --- */
+        .copy-code-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 3px 6px;
+            font-size: 0.75em;
+            background-color: var(--copy-button-bg);
+            color: var(--copy-button-text);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            z-index: 1;
+        }
+        .model-bubble pre:hover .copy-code-button { opacity: 1; }
+        .copy-code-button:hover { background-color: var(--copy-button-hover-bg); }
+        .copy-code-button.copied {
+             background-color: var(--copy-button-copied-bg);
+             color: var(--copy-button-copied-text);
+             opacity: 1;
+             border-color: transparent; /* Hide border when copied */
+        }
+
+        /* --- Config & Footer --- */
+        .server-url-options { display: flex; align-items: center; gap: 10px; margin-top: 5px; font-size: 0.9em; color: var(--secondary-color); }
+        .server-url-options input[type="checkbox"] { margin-right: 5px; }
+        .config-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; padding: 15px; border: 1px dashed var(--border-color); border-radius: 6px; transition: border-color var(--transition-speed); }
+        .config-options .input-group { margin-bottom: 0; }
+        details summary { cursor: pointer; color: var(--primary-color); margin-bottom: 15px; font-weight: 500; transition: color var(--transition-speed); }
+        footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid var(--border-color); color: var(--secondary-color); font-size: 0.9em; transition: border-color var(--transition-speed), color var(--transition-speed); }
+        footer a { color: var(--primary-color); text-decoration: none; transition: color var(--transition-speed); }
+        footer a:hover { text-decoration: underline; }
+
+        /* --- Input Area --- */
+        .input-area { margin-top: 10px; }
+        .input-area .input-group { margin-bottom: 10px; }
+        .input-area .button-group { margin-top: 0; margin-bottom: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>LlamaHTML</h1>
+            <div class="theme-switcher" id="themeSwitcher" title="Switch to Dark Mode">Dark</div>
+        </header>
+
+        <div class="input-group">
+            <label for="serverUrl">Llama Server URL:</label>
+            <input type="url" id="serverUrl" placeholder="e.g., http://127.0.0.1:8080" value="http://127.0.0.1:8080">
+             <div class="server-url-options">
+                 <input type="checkbox" id="rememberServerUrl">
+                 <label for="rememberServerUrl">Remember URL (Uses Local Storage)</label>
+            </div>
+             <small style="display: block; margin-top: 5px; color: var(--secondary-color);">
+                Ensure your llama.cpp server is running and accessible at this URL. The model is determined by the server.
+             </small>
+        </div>
+
+        <!-- Model Selection Removed -->
+
+        <details>
+            <summary>Configuration Options</summary>
+            <div class="config-options">
+                <div class="input-group">
+                    <label for="temperature">Temperature (0-~2):</label>
+                    <input type="number" id="temperature" min="0" max="2" step="0.1" value="0.7" title="Controls randomness. Higher values make output more random.">
+                </div>
+                <div class="input-group">
+                    <label for="nPredict">Max Predict Tokens (n_predict):</label>
+                    <input type="number" id="nPredict" min="1" step="1" value="512" title="Maximum number of tokens to generate in the response. -1 for infinite.">
+                </div>
+                 <div class="input-group">
+                    <label for="topP">Top P (0-1):</label>
+                    <input type="number" id="topP" min="0" max="1" step="0.01" value="0.95" title="Nucleus sampling parameter. Considers tokens with probability mass adding up to top_p.">
+                </div>
+                 <div class="input-group">
+                    <label for="topK">Top K (integer):</label>
+                    <input type="number" id="topK" min="1" step="1" value="40" title="Top-k sampling parameter. Considers the top k most likely tokens.">
+                </div>
+                <div class="input-group">
+                    <label for="stopSequences">Stop Sequences (comma-sep):</label>
+                    <input type="text" id="stopSequences" value="USER:, \nUSER:" title="Comma-separated strings to stop generation.">
+                </div>
+            </div>
+        </details>
+
+        <h2>Conversation History</h2>
+        <div class="response-area" id="responseArea">
+            <div id="chatContainer">
+                <div class="chat-placeholder">Conversation will appear here...</div>
+            </div>
+        </div>
+
+        <div id="status"></div>
+
+        <!-- Group prompt and buttons together visually -->
+        <div class="input-area">
+            <div class="input-group">
+                <label for="prompt">Your Message (Ctrl+Enter to send):</label>
+                <textarea id="prompt" rows="4" placeholder="Enter your message here..."></textarea>
+            </div>
+
+            <!-- File Upload Removed -->
+
+            <div class="button-group"> <!-- Send/Clear Buttons -->
+                <button id="sendButton">Send</button>
+                <button id="clearButton">Clear Chat</button>
+            </div>
+        </div>
+
+    </div> <!-- End .container -->
+
+     <footer>
+        Powered by a local <a href="https://github.com/ggerganov/llama.cpp/tree/master/examples/server" target="_blank" rel="noopener noreferrer">llama.cpp server</a>. Model determined by server configuration.
+     </footer>
+
+    <script>
+        // --- DOM Elements ---
+        const serverUrlInput = document.getElementById('serverUrl');
+        const rememberServerUrlCheckbox = document.getElementById('rememberServerUrl');
+        const promptInput = document.getElementById('prompt');
+        const sendButton = document.getElementById('sendButton');
+        const clearButton = document.getElementById('clearButton');
+        const statusDiv = document.getElementById('status');
+        const chatContainer = document.getElementById('chatContainer');
+        const responseArea = document.getElementById('responseArea');
+        const themeSwitcher = document.getElementById('themeSwitcher');
+        const temperatureInput = document.getElementById('temperature');
+        const nPredictInput = document.getElementById('nPredict'); // Renamed from maxTokens
+        const topPInput = document.getElementById('topP');
+        const topKInput = document.getElementById('topK');
+        const stopSequencesInput = document.getElementById('stopSequences'); // New input
+        const highlightThemeLink = document.getElementById('highlight-theme');
+        // Removed: apiKeyInput, rememberApiKeyCheckbox, modelSelect, currentModelNameSpan, uploadButton, fileInput, fileNameDisplay
+
+        // --- State ---
+        let chatHistory = []; // Stores messages as { role: 'user'/'model', content: '...' }
+        let serverAvailable = false; // Track if server seems reachable
+
+        // --- Initialization ---
+        function initialize() {
+            loadServerUrl();
+            setupEventListeners();
+            initializeTheme();
+            configureMarked();
+            checkServerStatus(); // Initial check
+            renderChatHistory();
+            updateSendButtonState(); // Set initial state based on URL
+        }
+
+        function configureMarked() {
+             marked.setOptions({
+                highlight: function(code, lang) {
+                    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                    try {
+                        // Highlight.js might throw on invalid language strings
+                        const result = hljs.highlight(code, { language, ignoreIllegals: true });
+                        return result.value;
+                    } catch (e) {
+                        console.warn("Highlight.js error:", e, "- Using auto-detection fallback. Lang:", lang);
+                        try {
+                           const result = hljs.highlightAuto(code);
+                           return result.value;
+                       } catch (e2) {
+                            console.error("Highlight.js auto-detection failed:", e2);
+                            return escapeHtml(code); // Basic escaping fallback
+                       }
+                    }
+                },
+                gfm: true,
+                breaks: true,
+            });
+        }
+
+        // --- Event Listeners ---
+        function setupEventListeners() {
+            sendButton.addEventListener('click', handleSendPrompt);
+            clearButton.addEventListener('click', clearAll);
+            themeSwitcher.addEventListener('click', toggleTheme);
+            rememberServerUrlCheckbox.addEventListener('change', handleRememberUrlChange);
+            serverUrlInput.addEventListener('input', handleServerUrlInput);
+            promptInput.addEventListener('keydown', (event) => {
+                if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                    event.preventDefault();
+                    if (!sendButton.disabled) {
+                        handleSendPrompt();
+                    }
+                }
+            });
+            // Add listener for copy buttons (using event delegation)
+            chatContainer.addEventListener('click', function(event) {
+                if (event.target.classList.contains('copy-code-button')) {
+                    handleCopyCodeClick(event.target);
+                }
+            });
+        }
+
+        // --- Server URL Handling ---
+        function loadServerUrl() {
+            const rememberedUrl = localStorage.getItem('llamaServerUrl');
+            const shouldRemember = localStorage.getItem('rememberLlamaServerUrl') === 'true';
+            rememberServerUrlCheckbox.checked = shouldRemember;
+            if (shouldRemember && rememberedUrl) {
+                serverUrlInput.value = rememberedUrl;
+                console.info("Server URL loaded from Local Storage.");
+            }
+        }
+
+        function handleRememberUrlChange() {
+            const url = serverUrlInput.value.trim();
+            if (rememberServerUrlCheckbox.checked) {
+                if (url) {
+                    localStorage.setItem('llamaServerUrl', url);
+                    localStorage.setItem('rememberLlamaServerUrl', 'true');
+                    console.info("Server URL saved to Local Storage.");
+                } else {
+                    rememberServerUrlCheckbox.checked = false; // Don't save empty
+                    localStorage.removeItem('llamaServerUrl');
+                    localStorage.removeItem('rememberLlamaServerUrl');
+                }
+            } else {
+                localStorage.removeItem('llamaServerUrl');
+                localStorage.removeItem('rememberLlamaServerUrl');
+                console.info("Server URL removed from Local Storage.");
+            }
+        }
+
+        let serverUrlDebounceTimer;
+        function handleServerUrlInput() {
+             handleRememberUrlChange(); // Update storage immediately if checked
+             clearTimeout(serverUrlDebounceTimer);
+             serverUrlDebounceTimer = setTimeout(() => {
+                 checkServerStatus();
+                 updateSendButtonState();
+             }, 500); // Debounce check
+         }
+
+         async function checkServerStatus() {
+            const serverUrl = serverUrlInput.value.trim();
+            if (!isValidHttpUrl(serverUrl)) {
+                showStatus("Invalid server URL format.", true);
+                serverAvailable = false;
+                updateSendButtonState();
+                return;
+            }
+
+            // Optional: Add a simple health check endpoint if your server has one
+            // e.g., fetch(`${serverUrl}/health`).then(...)
+            // For now, we'll just assume it's potentially available if the URL is valid
+            // and rely on the main API call to confirm.
+            showStatus("Server URL looks valid. Ready to send.", false); // Optimistic
+            serverAvailable = true; // Assume available until proven otherwise
+            updateSendButtonState();
+        }
+
+        function updateSendButtonState() {
+            const urlValid = isValidHttpUrl(serverUrlInput.value.trim());
+            sendButton.disabled = !urlValid;
+        }
+
+        function isValidHttpUrl(string) {
+            let url;
+            try {
+                url = new URL(string);
+            } catch (_) {
+                return false;
+            }
+            return url.protocol === "http:" || url.protocol === "https:";
+        }
+
+
+        // --- Theme Handling (Unchanged from Gemini version) ---
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+            updateSelectArrowColor(); // Call this for consistency, although no select is present now
+        }
+
+        function setTheme(theme) {
+            const html = document.documentElement;
+            html.setAttribute('data-theme', theme);
+            themeSwitcher.textContent = theme === 'dark' ? 'Light' : 'Dark';
+            themeSwitcher.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+            const lightThemeUrl = getComputedStyle(html).getPropertyValue('--highlight-style-light').trim().replace(/['"]/g,'');
+            const darkThemeUrl = getComputedStyle(html).getPropertyValue('--highlight-style-dark').trim().replace(/['"]/g,'');
+            highlightThemeLink.href = theme === 'dark' ? darkThemeUrl : lightThemeUrl;
+            localStorage.setItem('theme', theme);
+             updateSelectArrowColor();
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+
+        // Function kept for potential future selects, harmless without them
+        function updateSelectArrowColor() { /* ... (keep original implementation) ... */ }
+        let resizeDebounceTimer;
+        window.addEventListener('resize', () => { clearTimeout(resizeDebounceTimer); resizeDebounceTimer = setTimeout(updateSelectArrowColor, 100); });
+        // --- End Theme Handling ---
+
+
+        // --- Main API Call Logic ---
+        async function handleSendPrompt() {
+            const serverUrl = serverUrlInput.value.trim();
+            const promptText = promptInput.value.trim();
+            const temperature = parseFloat(temperatureInput.value);
+            const nPredict = parseInt(nPredictInput.value, 10);
+            const topP = parseFloat(topPInput.value);
+            const topK = parseInt(topKInput.value, 10);
+            const stopSequences = stopSequencesInput.value.split(',')
+                                      .map(s => s.trim())
+                                      .filter(s => s.length > 0); // Get stop sequences
+
+            // Validation
+            if (!isValidHttpUrl(serverUrl)) {
+                showStatus("Error: Invalid or missing server URL.", true); serverUrlInput.focus(); return;
+            }
+            if (!promptText) {
+                showStatus("Error: Message cannot be empty.", true); promptInput.focus(); return;
+            }
+
+            // Construct User Message & Add to History
+            const userMessage = { role: 'user', content: promptText };
+            chatHistory.push(userMessage);
+            renderChatHistory();
+            scrollToBottom();
+            promptInput.value = '';
+            showLoading(true);
+
+            // Prepare API request body
+            const fullPrompt = formatChatHistoryForLlama(chatHistory);
+            const apiUrl = `${serverUrl}/completion`; // Standard llama-server endpoint
+            const requestBody = {
+                prompt: fullPrompt,
+                temperature: temperature,
+                n_predict: nPredict === -1 ? -1 : Math.max(1, nPredict), // Allow -1, ensure positive otherwise
+                top_p: topP,
+                top_k: topK,
+                stop: stopSequences, // Add stop sequences
+                stream: false // Use non-streaming for simplicity first
+                // Consider adding other params like 'seed', 'repeat_penalty' etc. if needed
+            };
+
+            console.log("Sending API Request to:", apiUrl);
+            console.log("Request Body:", JSON.stringify(requestBody, null, 2));
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody),
+                });
+
+                if (!response.ok) {
+                    let errorText = `API Error: ${response.status} ${response.statusText}`;
+                    let errorData = null;
+                    try {
+                        errorData = await response.json();
+                        console.error("API Error Response Body:", errorData);
+                        if (errorData?.content) { // llama-server might put errors in content
+                           errorText += ` - ${errorData.content}`;
+                        } else if (errorData?.error) {
+                           errorText += ` - ${errorData.error}`;
+                        } else {
+                            const textResponse = await response.text(); // Try getting raw text
+                            errorText += ` - Server Response: ${textResponse.substring(0, 300)}${textResponse.length > 300 ? '...' : ''}`;
+                        }
+                    } catch (e) {
+                         try { const rawText = await response.text(); errorText += ` - Server Response: ${rawText.substring(0, 300)}${rawText.length > 300 ? '...' : ''}`; } catch (e2) {}
+                    }
+                     // Check for common connection refused error (might not have status code)
+                     if (errorText.includes('Failed to fetch') || errorText.includes('NetworkError')) {
+                         errorText = `Connection Error: Could not connect to server at ${serverUrl}. Is it running?`;
+                         serverAvailable = false;
+                         updateSendButtonState();
+                     }
+
+                    chatHistory.pop(); // Remove failed user message
+                    renderChatHistory();
+                    throw new Error(errorText);
+                }
+
+                // Process Successful Response (non-streaming)
+                const data = await response.json();
+                console.log("API Response Data:", JSON.stringify(data, null, 2));
+
+                let generatedText = "";
+                if (data && typeof data.content === 'string') {
+                    generatedText = data.content.trim(); // Get the generated text
+                    const modelMessage = { role: 'model', content: generatedText };
+                    chatHistory.push(modelMessage);
+                    renderChatHistory();
+                    scrollToBottom();
+
+                    let statusMessage = `Response received.`;
+                    if(data.timings) {
+                        statusMessage += ` Time: ${((data.timings.prompt_ms + data.timings.predicted_ms)/1000).toFixed(2)}s.`
+                    }
+                    if (data.stopped_eos) statusMessage += ` (Stopped: EOS)`;
+                    if (data.stopped_word) statusMessage += ` (Stopped: Word)`;
+                    if (data.stopped_limit) statusMessage += ` (Stopped: Limit)`;
+
+                    showStatus(statusMessage, false, data.stopped_limit); // Warn if stopped by limit
+                    serverAvailable = true; // Success means server is reachable
+
+                } else {
+                     throw new Error("Invalid response format from server. Expected JSON with 'content' string.");
+                }
+
+            } catch (error) {
+                console.error("API Call Failed:", error);
+                 // Check specifically for network errors again in catch block
+                 let displayError = error.message || 'An unknown error occurred.';
+                 if (displayError.includes('Failed to fetch') || displayError.includes('NetworkError')) {
+                     displayError = `Connection Error: Could not connect to server at ${serverUrl}. Is it running?`;
+                     serverAvailable = false;
+                     updateSendButtonState();
+                 } else {
+                     chatHistory.pop(); // Remove user msg only if it wasn't a connection error before send
+                 }
+                 renderChatHistory();
+                 showStatus(`Error: ${displayError}`, true);
+
+            } finally {
+                showLoading(false);
+                promptInput.focus();
+                updateSendButtonState(); // Re-enable button based on server status
+            }
+        }
+
+        // --- Prompt Formatting ---
+        function formatChatHistoryForLlama(history) {
+            // Basic USER/ASSISTANT format. Adjust if your model needs a different template (e.g., ChatML)
+            // Many models expect a specific instruction/system prompt first. Add one if needed.
+            // const systemPrompt = "You are a helpful assistant.\n";
+            let formattedPrompt = ""; // systemPrompt;
+
+            history.forEach(message => {
+                if (message.role === 'user') {
+                    formattedPrompt += `USER: ${message.content}\n`;
+                } else if (message.role === 'model') {
+                    formattedPrompt += `ASSISTANT: ${message.content}\n`;
+                }
+            });
+            // Add the final prompt for the model to continue
+            formattedPrompt += "ASSISTANT:";
+            return formattedPrompt;
+        }
+
+
+        // --- UI Update Functions ---
+        function showLoading(isLoading) {
+             const currentStatusText = statusDiv.querySelector('span')?.textContent || '';
+             const isError = statusDiv.classList.contains('error');
+             const isWarning = statusDiv.classList.contains('warning');
+             const isLoadingMessage = /Processing|Connecting/.test(currentStatusText);
+
+             if (isLoading) {
+                 if (!isLoadingMessage) {
+                    statusDiv.innerHTML = `<div class="loader"></div><span>Processing request...</span>`;
+                    if (isError) statusDiv.classList.add('error');
+                    if (isWarning) statusDiv.classList.add('warning');
+                 } else if (!statusDiv.querySelector('.loader')) {
+                     statusDiv.insertAdjacentHTML('afterbegin', '<div class="loader"></div>');
+                 }
+                 sendButton.disabled = true;
+                 promptInput.disabled = true;
+             } else {
+                 const loader = statusDiv.querySelector('.loader');
+                 if (loader) loader.remove();
+                 const statusSpan = statusDiv.querySelector('span');
+                 if (statusSpan && isLoadingMessage) {
+                     const newStatus = statusSpan.textContent;
+                      if (/Processing|Connecting/.test(newStatus)) {
+                         statusDiv.innerHTML = ''; // Clear loading message if no other status was set
+                      }
+                 }
+                 promptInput.disabled = false;
+                 updateSendButtonState(); // Enable/disable based on server URL/status
+             }
+         }
+
+        function showStatus(message, isError = false, isWarning = false) {
+             const loaderElement = statusDiv.querySelector('.loader');
+             const loaderHtml = loaderElement ? loaderElement.outerHTML : '';
+             statusDiv.classList.remove('error', 'warning');
+             statusDiv.innerHTML = `${loaderHtml}<span>${escapeHtml(message)}</span>`;
+             if (isError) statusDiv.classList.add('error');
+             else if (isWarning) statusDiv.classList.add('warning');
+         }
+
+        function renderChatHistory() {
+            chatContainer.innerHTML = '';
+            if (chatHistory.length === 0) {
+                chatContainer.innerHTML = '<div class="chat-placeholder">Conversation will appear here...</div>';
+                return;
+            }
+
+            chatHistory.forEach(message => {
+                 if (!message || !message.role || typeof message.content !== 'string') {
+                     console.warn("Skipping rendering invalid message:", message);
+                     return;
+                 }
+                 const bubble = document.createElement('div');
+                 bubble.classList.add('chat-bubble');
+
+                 if (message.role === 'user') {
+                     bubble.classList.add('user-bubble');
+                     bubble.textContent = message.content; // Display user text directly
+
+                 } else if (message.role === 'model') {
+                     bubble.classList.add('model-bubble');
+                     try {
+                         // Render model response as Markdown
+                         const rawHtml = marked.parse(message.content || "[Empty Model Response]");
+                         bubble.innerHTML = rawHtml;
+                         // Add copy buttons to code blocks after rendering
+                         requestAnimationFrame(() => {
+                             const preBlocks = bubble.querySelectorAll('pre');
+                             preBlocks.forEach(pre => {
+                                 if (pre.querySelector('.copy-code-button')) return; // Don't add twice
+                                 const codeElement = pre.querySelector('code');
+                                 if (!codeElement) return; // Only add if there's a code element
+
+                                 const copyButton = document.createElement('button');
+                                 copyButton.textContent = 'Copy';
+                                 copyButton.className = 'copy-code-button';
+                                 copyButton.title = 'Copy code to clipboard';
+                                 copyButton.setAttribute('aria-label', 'Copy code block');
+                                 pre.appendChild(copyButton);
+
+                                 // Ensure highlighting is applied if Marked didn't do it
+                                 if (!codeElement.classList.contains('hljs')) {
+                                     hljs.highlightElement(codeElement);
+                                 }
+                             });
+                         });
+                     } catch (e) {
+                         console.error("Markdown parsing/rendering error:", e);
+                         bubble.textContent = message.content || "[Error rendering response]"; // Fallback
+                     }
+                 }
+                 chatContainer.appendChild(bubble);
+             });
+         }
+
+        // --- Copy Code Logic (Unchanged) ---
+        function handleCopyCodeClick(button) {
+             const pre = button.closest('pre');
+             const code = pre?.querySelector('code');
+             if (!code) return;
+             const codeToCopy = code.textContent || '';
+             navigator.clipboard.writeText(codeToCopy).then(() => {
+                 button.textContent = 'Copied!';
+                 button.classList.add('copied');
+                 button.disabled = true; // Prevent multi-click issues
+                 setTimeout(() => {
+                     button.textContent = 'Copy';
+                     button.classList.remove('copied');
+                     button.disabled = false;
+                 }, 2000);
+             }).catch(err => {
+                 console.error('Failed to copy code: ', err);
+                 button.textContent = 'Error';
+                 button.disabled = true;
+                 setTimeout(() => {
+                     button.textContent = 'Copy';
+                     button.disabled = false;
+                 }, 2000);
+             });
+         }
+
+         // --- Utility Functions ---
+         function escapeHtml(unsafe) {
+             if (typeof unsafe !== 'string') return '';
+             return unsafe
+                  .replace(/&/g, "&amp;")
+                  .replace(/</g, "&lt;")
+                  .replace(/>/g, "&gt;")
+                  .replace(/"/g, "&quot;")
+                  .replace(/'/g, "&#039;");
+         }
+
+        function scrollToBottom() {
+            requestAnimationFrame(() => {
+                responseArea.scrollTop = responseArea.scrollHeight;
+            });
+        }
+
+        function clearAll() {
+            promptInput.value = '';
+            chatHistory = [];
+            renderChatHistory();
+            showStatus(""); // Clear status
+            promptInput.focus();
+        }
+
+        // --- Run Initialization ---
+        initialize();
+
+    </script>
+</body>
+</html>
