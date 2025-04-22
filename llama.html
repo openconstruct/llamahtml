@@ -161,7 +161,7 @@
             background-color: var(--error-color);
         }
         #sendButton.stop-button:hover:not(:disabled) {
-            background-color: var(--button-delete-hover-bg); 
+            background-color: var(--button-delete-hover-bg);
         }
 
         #status { margin: 15px 0; font-weight: bold; min-height: 1.6em; display: flex; align-items: center; gap: 10px; transition: color var(--transition-speed); font-size: 0.9em; }
@@ -209,7 +209,7 @@
             box-shadow: 0 1px 2px var(--shadow-color);
             transition: background-color var(--transition-speed), color var(--transition-speed);
             line-height: 1.5;
-            white-space: pre-wrap;
+            white-space: pre-wrap; /* Changed from pre-wrap */
         }
         .user-bubble {
             background-color: var(--user-bubble-bg);
@@ -217,6 +217,8 @@
             border-bottom-right-radius: 5px;
             align-self: flex-end;
             margin-left: auto;
+            /* Keep pre-wrap for user bubbles if needed, or consistency */
+             white-space: pre-wrap;
         }
         .model-bubble {
             background-color: var(--model-bubble-bg);
@@ -224,6 +226,8 @@
             border-bottom-left-radius: 5px;
             align-self: flex-start;
             margin-right: auto;
+            /* Let child elements (like pre) handle whitespace */
+            white-space: normal;
         }
         .chat-bubble :first-child { margin-top: 0; }
         .chat-bubble :last-child { margin-bottom: 0; }
@@ -235,14 +239,60 @@
         .model-bubble li { margin-bottom: 0.3em; }
         .model-bubble blockquote { border-left: 3px solid var(--primary-color); padding-left: 12px; margin: 0.8em 0; color: var(--secondary-color); font-style: italic; transition: border-color var(--transition-speed), color var(--transition-speed); }
         .model-bubble code:not(pre code) { background-color: var(--code-bg); color: var(--text-color); padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.85em; transition: background-color var(--transition-speed), color var(--transition-speed); }
-        .model-bubble pre { background-color: var(--highlight-bg); padding: 10px; border-radius: 6px; overflow-x: auto; margin: 0.8em 0; transition: background-color var(--transition-speed); position: relative; padding-top: 35px; }
-        .model-bubble pre code { background-color: transparent; padding: 0; font-family: 'Courier New', Courier, monospace; font-size: 0.85em; color: inherit; white-space: pre; }
+        .model-bubble pre {
+            background-color: var(--highlight-bg);
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.8em 0;
+            transition: background-color var(--transition-speed);
+            position: relative; /* Needed for absolute positioning of buttons */
+            padding-top: 35px; /* Make space for buttons */
+        }
+        .model-bubble pre code {
+            background-color: transparent;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85em;
+            color: inherit; /* Inherit color from parent pre */
+            white-space: pre; /* Ensure whitespace is preserved in code */
+        }
 
-        .code-actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; z-index: 1; }
-        .code-action-button { padding: 3px 6px; font-size: 0.75em; background-color: var(--code-action-button-bg); color: var(--code-action-button-text); border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; opacity: 0.6; transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
-        .model-bubble pre:hover .code-action-button { opacity: 1; }
-        .code-action-button:hover { background-color: var(--code-action-button-hover-bg); }
-        .copy-code-button.copied { background-color: var(--copy-button-copied-bg); color: var(--copy-button-copied-text); opacity: 1; border-color: transparent; }
+        /* --- Styles for Code Action Buttons --- */
+        .code-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            z-index: 1; /* Ensure buttons are above code */
+        }
+        .code-action-button {
+            padding: 3px 6px;
+            font-size: 0.75em;
+            background-color: var(--code-action-button-bg);
+            color: var(--code-action-button-text);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0.6; /* Slightly transparent by default */
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        /* Show buttons clearly on pre hover */
+        .model-bubble pre:hover .code-action-button {
+            opacity: 1;
+        }
+        .code-action-button:hover {
+            background-color: var(--code-action-button-hover-bg);
+        }
+        .copy-code-button.copied {
+            background-color: var(--copy-button-copied-bg);
+            color: var(--copy-button-copied-text);
+            opacity: 1;
+            border-color: transparent;
+        }
+        /* --- End Styles for Code Action Buttons --- */
+
 
         .server-url-options { display: flex; align-items: center; gap: 10px; margin-top: 5px; font-size: 0.9em; color: var(--secondary-color); }
         .server-url-options input[type="checkbox"] { margin-right: 5px; }
@@ -414,7 +464,7 @@
 
         const SESSION_INDEX_KEY = 'llamaChatIndex';
         const SESSION_DATA_PREFIX = 'llamaChatSession_';
-        const MAX_TEXT_FILE_EMBED_SIZE = 200 * 1024; 
+        const MAX_TEXT_FILE_EMBED_SIZE = 200 * 1024;
 
         const serverUrlInput = document.getElementById('serverUrl');
         const rememberServerUrlCheckbox = document.getElementById('rememberServerUrl');
@@ -443,13 +493,13 @@
         let serverAvailable = false;
         let messageCounter = 0;
         let currentSessionId = null;
-        let currentAbortController = null; 
-        let stagedFiles = []; 
+        let currentAbortController = null;
+        let stagedFiles = [];
 
         function handleStopGeneration() {
             if (currentAbortController) {
                 console.log("Stop button clicked. Aborting request...");
-                showStatus("Cancelling request...", false, true); 
+                showStatus("Cancelling request...", false, true);
                 currentAbortController.abort();
 
             }
@@ -472,11 +522,11 @@
             setupEventListeners();
             initializeTheme();
             configureMarked();
-            checkServerStatus(); 
-            populateSessionDropdown(); 
-            startNewSession(); 
-            updateSendButtonState(); 
-            updateSessionButtonStates(); 
+            checkServerStatus();
+            populateSessionDropdown();
+            startNewSession();
+            updateSendButtonState();
+            updateSessionButtonStates();
         }
 
          function configureMarked() {
@@ -484,23 +534,25 @@
                 highlight: function(code, lang) {
                     const language = hljs.getLanguage(lang) ? lang : 'plaintext';
                     try {
+                        // Return the highlighted code *without* wrapping in <pre><code>
                         const result = hljs.highlight(code, { language, ignoreIllegals: true });
                         return result.value;
                     } catch (e) {
                         console.warn("Highlight.js error:", e, "- Using auto-detection fallback. Lang:", lang);
-
                         try {
+                           // Return the highlighted code *without* wrapping in <pre><code>
                            const result = hljs.highlightAuto(code);
                            return result.value;
                        } catch (e2) {
                             console.error("Highlight.js auto-detection failed:", e2);
-                            return escapeHtml(code); 
+                            return escapeHtml(code); // Return escaped code on failure
                        }
                     }
                 },
                 gfm: true,
-                breaks: true, 
-
+                breaks: true,
+                // Use langPrefix to ensure highlight.js CSS classes are applied correctly
+                langPrefix: 'hljs language-',
             });
         }
 
@@ -509,7 +561,6 @@
             sendButton.addEventListener('click', handleSendPrompt);
 
             clearButton.addEventListener('click', () => {
-
                 if (currentAbortController) {
                    handleStopGeneration();
                 }
@@ -519,10 +570,9 @@
             rememberServerUrlCheckbox.addEventListener('change', handleRememberUrlChange);
             serverUrlInput.addEventListener('input', handleServerUrlInput);
 
-            promptInput.addEventListener('input', updateSendButtonState); 
+            promptInput.addEventListener('input', updateSendButtonState);
 
             promptInput.addEventListener('keydown', (event) => {
-
                 if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && !event.shiftKey && !event.altKey) {
                     event.preventDefault();
                     if (!sendButton.disabled && sendButton.textContent === 'Send') {
@@ -539,6 +589,7 @@
 
             stagedFilesArea.addEventListener('click', handleRemoveStagedFile);
 
+            // --- Event Delegation for Code Buttons ---
             chatContainer.addEventListener('click', function(event) {
                 if (event.target.classList.contains('copy-code-button')) {
                     handleCopyCodeClick(event.target);
@@ -565,8 +616,7 @@
                     localStorage.setItem('rememberLlamaServerUrl', 'true');
                     console.info("Server URL saved to Local Storage.");
                 } else {
-
-                    rememberServerUrlCheckbox.checked = false; 
+                    rememberServerUrlCheckbox.checked = false;
                     localStorage.removeItem('llamaServerUrl');
                     localStorage.removeItem('rememberLlamaServerUrl');
                 }
@@ -578,13 +628,13 @@
         }
         let serverUrlDebounceTimer;
         function handleServerUrlInput() {
-             handleRememberUrlChange(); 
+             handleRememberUrlChange();
 
              clearTimeout(serverUrlDebounceTimer);
              serverUrlDebounceTimer = setTimeout(() => {
                  checkServerStatus();
-                 updateSendButtonState(); 
-             }, 500); 
+                 updateSendButtonState();
+             }, 500);
          }
 
          async function checkServerStatus() {
@@ -596,20 +646,20 @@
                 return;
             }
 
-            showStatus("Server URL looks valid. Ready to send.", false, false, true); 
-            serverAvailable = true; 
+            // Simplified check - just assume valid URL means ready
+            showStatus("Server URL looks valid. Ready to send.", false, false, true);
+            serverAvailable = true;
             updateSendButtonState();
         }
 
         function updateSendButtonState() {
-
             if (currentAbortController) {
-                sendButton.disabled = false;
-                return; 
+                sendButton.disabled = false; // Stop button should always be enabled
+                return;
             }
 
             const urlValid = isValidHttpUrl(serverUrlInput.value.trim());
-            const isLoading = statusDiv.querySelector('.loader') !== null; 
+            const isLoading = statusDiv.querySelector('.loader') !== null;
 
             const canSend = urlValid && !isLoading && (promptInput.value.trim().length > 0 || stagedFiles.length > 0);
             sendButton.disabled = !canSend;
@@ -622,12 +672,11 @@
             } catch (_) {
                 return false;
             }
-
             return url.protocol === "http:" || url.protocol === "https:";
         }
 
         function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light'; 
+            const savedTheme = localStorage.getItem('theme') || 'light';
             setTheme(savedTheme);
         }
         function setTheme(theme) {
@@ -639,7 +688,7 @@
             const lightThemeUrl = getComputedStyle(html).getPropertyValue('--highlight-style-light').trim().replace(/['"]/g,'');
             const darkThemeUrl = getComputedStyle(html).getPropertyValue('--highlight-style-dark').trim().replace(/['"]/g,'');
             highlightThemeLink.href = theme === 'dark' ? darkThemeUrl : lightThemeUrl;
-            localStorage.setItem('theme', theme); 
+            localStorage.setItem('theme', theme);
         }
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
@@ -651,18 +700,18 @@
             const files = event.target.files;
             if (!files) return;
 
-            showLoading(true, "Processing files..."); 
+            showLoading(true, "Processing files...");
 
             const newFiles = Array.from(files).filter(file =>
-                !stagedFiles.some(staged => staged.name === file.name) 
+                !stagedFiles.some(staged => staged.name === file.name)
             );
 
             if (newFiles.length !== files.length) {
-                 showStatus("Some duplicate filenames were ignored.", false, true); 
+                 showStatus("Some duplicate filenames were ignored.", false, true);
             }
 
             if (newFiles.length === 0) {
-                showLoading(false); 
+                showLoading(false);
                 return;
             }
 
@@ -672,19 +721,19 @@
             newFiles.forEach(file => {
                 const reader = new FileReader();
                 const fileData = {
-                    file: file, 
+                    file: file,
                     name: file.name,
-                    type: file.type || 'application/octet-stream', 
-                    content: null, 
+                    type: file.type || 'application/octet-stream',
+                    content: null,
                     error: null
                 };
-                stagedFiles.push(fileData); 
+                stagedFiles.push(fileData);
 
                 reader.onload = function(e) {
-                    fileData.content = e.target.result; 
+                    fileData.content = e.target.result;
                     filesProcessed++;
                     if (filesProcessed === totalFilesToProcess) {
-                       finishFileProcessing(); 
+                       finishFileProcessing();
                     }
                 };
 
@@ -693,40 +742,38 @@
                     fileData.error = `Error reading file: ${e.target.error?.message || 'Unknown error'}`;
                     filesProcessed++;
                     if (filesProcessed === totalFilesToProcess) {
-                        finishFileProcessing(); 
+                        finishFileProcessing();
                     }
                 };
 
                 if (fileData.type.startsWith('text/') || /\.(txt|md|py|js|html|css|json|xml|csv|log)$/i.test(fileData.name)) {
-
                      reader.readAsText(file);
                 } else {
-
-                    reader.readAsDataURL(file); 
+                    reader.readAsDataURL(file); // Read images/binary as Base64 data URLs
                 }
             });
 
-             renderStagedFiles(); 
-
+             renderStagedFiles();
+             // Clear the input value to allow selecting the same file again
              event.target.value = null;
         }
 
         function finishFileProcessing() {
-             renderStagedFiles(); 
-             showLoading(false); 
-             updateSendButtonState(); 
-             promptInput.focus(); 
+             renderStagedFiles(); // Update UI in case of errors during read
+             showLoading(false);
+             updateSendButtonState();
+             promptInput.focus();
         }
 
         function renderStagedFiles() {
-            stagedFilesArea.innerHTML = ''; 
+            stagedFilesArea.innerHTML = '';
             if (stagedFiles.length === 0) {
-                stagedFilesArea.style.display = 'none'; 
-                updateSendButtonState(); 
+                stagedFilesArea.style.display = 'none';
+                updateSendButtonState();
                 return;
             }
 
-            stagedFilesArea.style.display = 'flex'; 
+            stagedFilesArea.style.display = 'flex';
 
             stagedFiles.forEach((fileData, index) => {
                 const item = document.createElement('div');
@@ -739,61 +786,61 @@
 
                 const typeSpan = document.createElement('span');
                 typeSpan.className = 'file-type';
-                typeSpan.textContent = `(${(fileData.type || 'unknown').split('/')[1]})`; 
+                typeSpan.textContent = `(${(fileData.type || 'unknown').split('/')[1]})`; // Show subtype
                 nameSpan.appendChild(typeSpan);
 
                 if (fileData.error) {
-                    item.style.borderColor = 'var(--error-color)'; 
+                    item.style.borderColor = 'var(--error-color)'; // Maybe add border for error?
                     nameSpan.style.color = 'var(--error-color)';
                     typeSpan.textContent = '(Error)';
                 } else if (fileData.content === null) {
-
+                    // Optionally indicate loading state per file
                     typeSpan.textContent = '(loading...)';
                 }
 
                 const removeButton = document.createElement('button');
                 removeButton.className = 'remove-file-button';
-                removeButton.innerHTML = '&times;'; 
+                removeButton.innerHTML = '&times;'; // Use multiplication sign '×'
                 removeButton.title = `Remove ${fileData.name}`;
                 removeButton.setAttribute('aria-label', `Remove ${fileData.name}`);
-                removeButton.dataset.index = index; 
+                removeButton.dataset.index = index; // Store index for removal
 
                 item.appendChild(nameSpan);
                 item.appendChild(removeButton);
                 stagedFilesArea.appendChild(item);
             });
-            updateSendButtonState(); 
+            updateSendButtonState();
         }
 
         function handleRemoveStagedFile(event) {
-
+             // Use event delegation to catch clicks on remove buttons
              if (event.target.classList.contains('remove-file-button')) {
                 const indexToRemove = parseInt(event.target.dataset.index, 10);
                  if (!isNaN(indexToRemove) && indexToRemove >= 0 && indexToRemove < stagedFiles.length) {
-                    stagedFiles.splice(indexToRemove, 1); 
-                    renderStagedFiles(); 
+                    stagedFiles.splice(indexToRemove, 1); // Remove file from array
+                    renderStagedFiles(); // Re-render the list
                  }
              }
          }
 
          function clearStagedFiles() {
              stagedFiles = [];
-             renderStagedFiles(); 
-
+             renderStagedFiles(); // Update UI
+             // Reset the file input visually, although its internal files list is already cleared
              fileInput.value = null;
          }
 
         async function handleSendPrompt() {
-
+            // Change button state to 'Stop' immediately
             sendButton.removeEventListener('click', handleSendPrompt);
-            sendButton.removeEventListener('click', handleStopGeneration);
+            sendButton.removeEventListener('click', handleStopGeneration); // Ensure no duplicate listeners
 
             sendButton.textContent = 'Stop';
             sendButton.classList.add('stop-button');
             sendButton.title = 'Cancel Generation';
             sendButton.addEventListener('click', handleStopGeneration);
-            sendButton.disabled = false; 
-            promptInput.disabled = true; 
+            sendButton.disabled = false; // Stop button should be clickable
+            promptInput.disabled = true; // Disable input while processing
 
             const serverUrl = serverUrlInput.value.trim();
             let promptText = promptInput.value.trim();
@@ -807,13 +854,13 @@
 
             if (!promptText && stagedFiles.length === 0) {
                 showStatus("Error: Message cannot be empty and no files attached.", true);
-
                  resetButtonToSendState();
                  promptInput.disabled = false;
-                 updateSendButtonState(); 
+                 updateSendButtonState(); // Re-enable if needed
                 return;
             }
 
+            // Check for file errors before sending
             const filesWithError = stagedFiles.filter(f => f.error);
              if (filesWithError.length > 0) {
                 showStatus(`Error: Cannot send due to errors reading files: ${filesWithError.map(f => f.name).join(', ')}`, true);
@@ -823,6 +870,7 @@
                 return;
              }
 
+            // Check if files are still loading
             const filesLoading = stagedFiles.filter(f => f.content === null && !f.error);
             if (filesLoading.length > 0) {
                 showStatus(`Please wait, files are still processing: ${filesLoading.map(f => f.name).join(', ')}`, false, true);
@@ -832,18 +880,20 @@
                 return;
             }
 
+            // --- Prepare user message including file info ---
             let fileInfoForPrompt = "";
             if (stagedFiles.length > 0) {
                 fileInfoForPrompt = "Attached Files:\n";
                 stagedFiles.forEach(fileData => {
                     fileInfoForPrompt += `[File: ${fileData.name} (${fileData.type})]\n`;
-
+                    // Embed small text files directly (optional, adjust size limit)
                     if (fileData.type.startsWith('text/') && fileData.content && fileData.content.length < MAX_TEXT_FILE_EMBED_SIZE) {
                         fileInfoForPrompt += `Content:\n---\n${fileData.content}\n---\n`;
                     }
-
+                    // Indicate non-text or large files without embedding content
                     else if (!fileData.type.startsWith('text/') && fileData.content?.startsWith('data:')) {
-
+                        // For data URLs (images, etc.), just mention it.
+                        // The actual data URL isn't added here, but might be sent differently if the API supports it.
                         fileInfoForPrompt += `(File is binary/image - content not embedded in text prompt)\n`;
                     } else if (fileData.type.startsWith('text/') && fileData.content && fileData.content.length >= MAX_TEXT_FILE_EMBED_SIZE) {
                         fileInfoForPrompt += `(Text file content too large to embed in prompt)\n`;
@@ -853,9 +903,11 @@
             }
 
             const fullUserContent = fileInfoForPrompt + promptText;
+            // --- End Prepare user message ---
 
+            // Abort previous request if any
             if (currentAbortController) {
-
+                console.warn("Aborting previous fetch request.");
                 currentAbortController.abort();
             }
             currentAbortController = new AbortController();
@@ -864,79 +916,83 @@
             const userMessageId = `msg-${messageCounter++}`;
             const userMessage = { role: 'user', content: fullUserContent, id: userMessageId };
             chatHistory.push(userMessage);
-            renderChatHistory();
+            renderChatHistory(); // Render user message immediately
             scrollToBottom();
-            promptInput.value = ''; 
-            clearStagedFiles(); 
-            showLoading(true, "Connecting..."); 
-            updateSessionButtonStates(); 
+            promptInput.value = ''; // Clear input after sending
+            clearStagedFiles(); // Clear staged files after sending
+            showLoading(true, "Connecting...");
+            updateSessionButtonStates(); // Disable session buttons during request
 
+            // Prepare placeholder for model response
             const modelMessageId = `msg-${messageCounter++}`;
             const modelMessage = { role: 'model', content: '', id: modelMessageId };
             chatHistory.push(modelMessage);
-            const modelBubble = createChatBubbleElement(modelMessage);
-            chatContainer.appendChild(modelBubble); 
-            updateChatPlaceholder();
+            const modelBubble = createChatBubbleElement(modelMessage); // Create empty bubble
+            chatContainer.appendChild(modelBubble); // Add to DOM
+            updateChatPlaceholder(); // Ensure placeholder is removed
             scrollToBottom();
 
-            const fullPromptForLlama = formatChatHistoryForLlama(chatHistory.slice(0, -1)); 
+            // Prepare prompt for llama.cpp server format
+            const fullPromptForLlama = formatChatHistoryForLlama(chatHistory.slice(0, -1)); // Exclude the empty model message
             const apiUrl = `${serverUrl}/completion`;
             const requestBody = {
                 prompt: fullPromptForLlama,
                 temperature: temperature,
-                n_predict: nPredict === -1 ? -1 : Math.max(1, nPredict), 
+                n_predict: nPredict === -1 ? -1 : Math.max(1, nPredict), // Ensure n_predict is valid
                 top_p: topP,
                 top_k: topK,
                 stop: stopSequences,
-                stream: true 
-
+                stream: true // Always use streaming
+                // Add image_data if server supports it and files are images
+                // image_data: stagedFiles.filter(f => f.type.startsWith('image/')).map(f => ({ data: f.content.split(',')[1], id: /* some unique id */ }))
             };
 
             console.log("Sending API Request to:", apiUrl);
             console.log("Request Body (prompt truncated):", JSON.stringify({...requestBody, prompt: requestBody.prompt.substring(0, 500) + (requestBody.prompt.length > 500 ? '...' : '') }, null, 2));
             console.log(`Using message IDs: User=${userMessageId}, Model=${modelMessageId}`);
 
+            // Debounced rendering for smoother UI during streaming
             const debouncedRender = debounce(() => {
-                updateModelBubbleContent(modelMessageId, modelMessage.content, false); 
+                updateModelBubbleContent(modelMessageId, modelMessage.content, false); // Final render after debounce period
                 scrollToBottom();
-            }, 250); 
+            }, 250); // Adjust debounce time as needed
 
             let responseOk = false;
-            let wasAborted = false; 
+            let wasAborted = false; // Flag to track if fetch was aborted
 
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(requestBody),
-                    signal: signal, 
+                    signal: signal, // Pass the abort signal
                 });
 
-                responseOk = response.ok;
+                responseOk = response.ok; // Store response status
 
                 if (!response.ok || !response.body) {
                     let errorText = `API Error: ${response.status} ${response.statusText}`;
                      try {
-
+                         // Try to parse JSON error from server
                          const errorData = await response.json();
                          console.error("API Error Response Body:", errorData);
-                         if (errorData?.content) errorText += ` - ${errorData.content}`; 
+                         if (errorData?.content) errorText += ` - ${errorData.content}`; // llama.cpp server format?
                          else if (errorData?.error) errorText += ` - ${errorData.error}`;
-                         else { 
+                         else { // Fallback to text if not JSON or unknown format
                             const textResponse = await response.text();
                             errorText += ` - Server Response: ${textResponse.substring(0, 300)}${textResponse.length > 300 ? '...' : ''}`;
                          }
-                     } catch (e) {  }
+                     } catch (e) { /* Ignore if response is not JSON */ }
                      throw new Error(errorText);
                 }
 
                 showLoading(true, "Receiving response...");
-                serverAvailable = true; 
+                serverAvailable = true; // Server responded successfully
 
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let buffer = '';
-                let finalData = null; 
+                let finalData = null; // To store the last data chunk with stats
 
                 while (true) {
                     const { value, done } = await reader.read();
@@ -946,9 +1002,9 @@
                     }
 
                     buffer += decoder.decode(value, { stream: true });
-
+                    // Process Server-Sent Events (SSE)
                     let lines = buffer.split('\n\n');
-                    buffer = lines.pop(); 
+                    buffer = lines.pop(); // Keep the potentially incomplete last part
 
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
@@ -956,29 +1012,31 @@
                             if (jsonData) {
                                 try {
                                     const data = JSON.parse(jsonData);
-
+                                    // Append content chunks
                                     if (typeof data.content === 'string') {
                                         modelMessage.content += data.content;
-
-                                        updateModelBubbleContent(modelMessageId, modelMessage.content, true);
-                                        debouncedRender(); 
+                                        // Update bubble immediately for responsiveness (optional, but good UX)
+                                        updateModelBubbleContent(modelMessageId, modelMessage.content, true); // Indicate streaming
+                                        debouncedRender(); // Schedule a full re-render
                                     }
-
+                                    // Check for stop signal and store final data
                                     if (data.stop === true) {
                                         console.log("Stop signal received in stream:", data);
-                                        finalData = data; 
+                                        finalData = data; // Store the final chunk containing metrics
 
-                                        buffer += decoder.decode(undefined, { stream: false }); 
+                                        // Ensure any remaining buffer is decoded
+                                         buffer += decoder.decode(undefined, { stream: false }); // Decode final part
+                                         // Check if the final buffer part also contains 'data:'
                                          if (buffer.startsWith('data: ')) {
                                              const lastJsonData = buffer.substring(6).trim();
                                              if(lastJsonData) {
                                                   try {
                                                      const lastData = JSON.parse(lastJsonData);
-                                                      if (lastData.stop === true) finalData = lastData; 
+                                                      if (lastData.stop === true) finalData = lastData; // Update if this is the real last one
                                                   } catch(e) { console.error("Error parsing final buffer chunk:", e); }
                                              }
                                          }
-                                        buffer = ''; 
+                                        buffer = ''; // Clear buffer after processing final part
                                     }
                                 } catch (e) {
                                     console.error("Error parsing stream JSON:", e, "Data:", jsonData);
@@ -986,107 +1044,113 @@
                             }
                         }
                     }
-                } 
+                } // End while loop
 
+                // Final update after stream ends
                 updateModelBubbleContent(modelMessageId, modelMessage.content, false);
                 scrollToBottom();
 
+                // Display final status with metrics if available
                 let statusMessage = "Response complete.";
                 let tokensPerSecond = 0;
                 if (finalData) {
-
+                     console.log("Final data chunk:", finalData); // Log final metrics
                      if (finalData.timings && finalData.tokens_predicted > 0 && finalData.timings.predicted_ms > 0) {
                          tokensPerSecond = finalData.tokens_predicted / (finalData.timings.predicted_ms / 1000);
-                         statusMessage += ` Speed: ${tokensPerSecond.toFixed(1)} t/s.`; 
+                         statusMessage += ` Speed: ${tokensPerSecond.toFixed(1)} t/s.`; // Add token speed
                      }
-
-                    else if(finalData.timings && finalData.timings.predicted_ms > 0) { 
+                     // Or just show total time if speed cannot be calculated
+                    else if(finalData.timings && finalData.timings.predicted_ms > 0) { // Add prompt eval time too
                          statusMessage += ` Time: ${((finalData.timings.prompt_ms + finalData.timings.predicted_ms)/1000).toFixed(2)}s.`
                     }
 
                     if (finalData.stopped_eos) statusMessage += ` (Stopped: EOS)`;
                     if (finalData.stopped_word) statusMessage += ` (Stopped: Word)`;
-                    if (finalData.stopped_limit) statusMessage += ` (Stopped: Limit)`;
+                    if (finalData.stopped_limit) statusMessage += ` (Stopped: Limit)`; // Indicate if max tokens hit
                 }
-                showStatus(statusMessage, false, finalData?.stopped_limit); 
+                showStatus(statusMessage, false, finalData?.stopped_limit); // Show warning if stopped by limit
 
             } catch (error) {
                 if (error.name === 'AbortError') {
-                    wasAborted = true; 
+                    wasAborted = true; // Set the flag
                     console.log("Fetch aborted by user.");
-                    showStatus("Request cancelled by user.", false, false, true); 
+                    showStatus("Request cancelled by user.", false, false, true); // Info status for cancellation
 
+                    // Optional: Remove very short/empty model bubble if cancelled early
                     const modelBubbleIndex = chatHistory.findIndex(m => m.id === modelMessageId);
-                    if (modelBubbleIndex > -1 && chatHistory[modelBubbleIndex].content.length < 15) { 
+                    if (modelBubbleIndex > -1 && chatHistory[modelBubbleIndex].content.length < 15) { // Threshold for removal
                         console.log("Removing very short cancelled model message.");
-                        chatHistory.splice(modelBubbleIndex, 1);
-                        messageCounter--; 
-                        renderChatHistory(); 
+                        chatHistory.splice(modelBubbleIndex, 1); // Remove the empty model message
+                        messageCounter--; // Adjust counter
+                        renderChatHistory(); // Re-render without the bubble
                     } else if (modelBubbleIndex > -1) {
-
+                        // Ensure the final partial content is rendered correctly even if aborted
                          updateModelBubbleContent(modelMessageId, modelMessage.content, false);
                     }
 
                 } else {
-
+                     // Handle other errors (network, API, etc.)
                      console.error("API Call Failed:", error);
                      let displayError = error.message || 'An unknown error occurred.';
-
+                     // Specific message for connection errors
                      if (!responseOk && (displayError.includes('Failed to fetch') || displayError.includes('NetworkError') || displayError.includes('ERR_CONNECTION_REFUSED'))) {
                          displayError = `Connection Error: Could not connect to server at ${serverUrl}. Is it running?`;
-                         serverAvailable = false; 
+                         serverAvailable = false; // Mark server as unavailable
                      }
-
+                     // Rollback: Remove the user and model messages added for this failed attempt
                      const userMsgIndex = chatHistory.findIndex(m => m.id === userMessageId);
                      if (userMsgIndex !== -1) {
-
+                        // Remove user message and the placeholder model message
                         chatHistory.splice(userMsgIndex, 2);
-                        messageCounter -= 2; 
+                        messageCounter -= 2; // Adjust counter
                      }
-                     renderChatHistory(); 
-                     showStatus(`Error: ${displayError}`, true);
+                     renderChatHistory(); // Re-render without the failed messages
+                     showStatus(`Error: ${displayError}`, true); // Show error status
                 }
-
             } finally {
-
-                resetButtonToSendState();
-
-                showLoading(false);
-                promptInput.disabled = false; 
-                currentAbortController = null; 
-                updateSendButtonState(); 
-                updateSessionButtonStates(); 
-                if (!wasAborted) { 
+                // --- Cleanup regardless of success, failure, or abort ---
+                resetButtonToSendState(); // Reset button to 'Send' state
+                showLoading(false); // Hide loader
+                promptInput.disabled = false; // Re-enable input
+                currentAbortController = null; // Clear the controller
+                updateSendButtonState(); // Update button state based on input/files
+                updateSessionButtonStates(); // Re-enable session buttons
+                if (!wasAborted) { // Only refocus if not aborted (user might not want focus after cancelling)
                    promptInput.focus();
                 }
             }
         }
 
         function resetButtonToSendState() {
-             sendButton.removeEventListener('click', handleStopGeneration);
+             sendButton.removeEventListener('click', handleStopGeneration); // Remove stop listener
              sendButton.textContent = 'Send';
              sendButton.classList.remove('stop-button');
              sendButton.title = 'Send Message';
-             sendButton.addEventListener('click', handleSendPrompt); 
-
+             sendButton.addEventListener('click', handleSendPrompt); // Add send listener back
+             // State (disabled/enabled) will be handled by updateSendButtonState
         }
 
-         function formatChatHistoryForLlama(history) {
-
+         // Formats chat history for llama.cpp /completion endpoint
+        function formatChatHistoryForLlama(history) {
+            // This format assumes a simple USER:/ASSISTANT: turn structure.
+            // Adjust if your model expects a different format (e.g., ChatML, Alpaca).
             let formattedPrompt = "";
+            // Optional: Add a system prompt if needed
+            // formattedPrompt += "SYSTEM: You are a helpful assistant.\n";
 
             history.forEach(message => {
                 if (message.role === 'user') {
-
+                    // Add user message, ensuring newline separation
                     formattedPrompt += `USER: ${message.content}\n`;
                 } else if (message.role === 'model') {
-
+                    // Add assistant message, ensuring newline separation
                     formattedPrompt += `ASSISTANT: ${message.content}\n`;
                 }
-
+                // Ignore other roles or potentially add them if the model supports it
             });
 
-            formattedPrompt += "ASSISTANT:"; 
+            // Add the final prompt for the assistant to start generating
+            formattedPrompt += "ASSISTANT:"; // Important: The model continues from here
             return formattedPrompt;
         }
 
@@ -1099,47 +1163,50 @@
 
              if (isLoading) {
                  if (!loaderElement) {
-
+                    // Insert loader + message
                     statusDiv.innerHTML = `<div class="loader"></div><span>${escapeHtml(message)}</span>`;
-
+                    // Preserve existing status type if possible
                     if (isError) statusDiv.classList.add('error');
                     else if (isWarning) statusDiv.classList.add('warning');
                     else if (isInfo) statusDiv.classList.add('info');
+                    else statusDiv.classList.remove('error', 'warning', 'info'); // Default to normal
                  } else {
-
+                    // Update message if loader already exists
                     const statusSpan = statusDiv.querySelector('span');
                     if(statusSpan) statusSpan.textContent = escapeHtml(message);
                  }
-
-                 promptInput.disabled = true; 
-                 updateSessionButtonStates(); 
+                 // Disable input/buttons while loading
+                 promptInput.disabled = true; // Ensure input is disabled
+                 updateSessionButtonStates(); // Update session buttons state
              } else {
-
+                 // Remove loader if present
                  if (loaderElement) loaderElement.remove();
                  const statusSpan = statusDiv.querySelector('span');
-
+                 // Clear status message only if it was a loading message
                  if (statusSpan && /Processing|Connecting|Receiving|Processing files/.test(statusSpan.textContent)) {
-                      statusDiv.innerHTML = ''; 
-                      statusDiv.classList.remove('error', 'warning', 'info'); 
+                      statusDiv.innerHTML = ''; // Clear the temporary loading message
+                      statusDiv.classList.remove('error', 'warning', 'info'); // Clear status type
                  }
-                 promptInput.disabled = false; 
-                 updateSendButtonState(); 
-                 updateSessionButtonStates(); 
+                 // Re-enable input/buttons
+                 promptInput.disabled = false; // Re-enable input
+                 updateSendButtonState(); // Update send button based on content
+                 updateSessionButtonStates(); // Update session buttons state
              }
          }
 
         function showStatus(message, isError = false, isWarning = false, isInfo = false, clearNormal = false) {
              const loaderElement = statusDiv.querySelector('.loader');
-             const loaderHtml = loaderElement ? loaderElement.outerHTML : ''; 
+             const loaderHtml = loaderElement ? loaderElement.outerHTML : ''; // Preserve loader if showing status during loading
 
+             // Option to clear non-error/warning/info messages completely
              if (clearNormal && !isError && !isWarning && !isInfo && !loaderHtml) {
                  statusDiv.innerHTML = '';
                  statusDiv.classList.remove('error', 'warning', 'info');
                  return;
              }
 
-             statusDiv.classList.remove('error', 'warning', 'info'); 
-             statusDiv.innerHTML = `${loaderHtml}<span>${escapeHtml(message)}</span>`; 
+             statusDiv.classList.remove('error', 'warning', 'info'); // Clear previous types
+             statusDiv.innerHTML = `${loaderHtml}<span>${escapeHtml(message)}</span>`; // Show message (and loader if present)
 
              if (isError) statusDiv.classList.add('error');
              else if (isWarning) statusDiv.classList.add('warning');
@@ -1149,18 +1216,18 @@
         function createChatBubbleElement(message) {
             const bubble = document.createElement('div');
             bubble.classList.add('chat-bubble');
-            bubble.dataset.messageId = message.id; 
+            bubble.dataset.messageId = message.id; // Assign ID for later updates
 
             if (message.role === 'user') {
                 bubble.classList.add('user-bubble');
-
+                // Use textContent for user messages to prevent XSS from file names/content snippets
                 bubble.textContent = message.content;
             } else if (message.role === 'model') {
                 bubble.classList.add('model-bubble');
-
-                bubble.innerHTML = message.content ? marked.parse(message.content) : ''; 
+                // Use marked.parse for model messages, which contain markdown
+                bubble.innerHTML = message.content ? marked.parse(message.content) : ''; // Initial render
                 if (message.content) {
-
+                    // Add code actions *after* the element is potentially in the DOM
                      requestAnimationFrame(() => addCodeActionsToBubble(bubble));
                 }
             }
@@ -1168,15 +1235,15 @@
         }
 
         function renderChatHistory() {
-            chatContainer.innerHTML = ''; 
+            chatContainer.innerHTML = ''; // Clear existing bubbles
             if (chatHistory.length === 0) {
-                 updateChatPlaceholder(); 
-                 updateSendButtonState(); 
+                 updateChatPlaceholder(); // Show placeholder if empty
+                 updateSendButtonState(); // Update button state
                 return;
             }
 
             chatHistory.forEach(message => {
-
+                 // Basic validation for message structure
                  if (!message || !message.role || typeof message.content !== 'string') {
                      console.warn("Skipping rendering invalid message:", message);
                      return;
@@ -1184,11 +1251,12 @@
                  const bubble = createChatBubbleElement(message);
                  chatContainer.appendChild(bubble);
              });
-             updateChatPlaceholder(); 
-             updateSessionButtonStates(); 
-             updateSendButtonState(); 
+             updateChatPlaceholder(); // Hide placeholder if needed
+             updateSessionButtonStates(); // Update session buttons
+             updateSendButtonState(); // Update send button
          }
 
+         // Updates the content of an existing model bubble, especially for streaming
          function updateModelBubbleContent(messageId, newContent, isStreamingUpdate = false) {
              const bubble = chatContainer.querySelector(`.model-bubble[data-message-id="${messageId}"]`);
              if (!bubble) {
@@ -1197,27 +1265,30 @@
              }
 
              try {
-
+                 // Re-parse the entire content. Marked is fast enough for typical message sizes.
                  bubble.innerHTML = marked.parse(newContent || (isStreamingUpdate ? "" : "[Empty Model Response]"));
-
+                 // Re-add code actions after updating innerHTML, as they might have been wiped out
+                 addCodeActionsToBubble(bubble); // Ensure buttons are present/updated
              } catch (e) {
                  console.error("Markdown parsing/rendering error during update:", e);
-
+                 // Fallback to text content on error
                  bubble.textContent = newContent || "[Error rendering response]";
              }
          }
 
+        // --- Function to Add Copy/Download Buttons ---
         function addCodeActionsToBubble(bubble) {
             const preBlocks = bubble.querySelectorAll('pre');
             preBlocks.forEach(pre => {
-                if (pre.querySelector('.code-actions')) return; 
+                if (pre.querySelector('.code-actions')) return; // Don't add if already present
 
                 const codeElement = pre.querySelector('code');
-                if (!codeElement) return; 
+                if (!codeElement) return; // Should have a code element
 
                 const actionsContainer = document.createElement('div');
                 actionsContainer.className = 'code-actions';
 
+                // Copy Button
                 const copyButton = document.createElement('button');
                 copyButton.textContent = 'Copy';
                 copyButton.className = 'code-action-button copy-code-button';
@@ -1225,24 +1296,33 @@
                 copyButton.setAttribute('aria-label', 'Copy code block');
                 actionsContainer.appendChild(copyButton);
 
+                // Download Button
                 const downloadButton = document.createElement('button');
                 downloadButton.textContent = 'Download';
                 downloadButton.className = 'code-action-button download-code-button';
-                downloadButton.title = 'Download code block';
+                downloadButton.title = 'Download code block as file';
                 downloadButton.setAttribute('aria-label', 'Download code block');
                 actionsContainer.appendChild(downloadButton);
 
+                // Prepend the actions container to the <pre> block
                  if (pre.firstChild) {
                     pre.insertBefore(actionsContainer, pre.firstChild);
                  } else {
                     pre.appendChild(actionsContainer);
                  }
 
+                // Ensure highlight.js runs if marked didn't do it (e.g., no language specified)
+                // Check if the hljs class is already there
                 if (!codeElement.classList.contains('hljs')) {
-                   try { hljs.highlightElement(codeElement); }
-                   catch(e) { console.warn("Highlighting failed for element", codeElement, e); }
+                   try {
+                      // Only highlight if not already highlighted
+                      hljs.highlightElement(codeElement);
+                   }
+                   catch(e) {
+                      console.warn("Highlighting failed for element", codeElement, e);
+                   }
                 } else {
-
+                   // console.log("Code element already highlighted:", codeElement);
                 }
             });
         }
@@ -1250,14 +1330,15 @@
         function updateChatPlaceholder() {
              const placeholder = chatContainer.querySelector('.chat-placeholder');
              if (chatHistory.length === 0 && !placeholder) {
-
+                 // Add placeholder if chat is empty and it doesn't exist
                  chatContainer.innerHTML = '<div class="chat-placeholder">Conversation will appear here...</div>';
              } else if (chatHistory.length > 0 && placeholder) {
-
+                 // Remove placeholder if chat has messages and it exists
                  placeholder.remove();
              }
          }
 
+         // --- Click Handler for Copy Button ---
          function handleCopyCodeClick(button) {
              const pre = button.closest('pre');
              const code = pre?.querySelector('code');
@@ -1266,15 +1347,15 @@
              navigator.clipboard.writeText(codeToCopy).then(() => {
                  button.textContent = 'Copied!';
                  button.classList.add('copied');
-                 button.disabled = true; 
+                 button.disabled = true; // Briefly disable
                  setTimeout(() => {
                      button.textContent = 'Copy';
                      button.classList.remove('copied');
                      button.disabled = false;
-                 }, 2000); 
+                 }, 2000); // Reset after 2 seconds
              }).catch(err => {
                  console.error('Failed to copy code: ', err);
-                 button.textContent = 'Error'; 
+                 button.textContent = 'Error'; // Indicate error
                  button.disabled = true;
                  setTimeout(() => {
                      button.textContent = 'Copy';
@@ -1283,6 +1364,7 @@
              });
          }
 
+        // --- Click Handler for Download Button ---
         function handleDownloadCodeClick(button) {
             const pre = button.closest('pre');
             const code = pre?.querySelector('code');
@@ -1290,43 +1372,72 @@
 
             const codeContent = code.textContent || '';
             let language = 'plaintext';
-            let extension = '.txt'; 
+            let extension = '.txt'; // Default extension
 
+            // 1. Try to detect language from highlight.js class (most reliable)
+            // Check both code and pre elements for 'language-xyz' or 'hljs language-xyz'
             const langClass = Array.from(code.classList).find(cls => cls.startsWith('language-'))
-                           || Array.from(pre.classList).find(cls => cls.startsWith('language-')); 
+                           || Array.from(pre.classList).find(cls => cls.startsWith('language-'));
             if (langClass) {
-                language = langClass.replace('language-', '');
+                // Extract language name (e.g., 'python' from 'language-python')
+                language = langClass.replace('language-', '').split(' ')[0]; // Take first part if multiple classes like "hljs language-js"
             } else {
-
-                if (codeContent.includes('def ') && codeContent.includes(':')) language = 'python';
-                else if (codeContent.includes('function') && codeContent.includes('{')) language = 'javascript';
-                else if (codeContent.includes('<div') || codeContent.includes('<html')) language = 'html';
-
+                // 2. Basic content sniffing as a fallback
+                if (/^\s*<\!DOCTYPE html>|<html.*>/i.test(codeContent.substring(0,100))) language = 'html';
+                else if (/^\s*\{.*\}\s*$/.test(codeContent) || /^\s*\[.*\]\s*$/.test(codeContent)) language = 'json'; // Basic JSON check
+                else if (codeContent.includes('def ') && codeContent.includes(':')) language = 'python';
+                else if (codeContent.includes('function') && (codeContent.includes('{') || codeContent.includes('=>'))) language = 'javascript'; // Broader JS check
+                else if (codeContent.includes('public class') || codeContent.includes('import java')) language = 'java';
+                else if (codeContent.includes('#include') && codeContent.includes('main(')) language = 'cpp'; // C/C++ guess
+                else if (codeContent.includes('<?php')) language = 'php';
+                else if (codeContent.includes('FROM ') && codeContent.includes('RUN ')) language = 'dockerfile';
+                else if (/^\s*---/.test(codeContent)) language = 'yaml';
+                 else if (/^\s*SELECT .* FROM /i.test(codeContent)) language = 'sql';
             }
 
+            // 3. Map language name to file extension
             const extensionMap = {
-                python: '.py', javascript: '.js', js: '.js', typescript: '.ts', ts: '.ts',
-                html: '.html', css: '.css', json: '.json', xml: '.xml', yaml: '.yaml', yml: '.yaml',
-                markdown: '.md', md: '.md', shell: '.sh', bash: '.sh', zsh: '.zsh',
-                java: '.java', c: '.c', cpp: '.cpp', csharp: '.cs', cs: '.cs', go: '.go', ruby: '.rb', rb: '.rb',
-                php: '.php', rust: '.rs', sql: '.sql', dockerfile: 'Dockerfile', ini: '.ini',
-                toml: '.toml', plaintext: '.txt', text: '.txt'
-
+                python: '.py', py: '.py',
+                javascript: '.js', js: '.js',
+                typescript: '.ts', ts: '.ts',
+                html: '.html', htm: '.html',
+                css: '.css',
+                json: '.json',
+                xml: '.xml',
+                yaml: '.yaml', yml: '.yaml',
+                markdown: '.md', md: '.md',
+                shell: '.sh', bash: '.sh', zsh: '.zsh', sh: '.sh',
+                java: '.java',
+                c: '.c',
+                cpp: '.cpp', cxx: '.cpp', 'c++': '.cpp',
+                csharp: '.cs', cs: '.cs',
+                go: '.go',
+                ruby: '.rb', rb: '.rb',
+                php: '.php',
+                rust: '.rs', rs: '.rs',
+                sql: '.sql',
+                dockerfile: 'Dockerfile', // Dockerfile often has no extension
+                ini: '.ini',
+                toml: '.toml',
+                plaintext: '.txt', text: '.txt', txt: '.txt',
+                // Add more mappings as needed
             };
-            extension = extensionMap[language.toLowerCase()] || extension; 
-            const filename = `code-${language}${extension}`; 
+            extension = extensionMap[language.toLowerCase()] || extension; // Use mapped extension or default .txt
+            const filename = `code-${language}${extension === 'Dockerfile' ? '' : extension}`; // Construct filename
 
+            // 4. Create Blob and trigger download
             try {
-                const blob = new Blob([codeContent], { type: 'application/octet-stream' }); 
+                const blob = new Blob([codeContent], { type: 'application/octet-stream' }); // Use octet-stream to force download
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = filename;
-                document.body.appendChild(a); 
+                document.body.appendChild(a); // Append needed for Firefox
                 a.click();
-                document.body.removeChild(a); 
-                URL.revokeObjectURL(url); 
+                document.body.removeChild(a); // Clean up
+                URL.revokeObjectURL(url); // Free memory
 
+                // Feedback
                 button.textContent = 'Downloaded';
                 button.disabled = true;
                  setTimeout(() => { button.textContent = 'Download'; button.disabled = false; }, 2000);
@@ -1338,6 +1449,7 @@
             }
         }
 
+
         function escapeHtml(unsafe) {
              if (typeof unsafe !== 'string') return '';
              return unsafe
@@ -1347,35 +1459,38 @@
                   .replace(/"/g, "&quot;")
                   .replace(/'/g, "&#039;");
          }
+
         function scrollToBottom() {
             requestAnimationFrame(() => {
-
-                const isNearBottom = responseArea.scrollHeight - responseArea.scrollTop - responseArea.clientHeight < 250; 
+                // Scroll down if user is already near the bottom or if it's the initial load
+                const isNearBottom = responseArea.scrollHeight - responseArea.scrollTop - responseArea.clientHeight < 250; // Adjust threshold if needed
                  if (isNearBottom) {
                      responseArea.scrollTop = responseArea.scrollHeight;
                  }
             });
         }
 
+        // --- Session Management ---
+
         function getSessionIndex() {
             try {
                 const indexJson = localStorage.getItem(SESSION_INDEX_KEY);
                 if (!indexJson) return [];
                 const index = JSON.parse(indexJson);
-
+                // Filter out invalid entries just in case
                 return Array.isArray(index) ? index.filter(s => s && s.id && s.name) : [];
             } catch (e) {
                 console.error("Error reading session index from Local Storage:", e);
-                localStorage.removeItem(SESSION_INDEX_KEY); 
+                localStorage.removeItem(SESSION_INDEX_KEY); // Clear corrupted index
                 return [];
             }
         }
 
         function saveSessionIndex(index) {
             try {
-
+                 // Ensure index is valid and sorted before saving
                  const validIndex = index.filter(s => s && s.id && s.name);
-                 validIndex.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+                 validIndex.sort((a, b) => (a.name || "").localeCompare(b.name || "")); // Sort alphabetically by name
                 localStorage.setItem(SESSION_INDEX_KEY, JSON.stringify(validIndex));
             } catch (e) {
                 console.error("Error saving session index to Local Storage:", e);
@@ -1385,47 +1500,50 @@
 
         function populateSessionDropdown() {
             const sessions = getSessionIndex();
-            sessionSelect.innerHTML = ''; 
+            sessionSelect.innerHTML = ''; // Clear existing options
 
+            // Add "New Chat" option first
             const newOption = document.createElement('option');
-            newOption.value = ""; 
+            newOption.value = ""; // Use empty value for "New Chat"
             newOption.textContent = "--- New Chat ---";
             sessionSelect.appendChild(newOption);
 
+            // Add saved sessions
             sessions.forEach(session => {
                  const option = document.createElement('option');
                  option.value = session.id;
-                 option.textContent = session.name; 
+                 option.textContent = session.name; // Display session name
                  sessionSelect.appendChild(option);
             });
 
+            // Select the current session or "New Chat"
             sessionSelect.value = currentSessionId || "";
-            updateSessionButtonStates(); 
+            updateSessionButtonStates(); // Update button states after populating
         }
 
         function startNewSession() {
-
+             // Abort any ongoing request safely
              if (currentAbortController) {
                 currentAbortController.abort();
-                currentAbortController = null;
+                currentAbortController = null; // Clear controller
             }
             promptInput.value = '';
             chatHistory = [];
-            currentSessionId = null; 
-            messageCounter = 0; 
-            clearStagedFiles(); 
-            renderChatHistory(); 
-            showStatus("", false, false, false, true); 
-            sessionSelect.value = ""; 
-            updateSessionButtonStates(); 
-            promptInput.disabled = false; 
-            resetButtonToSendState(); 
-            updateSendButtonState(); 
-            promptInput.focus(); 
+            currentSessionId = null; // No session loaded
+            messageCounter = 0; // Reset message IDs
+            clearStagedFiles(); // Clear any leftover staged files
+            renderChatHistory(); // Render the empty state (shows placeholder)
+            showStatus("", false, false, false, true); // Clear status bar
+            sessionSelect.value = ""; // Set dropdown to "New Chat"
+            updateSessionButtonStates(); // Update buttons (Save disabled, Delete disabled)
+            promptInput.disabled = false; // Ensure input is enabled
+            resetButtonToSendState(); // Ensure button is 'Send'
+            updateSendButtonState(); // Update send button state (likely disabled)
+            promptInput.focus(); // Focus input for user
         }
 
         function handleSaveSession() {
-
+            // Prevent saving if empty or loading
              const isLoading = statusDiv.querySelector('.loader') !== null;
             if ((chatHistory.length === 0 && stagedFiles.length === 0) || isLoading) {
                 showStatus("Cannot save an empty chat or while loading.", false, true);
@@ -1436,16 +1554,17 @@
             let defaultName = `Chat ${new Date().toLocaleString()}`;
             let existingSession = null;
 
+            // If currently in a saved session, suggest its name
             if (currentSessionId) {
                 existingSession = sessions.find(s => s.id === currentSessionId);
                 if (existingSession) {
-                    defaultName = existingSession.name; 
+                    defaultName = existingSession.name; // Suggest current session name for overwrite
                 }
             }
 
             const sessionName = prompt("Enter a name for this session:", defaultName);
 
-            if (sessionName === null) { 
+            if (sessionName === null) { // User cancelled prompt
                 showStatus("Save cancelled.", false, false, true);
                 return;
             }
@@ -1456,53 +1575,55 @@
                  return;
              }
 
+             // Check if the name (excluding the current session if overwriting) already exists
              const nameExists = sessions.some(s => s.name === trimmedName && s.id !== currentSessionId);
              if (nameExists) {
                  const conflictingSession = sessions.find(s => s.name === trimmedName);
-
+                 // Confirm overwrite if name exists and belongs to a *different* session ID
                  if (!confirm(`A session named "${trimmedName}" already exists. Overwrite it?`)) {
                      showStatus("Save cancelled.", false, false, true);
                      return;
                  }
-
+                 // If confirmed, remove the old conflicting session data and index entry
                  if (conflictingSession) {
                      try { localStorage.removeItem(`${SESSION_DATA_PREFIX}${conflictingSession.id}`); }
                      catch (e) { console.error(`Error removing conflicting session data ${conflictingSession.id}:`, e); }
-
+                     // Remove from index array before saving the new one
                      const conflictIndex = sessions.findIndex(s => s.id === conflictingSession.id);
                      if (conflictIndex > -1) sessions.splice(conflictIndex, 1);
                  }
              }
 
             try {
-
+                // Serialize current chat history
                 const historyJson = JSON.stringify(chatHistory);
                 let sessionIdToSave = currentSessionId;
 
-                if (existingSession) { 
+                if (existingSession) { // Overwriting or updating existing session
                     if (existingSession.name !== trimmedName) {
-                        existingSession.name = trimmedName; 
+                        existingSession.name = trimmedName; // Update name in index if changed
                     }
-                    existingSession.timestamp = Date.now(); 
+                    existingSession.timestamp = Date.now(); // Update timestamp
                     console.log(`Updating session: ${sessionIdToSave}`);
-                } else { 
-
+                } else { // Saving as a new session
+                    // Generate a reasonably unique ID
                     sessionIdToSave = `${SESSION_DATA_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
                     sessions.push({ id: sessionIdToSave, name: trimmedName, timestamp: Date.now() });
-                    currentSessionId = sessionIdToSave; 
+                    currentSessionId = sessionIdToSave; // Update current session ID
                     console.log(`Creating new session: ${sessionIdToSave}`);
                 }
 
+                // Save the chat data and the updated index
                 localStorage.setItem(`${SESSION_DATA_PREFIX}${sessionIdToSave}`, historyJson);
-                saveSessionIndex(sessions); 
-                populateSessionDropdown(); 
-                sessionSelect.value = sessionIdToSave; 
+                saveSessionIndex(sessions); // Save the potentially modified index
+                populateSessionDropdown(); // Refresh dropdown
+                sessionSelect.value = sessionIdToSave; // Select the newly saved/updated session
                 showStatus(`Session "${trimmedName}" saved successfully.`, false, false, true);
-                updateSessionButtonStates(); 
+                updateSessionButtonStates(); // Update button states (Delete might become enabled)
 
             } catch (e) {
                  console.error("Error saving session data:", e);
-
+                 // Check for QuotaExceededError
                  if (e.name === 'QuotaExceededError' || (e.message && e.message.toLowerCase().includes('quota'))) {
                     showStatus("Error: Failed to save session. Local Storage is full. Please delete older sessions.", true);
                  } else {
@@ -1514,12 +1635,12 @@
         function handleLoadSession() {
             const selectedId = sessionSelect.value;
 
-            if (!selectedId) { 
-
+            if (!selectedId) { // User selected "--- New Chat ---"
+                 // Check for unsaved changes before starting new chat
                  const hasUnsavedChanges = (chatHistory.length > 0 || stagedFiles.length > 0) && currentSessionId === null;
                  if (hasUnsavedChanges) {
                      if (!confirm("You have an unsaved chat/files. Start a new chat anyway? Changes will be lost.")) {
-                         sessionSelect.value = currentSessionId || ""; 
+                         sessionSelect.value = currentSessionId || ""; // Revert dropdown selection
                          return;
                      }
                  }
@@ -1527,12 +1648,14 @@
                 return;
             }
 
+             // Avoid reloading the same session
              if (selectedId === currentSessionId) return;
 
+             // Check for unsaved changes if switching *from* a "New Chat" state
              const hasUnsavedChanges = (chatHistory.length > 0 || stagedFiles.length > 0) && currentSessionId === null;
              if (hasUnsavedChanges) {
                  if (!confirm("You have an unsaved chat/files. Load selected session anyway? Changes will be lost.")) {
-                     sessionSelect.value = currentSessionId || ""; 
+                     sessionSelect.value = currentSessionId || ""; // Revert dropdown selection
                      return;
                  }
              }
@@ -1543,20 +1666,22 @@
                     throw new Error(`Session data not found for ID: ${selectedId}. It might have been corrupted or deleted.`);
                 }
                 const loadedHistory = JSON.parse(historyJson);
-
+                 // Validate loaded data structure
                  if (!Array.isArray(loadedHistory)) {
                     throw new Error(`Invalid chat history format for ID: ${selectedId}.`);
                  }
 
+                // Abort any ongoing request before loading
                 if (currentAbortController) {
                     currentAbortController.abort();
                     currentAbortController = null;
                 }
 
                 chatHistory = loadedHistory;
-                currentSessionId = selectedId; 
-                clearStagedFiles(); 
+                currentSessionId = selectedId; // Update current session ID
+                clearStagedFiles(); // Clear any files staged before loading
 
+                // Reset message counter based on loaded IDs (important for unique IDs)
                 let maxIdNum = -1;
                 chatHistory.forEach(msg => {
                     if (msg && msg.id && msg.id.startsWith('msg-')) {
@@ -1564,25 +1689,25 @@
                         if (!isNaN(numPart) && numPart > maxIdNum) maxIdNum = numPart;
                     }
                 });
-                messageCounter = maxIdNum + 1;
+                messageCounter = maxIdNum + 1; // Start next ID after the highest loaded one
                 console.log(`Message counter reset to ${messageCounter} after loading session '${selectedId}'.`);
 
-                renderChatHistory(); 
+                renderChatHistory(); // Display the loaded chat
                 showStatus(`Session "${sessionSelect.options[sessionSelect.selectedIndex].text}" loaded.`, false, false, true);
-                updateSessionButtonStates(); 
-                resetButtonToSendState(); 
-                updateSendButtonState();
-                scrollToBottom(); 
+                updateSessionButtonStates(); // Update buttons (Save enabled, Delete enabled)
+                resetButtonToSendState(); // Ensure button is 'Send'
+                updateSendButtonState(); // Update send button state
+                scrollToBottom(); // Scroll to the end of loaded chat
 
             } catch (e) {
                 console.error("Error loading session:", e);
                 showStatus(`Error: Failed to load session. ${e.message}`, true);
-
+                // Attempt recovery: remove bad session data and index entry
                  localStorage.removeItem(`${SESSION_DATA_PREFIX}${selectedId}`);
                  const sessions = getSessionIndex().filter(s => s.id !== selectedId);
                  saveSessionIndex(sessions);
-                 startNewSession(); 
-                 populateSessionDropdown(); 
+                 startNewSession(); // Go back to a clean state
+                 populateSessionDropdown(); // Refresh dropdown without the bad entry
             }
         }
 
@@ -1590,6 +1715,7 @@
             const selectedId = sessionSelect.value;
              const isLoading = statusDiv.querySelector('.loader') !== null;
 
+            // Cannot delete "New Chat" or while loading
             if (!selectedId || isLoading) {
                 showStatus("Select a session to delete first (cannot delete while loading).", false, true);
                 return;
@@ -1602,20 +1728,21 @@
             }
 
             try {
-
+                // Remove session data
                 localStorage.removeItem(`${SESSION_DATA_PREFIX}${selectedId}`);
-
+                // Remove session from index
                 const sessions = getSessionIndex();
                 const updatedSessions = sessions.filter(s => s.id !== selectedId);
                 saveSessionIndex(updatedSessions);
 
                 showStatus(`Session "${sessionName}" deleted.`, false, false, true);
 
+                // If the deleted session was the active one, start a new chat
                 if (currentSessionId === selectedId) {
-                    startNewSession(); 
+                    startNewSession(); // This also repopulates the dropdown
                 } else {
-                     populateSessionDropdown(); 
-                     updateSessionButtonStates(); 
+                     populateSessionDropdown(); // Just repopulate dropdown if a different session was deleted
+                     updateSessionButtonStates(); // Update button states
                 }
 
             } catch (e) {
@@ -1625,17 +1752,19 @@
         }
 
         function updateSessionButtonStates() {
-             const isLoading = statusDiv.querySelector('.loader') !== null || currentAbortController !== null; 
+             const isLoading = statusDiv.querySelector('.loader') !== null || currentAbortController !== null; // Check active request too
 
+             // Can save if not loading and chat is not empty (or has staged files)
              const canSave = !isLoading && (chatHistory.length > 0 || stagedFiles.length > 0);
-
+             // Can delete if not loading and a specific session (not "New Chat") is selected
              const isSessionSelected = sessionSelect.value !== "";
 
              saveSessionButton.disabled = !canSave;
              deleteSessionButton.disabled = isLoading || !isSessionSelected;
-             sessionSelect.disabled = isLoading; 
+             sessionSelect.disabled = isLoading; // Disable dropdown during requests
         }
 
+        // --- Initialize Application ---
         initialize();
 
     </script>
