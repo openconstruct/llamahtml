@@ -6,8 +6,10 @@ I dislike the built-in html interface, so I made my own.
 simply download the html file, and open in a web browser.
 
 YOU MUST HAVE llama-server running 
+![Screenshot from 2025-06-03 16-47-37](https://github.com/user-attachments/assets/7401924c-031a-4ab3-8679-b951c9ced697)
 
-![Screenshot From 2025-04-11 17-17-13](https://github.com/user-attachments/assets/bb74768e-a79a-48a2-a909-aa68b1f44342)
+![Screenshot from 2025-06-03 16-46-21](https://github.com/user-attachments/assets/9bbf6929-5197-4257-be1b-2d14410fcc0f)
+
 
 
 ## LlamaHTML Documentation
