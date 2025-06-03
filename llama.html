@@ -11,484 +11,886 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     <style>
-
         :root {
             --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            --transition-speed: 0.3s ease;
+            --transition-speed: 0.2s ease;
 
-            --bg-color: #f8f9fa;
-            --text-color: #212529;
-            --primary-color: #007bff;
-            --primary-color-rgb: 0, 123, 255;
-            --secondary-color: #6c757d;
-            --card-bg: #ffffff;
+            /* Light theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f7f8;
+            --bg-tertiary: #ececf1;
+            --text-primary: #2d2d2d;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --border-color: #e5e5e5;
+            --sidebar-bg: #f7f7f8;
+            --sidebar-hover: #e5e5e5;
             --input-bg: #ffffff;
-            --input-border: #ced4da;
-            --button-bg: var(--primary-color);
-            --button-text: #ffffff;
-            --button-hover-bg: #0056b3;
-            --error-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
-            --code-bg: #e9ecef;
-            --border-color: #dee2e6;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --highlight-style-light: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
-            --highlight-style-dark: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
-            --highlight-bg: var(--code-bg);
-            --user-bubble-bg: #e7f5ff;
-            --model-bubble-bg: #f1f3f5;
-            --code-action-button-bg: rgba(108, 117, 125, 0.1);
-            --code-action-button-hover-bg: rgba(108, 117, 125, 0.2);
-            --code-action-button-text: var(--secondary-color);
-            --copy-button-copied-bg: #28a745;
-            --copy-button-copied-text: #ffffff;
-            --button-delete-bg: var(--error-color);
-            --button-delete-hover-bg: #c82333;
-            --button-save-bg: #28a745;
-            --button-save-hover-bg: #218838;
-            --staged-file-bg: var(--input-bg);
-            --staged-file-border: var(--input-border);
-            --staged-file-text: var(--text-color);
-            --staged-file-remove-hover-bg: rgba(var(--primary-color-rgb), 0.1);
-            --staged-file-remove-color: var(--secondary-color);
+            --input-border: #e5e5e5;
+            --input-focus-border: #10a37f;
+            --button-primary: #10a37f;
+            --button-primary-hover: #0d8f6f;
+            --button-secondary: #f7f7f8;
+            --button-secondary-hover: #e5e5e5;
+            --button-danger: #ef4444;
+            --button-danger-hover: #dc2626;
+            --user-message-bg: #f7f7f8;
+            --assistant-message-bg: #ffffff;
+            --code-bg: #f6f8fa;
+            --scrollbar-bg: transparent;
+            --scrollbar-thumb: #d1d5db;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         html[data-theme='dark'] {
-            --bg-color: #1a1a1a;
-            --text-color: #e0e0e0;
-            --primary-color: #4dabf7;
-            --primary-color-rgb: 77, 171, 247;
-            --secondary-color: #a0a0a0;
-            --card-bg: #2c2c2c;
-            --input-bg: #333;
-            --input-border: #555;
-            --button-bg: #4dabf7;
-            --button-text: #111;
-            --button-hover-bg: #2196f3;
-            --error-color: #f44336;
-            --warning-color: #ffca28;
-            --info-color: #4dd0e1;
-            --code-bg: #222;
-            --border-color: #444;
-            --shadow-color: rgba(255, 255, 255, 0.1);
-            --highlight-bg: var(--code-bg);
-            --user-bubble-bg: #1c3b5e;
-            --model-bubble-bg: #383838;
-            --code-action-button-bg: rgba(160, 160, 160, 0.15);
-            --code-action-button-hover-bg: rgba(160, 160, 160, 0.3);
-            --code-action-button-text: var(--secondary-color);
-            --copy-button-copied-bg: #34c759;
-            --copy-button-copied-text: #111;
-            --button-delete-bg: var(--error-color);
-            --button-delete-hover-bg: #d32f2f;
-            --button-save-bg: #34c759;
-            --button-save-hover-bg: #2aa74a;
-            --staged-file-bg: var(--input-bg);
-            --staged-file-border: var(--input-border);
-            --staged-file-text: var(--text-color);
-            --staged-file-remove-hover-bg: rgba(var(--primary-color-rgb), 0.2);
-            --staged-file-remove-color: var(--secondary-color);
+            --bg-primary: #212121;
+            --bg-secondary: #2a2a2a;
+            --bg-tertiary: #303030;
+            --text-primary: #ececf1;
+            --text-secondary: #a9a9a9;
+            --text-tertiary: #6e6e6e;
+            --border-color: #444444;
+            --sidebar-bg: #171717;
+            --sidebar-hover: #2a2a2a;
+            --input-bg: #2a2a2a;
+            --input-border: #444444;
+            --input-focus-border: #10a37f;
+            --button-primary: #10a37f;
+            --button-primary-hover: #0d8f6f;
+            --button-secondary: #2a2a2a;
+            --button-secondary-hover: #3a3a3a;
+            --button-danger: #ef4444;
+            --button-danger-hover: #dc2626;
+            --user-message-bg: #2a2a2a;
+            --assistant-message-bg: #212121;
+            --code-bg: #1a1a1a;
+            --scrollbar-bg: transparent;
+            --scrollbar-thumb: #4a4a4a;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding: 20px; transition: background-color var(--transition-speed), color var(--transition-speed); display: flex; flex-direction: column; min-height: 100vh; }
-        .container { max-width: 900px; margin: 20px auto; padding: 30px; background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-color); transition: background-color var(--transition-speed), box-shadow var(--transition-speed); flex-grow: 1; display: flex; flex-direction: column; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; transition: border-color var(--transition-speed); }
-        h1 { color: var(--primary-color); font-size: 1.8em; transition: color var(--transition-speed); }
-        h2 {
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 1.4em;
-            color: var(--text-color);
-            padding-bottom: 5px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: all var(--transition-speed);
+        }
+
+        .sidebar-header {
+            padding: 12px;
             border-bottom: 1px solid var(--border-color);
         }
-        .theme-switcher {
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 500;
-            padding: 3px 8px;
+
+        .new-chat-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            color: var(--text-color);
-            background-color: transparent;
-            transition: color var(--transition-speed), border-color var(--transition-speed), background-color var(--transition-speed);
-            user-select: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-speed);
         }
-        .theme-switcher:hover {
-            background-color: var(--code-bg);
-            border-color: var(--secondary-color);
-        }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--secondary-color); transition: color var(--transition-speed); }
-        .input-group input[type="text"], .input-group input[type="password"], .input-group input[type="number"], .input-group input[type="url"], .input-group textarea, .input-group select { width: 100%; padding: 12px 15px; border: 1px solid var(--input-border); border-radius: 6px; font-size: 1rem; background-color: var(--input-bg); color: var(--text-color); transition: border-color var(--transition-speed), background-color var(--transition-speed), color var(--transition-speed); }
-        .input-group input:focus, .input-group textarea:focus, .input-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.25); }
-        textarea { resize: vertical; min-height: 120px; }
 
-        .button-group { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
-        button, .file-upload-button {
-            padding: 10px 18px;
-            background-color: var(--button-bg);
-            color: var(--button-text);
+        .new-chat-btn:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        .new-chat-btn::before {
+            content: '+';
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .sessions-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .session-item {
+            padding: 12px 16px;
+            margin-bottom: 2px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+
+        .session-item:hover {
+            background-color: var(--sidebar-hover);
+        }
+
+        .session-item.active {
+            background-color: var(--sidebar-hover);
+            font-weight: 500;
+        }
+
+        .session-item .delete-btn {
+            opacity: 0;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all var(--transition-speed);
+        }
+
+        .session-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .session-item .delete-btn:hover {
+            color: var(--button-danger);
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .sidebar-footer {
+            padding: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .server-config {
+            margin-bottom: 12px;
+        }
+
+        .server-input {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 13px;
+            transition: all var(--transition-speed);
+        }
+
+        .server-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+        }
+
+        .sidebar-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sidebar-actions button {
+            flex: 1;
+            padding: 8px 12px;
+            background-color: var(--button-secondary);
+            color: var(--text-primary);
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: background-color var(--transition-speed), transform 0.1s ease;
-            display: inline-block;
-            text-align: center;
-        }
-        button:hover:not(:disabled), .file-upload-button:hover {
-            background-color: var(--button-hover-bg);
-            transform: translateY(-1px);
-        }
-        button:active:not(:disabled), .file-upload-button:active {
-            transform: translateY(0px);
-        }
-        button:disabled { background-color: var(--secondary-color); cursor: not-allowed; opacity: 0.7; }
-        #clearButton { background-color: var(--secondary-color); }
-        #clearButton:hover:not(:disabled) { background-color: #5a6268; }
-        #saveSessionButton { background-color: var(--button-save-bg); }
-        #saveSessionButton:hover:not(:disabled) { background-color: var(--button-save-hover-bg); }
-        #deleteSessionButton { background-color: var(--button-delete-bg); }
-        #deleteSessionButton:hover:not(:disabled) { background-color: var(--button-delete-hover-bg); }
-        .file-upload-button { background-color: var(--info-color);  }
-        .file-upload-button:hover { background-color: #138496; }
-
-        #sendButton.stop-button {
-            background-color: var(--error-color);
-        }
-        #sendButton.stop-button:hover:not(:disabled) {
-            background-color: var(--button-delete-hover-bg);
+            font-size: 13px;
+            transition: all var(--transition-speed);
         }
 
-        #status { margin: 15px 0; font-weight: bold; min-height: 1.6em; display: flex; align-items: center; gap: 10px; transition: color var(--transition-speed); font-size: 0.9em; }
-        #status.error { color: var(--error-color); }
-        #status.warning { color: var(--warning-color); }
-        #status.info { color: var(--info-color); }
-        .loader { border: 3px solid var(--input-border); border-top: 3px solid var(--primary-color); border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 6px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .sidebar-actions button:hover {
+            background-color: var(--button-secondary-hover);
+        }
 
-        .response-area {
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 20px;
-            margin-top: 10px;
-            overflow-y: auto;
-            flex-grow: 1;
-            min-height: 200px;
-            max-height: 50vh;
-            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        /* Main Content */
+        .main-content {
+            flex: 1;
             display: flex;
             flex-direction: column;
-        }
-        #chatContainer {
-            width: 100%;
-            word-wrap: break-word;
-            font-size: 0.95em;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .chat-placeholder {
-            color: var(--secondary-color);
-            text-align: center;
-            margin: auto;
-            font-style: italic;
-        }
-
-        .chat-bubble {
-            padding: 10px 15px;
-            border-radius: 15px;
-            max-width: 85%;
-            word-wrap: break-word;
             position: relative;
-            box-shadow: 0 1px 2px var(--shadow-color);
-            transition: background-color var(--transition-speed), color var(--transition-speed);
-            line-height: 1.5;
-            white-space: pre-wrap; /* Changed from pre-wrap */
+            overflow: hidden;
         }
-        .user-bubble {
-            background-color: var(--user-bubble-bg);
-            color: var(--text-color);
-            border-bottom-right-radius: 5px;
-            align-self: flex-end;
-            margin-left: auto;
-            /* Keep pre-wrap for user bubbles if needed, or consistency */
-             white-space: pre-wrap;
-        }
-        .model-bubble {
-            background-color: var(--model-bubble-bg);
-            color: var(--text-color);
-            border-bottom-left-radius: 5px;
-            align-self: flex-start;
-            margin-right: auto;
-            /* Let child elements (like pre) handle whitespace */
-            white-space: normal;
-        }
-        .chat-bubble :first-child { margin-top: 0; }
-        .chat-bubble :last-child { margin-bottom: 0; }
 
-        .model-bubble h1, .model-bubble h2, .model-bubble h3 { margin-top: 0.8em; margin-bottom: 0.4em; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.2em; transition: border-color var(--transition-speed); }
-        .model-bubble h1 { font-size: 1.3em; } .model-bubble h2 { font-size: 1.15em; } .model-bubble h3 { font-size: 1.05em; }
-        .model-bubble p { margin-bottom: 0.8em; }
-        .model-bubble ul, .model-bubble ol { margin-left: 20px; margin-bottom: 0.8em; }
-        .model-bubble li { margin-bottom: 0.3em; }
-        .model-bubble blockquote { border-left: 3px solid var(--primary-color); padding-left: 12px; margin: 0.8em 0; color: var(--secondary-color); font-style: italic; transition: border-color var(--transition-speed), color var(--transition-speed); }
-        .model-bubble code:not(pre code) { background-color: var(--code-bg); color: var(--text-color); padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.85em; transition: background-color var(--transition-speed), color var(--transition-speed); }
-        .model-bubble pre {
-            background-color: var(--highlight-bg);
-            padding: 10px;
+        /* Chat Area */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+            background-color: var(--bg-primary);
+        }
+
+        .chat-message {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chat-message:last-child {
+            border-bottom: none;
+        }
+
+        .message-content {
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .message-avatar {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-message .message-avatar {
+            background-color: var(--button-primary);
+            color: white;
+        }
+
+        .assistant-message .message-avatar {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .message-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .message-body h1, .message-body h2, .message-body h3 {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+
+        .message-body p {
+            margin-bottom: 1em;
+        }
+
+        .message-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-body ul, .message-body ol {
+            margin-left: 24px;
+            margin-bottom: 1em;
+        }
+
+        .message-body li {
+            margin-bottom: 0.5em;
+        }
+
+        .message-body code:not(pre code) {
+            background-color: var(--code-bg);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.875em;
+        }
+
+        .message-body pre {
+            position: relative;
+            background-color: var(--code-bg);
             border-radius: 6px;
+            padding: 16px;
+            padding-top: 40px;
             overflow-x: auto;
-            margin: 0.8em 0;
-            transition: background-color var(--transition-speed);
-            position: relative; /* Needed for absolute positioning of buttons */
-            padding-top: 35px; /* Make space for buttons */
-        }
-        .model-bubble pre code {
-            background-color: transparent;
-            padding: 0;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.85em;
-            color: inherit; /* Inherit color from parent pre */
-            white-space: pre; /* Ensure whitespace is preserved in code */
+            margin: 1em 0;
         }
 
-        /* --- Styles for Code Action Buttons --- */
+        .message-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.875em;
+            white-space: pre;
+        }
+
+        .message-body blockquote {
+            border-left: 3px solid var(--border-color);
+            padding-left: 16px;
+            margin: 1em 0;
+            color: var(--text-secondary);
+        }
+
+        /* Code Action Buttons */
         .code-actions {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 8px;
+            right: 8px;
             display: flex;
-            gap: 5px;
-            z-index: 1; /* Ensure buttons are above code */
+            gap: 8px;
         }
+
         .code-action-button {
-            padding: 3px 6px;
-            font-size: 0.75em;
-            background-color: var(--code-action-button-bg);
-            color: var(--code-action-button-text);
-            border: 1px solid var(--border-color);
+            padding: 4px 8px;
+            font-size: 12px;
+            background-color: var(--button-secondary);
+            color: var(--text-primary);
+            border: none;
             border-radius: 4px;
             cursor: pointer;
-            opacity: 0.6; /* Slightly transparent by default */
-            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            opacity: 0.8;
+            transition: all var(--transition-speed);
         }
-        /* Show buttons clearly on pre hover */
-        .model-bubble pre:hover .code-action-button {
-            opacity: 1;
-        }
+
         .code-action-button:hover {
-            background-color: var(--code-action-button-hover-bg);
-        }
-        .copy-code-button.copied {
-            background-color: var(--copy-button-copied-bg);
-            color: var(--copy-button-copied-text);
             opacity: 1;
-            border-color: transparent;
+            background-color: var(--button-secondary-hover);
         }
-        /* --- End Styles for Code Action Buttons --- */
 
+        .code-action-button.copied {
+            background-color: var(--button-primary);
+            color: white;
+        }
 
-        .server-url-options { display: flex; align-items: center; gap: 10px; margin-top: 5px; font-size: 0.9em; color: var(--secondary-color); }
-        .server-url-options input[type="checkbox"] { margin-right: 5px; }
-        .config-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; padding: 15px; border: 1px dashed var(--border-color); border-radius: 6px; transition: border-color var(--transition-speed); }
-        .config-options .input-group { margin-bottom: 0; }
-        details summary { cursor: pointer; color: var(--primary-color); margin-bottom: 15px; font-weight: 500; transition: color var(--transition-speed); }
-        footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid var(--border-color); color: var(--secondary-color); font-size: 0.9em; transition: border-color var(--transition-speed), color var(--transition-speed); }
-        footer a { color: var(--primary-color); text-decoration: none; transition: color var(--transition-speed); }
-        footer a:hover { text-decoration: underline; }
+        /* Chat Input */
+        .chat-input-container {
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            padding: 16px 0;
+        }
 
-        .session-management { padding: 15px; margin-bottom: 20px; border: 1px dashed var(--border-color); border-radius: 6px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-        .session-management label { font-weight: 600; color: var(--secondary-color); margin-right: 5px; flex-shrink: 0; }
-        .session-management select { flex-grow: 1; min-width: 150px; padding: 8px 12px; }
-        .session-management button { padding: 8px 15px; flex-shrink: 0; }
+        .chat-input-wrapper {
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
 
-        .input-area { margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border-color); transition: border-color var(--transition-speed); }
-        .input-area .input-group { margin-bottom: 10px; }
-        .input-area .button-group { margin-top: 0; margin-bottom: 10px; justify-content: flex-start;  }
+        .input-area {
+            position: relative;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            padding: 12px;
+            transition: all var(--transition-speed);
+        }
 
-        .file-input-area { margin-bottom: 10px; }
+        .input-area:focus-within {
+            border-color: var(--input-focus-border);
+        }
 
-        .file-input-area input[type="file"] { display: none; }
-        #stagedFilesArea {
-            margin-top: 10px;
-            font-size: 0.85em;
+        .staged-files {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-            max-height: 100px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            padding: 5px;
-            border-radius: 4px;
-            background-color: var(--staged-file-bg);
-            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
         }
+
         .staged-file-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 5px 8px;
-
+            gap: 4px;
+            padding: 4px 8px;
+            background-color: var(--bg-tertiary);
             border-radius: 4px;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
 
-        }
-        .staged-file-name {
-            color: var(--staged-file-text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-right: 10px;
-            flex-grow: 1;
-            transition: color var(--transition-speed);
-        }
-        .staged-file-name .file-type {
-             color: var(--secondary-color);
-             margin-left: 5px;
-        }
         .remove-file-button {
             background: none;
             border: none;
-            color: var(--staged-file-remove-color);
+            color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1.1em;
-            padding: 2px 5px;
+            padding: 0 2px;
+            font-size: 16px;
             line-height: 1;
-            border-radius: 3px;
-            transition: background-color var(--transition-speed), color var(--transition-speed);
-            flex-shrink: 0;
-        }
-        .remove-file-button:hover {
-            background-color: var(--staged-file-remove-hover-bg);
-            color: var(--error-color);
         }
 
+        .remove-file-button:hover {
+            color: var(--button-danger);
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 15px;
+            resize: none;
+            outline: none;
+            min-height: 24px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .input-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-upload-label {
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color var(--transition-speed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+        }
+
+        .file-upload-label:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-tertiary);
+        }
+
+        .file-upload-label svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .send-button {
+            padding: 8px 16px;
+            background-color: var(--button-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .send-button:hover:not(:disabled) {
+            background-color: var(--button-primary-hover);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .send-button.stop-button {
+            background-color: var(--button-danger);
+        }
+
+        .send-button.stop-button:hover:not(:disabled) {
+            background-color: var(--button-danger-hover);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            padding: 8px 24px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .status-bar.error {
+            color: var(--button-danger);
+        }
+
+        .status-bar.warning {
+            color: #f59e0b;
+        }
+
+        .status-bar.info {
+            color: var(--button-primary);
+        }
+
+        /* Settings Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-speed);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--bg-primary);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 480px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .settings-group {
+            margin-bottom: 20px;
+        }
+
+        .settings-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .settings-group input[type="number"],
+        .settings-group input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .settings-group small {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Loader */
+        .loader {
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--button-primary);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                height: 100%;
+                z-index: 100;
+                box-shadow: var(--shadow-md);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-menu-btn {
+                position: fixed;
+                top: 16px;
+                left: 16px;
+                z-index: 101;
+                background-color: var(--bg-primary);
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                padding: 8px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .message-content {
+                padding: 0 16px;
+            }
+
+            .chat-input-wrapper {
+                padding: 0 16px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        /* Hide file input */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
+    <div class="app-container">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18"></path>
+            </svg>
+        </button>
 
-    <div class="container">
-        <header>
-            <h1>LlamaHTML</h1>
-            <div class="theme-switcher" id="themeSwitcher" title="Switch to Dark Mode">Dark</div>
-        </header>
-
-        <div class="input-group">
-            <label for="serverUrl">Llama Server URL:</label>
-            <input type="url" id="serverUrl" placeholder="e.g., http://127.0.0.1:8080" value="http://127.0.0.1:8080">
-             <div class="server-url-options">
-                 <input type="checkbox" id="rememberServerUrl">
-                 <label for="rememberServerUrl">Remember URL (Uses Local Storage)</label>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" id="newChatBtn">New chat</button>
             </div>
-             <small style="display: block; margin-top: 5px; color: var(--secondary-color);">
-        Please report any issues on github.
-             </small>
-        </div>
+            
+            <div class="sessions-list" id="sessionsList">
+                <!-- Sessions will be populated here -->
+            </div>
 
-        <details>
-            <summary>Configuration Options</summary>
-            <div class="config-options">
-                <div class="input-group">
-                    <label for="temperature">Temperature (0-~2):</label>
-                    <input type="number" id="temperature" min="0" max="2" step="0.1" value="0.7" title="Controls randomness. Higher values make output more random.">
+            <div class="sidebar-footer">
+                <div class="server-config">
+                    <input 
+                        type="url" 
+                        class="server-input" 
+                        id="serverUrl" 
+                        placeholder="Server URL (e.g., http://127.0.0.1:8080)"
+                        value="http://127.0.0.1:8080"
+                    >
                 </div>
-                <div class="input-group">
-                    <label for="nPredict">Max Predict Tokens (n_predict):</label>
-                    <input type="number" id="nPredict" min="1" step="1" value="2048" title="Maximum number of tokens to generate in the response. -1 for infinite.">
-                </div>
-                 <div class="input-group">
-                    <label for="topP">Top P (0-1):</label>
-                    <input type="number" id="topP" min="0" max="1" step="0.01" value="0.95" title="Nucleus sampling parameter. Considers tokens with probability mass adding up to top_p.">
-                </div>
-                 <div class="input-group">
-                    <label for="topK">Top K (integer):</label>
-                    <input type="number" id="topK" min="1" step="1" value="40" title="Top-k sampling parameter. Considers the top k most likely tokens.">
-                </div>
-                <div class="input-group">
-                    <label for="stopSequences">Stop Sequences (comma-sep):</label>
-                    <input type="text" id="stopSequences" value="USER:, \nUSER:, <|user|>" title="Comma-separated strings to stop generation.">
+                <div class="sidebar-actions">
+                    <button id="settingsBtn">Settings</button>
+                    <button id="themeSwitcher">🌙</button>
                 </div>
             </div>
-        </details>
+        </aside>
 
-        <!-- Session Management Section -->
-        <div class="session-management">
-            <label for="sessionSelect">Session:</label>
-            <select id="sessionSelect"></select>
-            <button id="saveSessionButton" title="Save current chat as a session">Save</button>
-            <button id="deleteSessionButton" title="Delete the selected session">Delete</button>
-        </div>
-
-        <h2>Conversation History</h2>
-        <div class="response-area" id="responseArea">
-            <div id="chatContainer">
-                <div class="chat-placeholder">Conversation will appear here...</div>
-            </div>
-        </div>
-
-        <div id="status"></div>
-
-        <div class="input-area">
-             <!-- File Upload Area -->
-            <div class="file-input-area">
-                <label for="fileInput" class="file-upload-button">Attach Files</label>
-                <input type="file" id="fileInput" multiple accept="text/*,image/*,application/pdf,.md,.py,.js,.html,.css,.json,.xml,.csv,.log"> <!-- Basic filtering, adjust as needed -->
-                <div id="stagedFilesArea" style="display: none;"> <!-- Initially hidden -->
-                    <!-- Selected files will be listed here by JS -->
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Chat Container -->
+            <div class="chat-container" id="chatContainer">
+                <div class="empty-state">
+                    <h2>LlamaHTML</h2>
+                    <p>Start a conversation with your local Llama model</p>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="prompt">Your Message (Ctrl+Enter to send):</label>
-                <textarea id="prompt" rows="3" placeholder="Enter your message here, or attach files and describe them..."></textarea>
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <div class="input-area">
+                        <div class="staged-files" id="stagedFilesArea" style="display: none;">
+                            <!-- Staged files will appear here -->
+                        </div>
+                        <div class="input-row">
+                            <textarea 
+                                class="chat-input" 
+                                id="chatInput" 
+                                placeholder="Message Llama..."
+                                rows="1"
+                            ></textarea>
+                            <div class="input-actions">
+                                <label for="fileInput" class="file-upload-label" title="Attach files">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                                    </svg>
+                                </label>
+                                <input type="file" id="fileInput" multiple accept="text/*,image/*,application/pdf,.md,.py,.js,.html,.css,.json,.xml,.csv,.log">
+                                <button class="send-button" id="sendButton">
+                                    <span>Send</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="status-bar" id="statusBar"></div>
+                </div>
             </div>
-
-            <div class="button-group">
-                <button id="sendButton">Send</button> <!-- Initially 'Send' -->
-                <button id="clearButton">Clear / New Chat</button>
-            </div>
-        </div>
-
+        </main>
     </div>
 
-     <footer>
-        Powered by a local <a href="https://github.com/ggerganov/llama.cpp/tree/master/examples/server" target="_blank" rel="noopener noreferrer">llama.cpp server</a>. Model determined by server configuration. File processing depends on server capabilities.
-     </footer>
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="modal-close" id="closeSettings">&times;</button>
+            </div>
+            
+            <div class="settings-group">
+                <label for="temperature">Temperature</label>
+                <input type="number" id="temperature" min="0" max="2" step="0.1" value="0.7">
+                <small>Controls randomness. Higher values make output more random.</small>
+            </div>
+
+            <div class="settings-group">
+                <label for="nPredict">Max Tokens</label>
+                <input type="number" id="nPredict" min="1" step="1" value="2048">
+                <small>Maximum number of tokens to generate. Use -1 for unlimited.</small>
+            </div>
+
+            <div class="settings-group">
+                <label for="topP">Top P</label>
+                <input type="number" id="topP" min="0" max="1" step="0.01" value="0.95">
+                <small>Nucleus sampling parameter.</small>
+            </div>
+
+            <div class="settings-group">
+                <label for="topK">Top K</label>
+                <input type="number" id="topK" min="1" step="1" value="40">
+                <small>Top-k sampling parameter.</small>
+            </div>
+
+            <div class="settings-group">
+                <label for="stopSequences">Stop Sequences</label>
+                <input type="text" id="stopSequences" value="USER:, \nUSER:, <|user|>">
+                <small>Comma-separated strings to stop generation.</small>
+            </div>
+
+            <div class="settings-group">
+                <label>
+                    <input type="checkbox" id="rememberServerUrl">
+                    Remember Server URL
+                </label>
+                <small>Save URL in browser storage</small>
+            </div>
+        </div>
+    </div>
 
     <script>
-
+        // Constants
         const SESSION_INDEX_KEY = 'llamaChatIndex';
         const SESSION_DATA_PREFIX = 'llamaChatSession_';
         const MAX_TEXT_FILE_EMBED_SIZE = 200 * 1024;
 
-        const serverUrlInput = document.getElementById('serverUrl');
-        const rememberServerUrlCheckbox = document.getElementById('rememberServerUrl');
-        const promptInput = document.getElementById('prompt');
-        const sendButton = document.getElementById('sendButton');
-        const clearButton = document.getElementById('clearButton');
-        const statusDiv = document.getElementById('status');
-        const chatContainer = document.getElementById('chatContainer');
-        const responseArea = document.getElementById('responseArea');
-        const themeSwitcher = document.getElementById('themeSwitcher');
-        const temperatureInput = document.getElementById('temperature');
-        const nPredictInput = document.getElementById('nPredict');
-        const topPInput = document.getElementById('topP');
-        const topKInput = document.getElementById('topK');
-        const stopSequencesInput = document.getElementById('stopSequences');
-        const highlightThemeLink = document.getElementById('highlight-theme');
+        // DOM Elements
+        const elements = {
+            serverUrl: document.getElementById('serverUrl'),
+            rememberServerUrl: document.getElementById('rememberServerUrl'),
+            chatInput: document.getElementById('chatInput'),
+            sendButton: document.getElementById('sendButton'),
+            statusBar: document.getElementById('statusBar'),
+            chatContainer: document.getElementById('chatContainer'),
+            themeSwitcher: document.getElementById('themeSwitcher'),
+            temperature: document.getElementById('temperature'),
+            nPredict: document.getElementById('nPredict'),
+            topP: document.getElementById('topP'),
+            topK: document.getElementById('topK'),
+            stopSequences: document.getElementById('stopSequences'),
+            sessionsList: document.getElementById('sessionsList'),
+            newChatBtn: document.getElementById('newChatBtn'),
+            fileInput: document.getElementById('fileInput'),
+            stagedFilesArea: document.getElementById('stagedFilesArea'),
+            settingsBtn: document.getElementById('settingsBtn'),
+            settingsModal: document.getElementById('settingsModal'),
+            closeSettings: document.getElementById('closeSettings'),
+            sidebar: document.getElementById('sidebar'),
+            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+            highlightTheme: document.getElementById('highlight-theme')
+        };
 
-        const sessionSelect = document.getElementById('sessionSelect');
-        const saveSessionButton = document.getElementById('saveSessionButton');
-        const deleteSessionButton = document.getElementById('deleteSessionButton');
-
-        const fileInput = document.getElementById('fileInput');
-        const stagedFilesArea = document.getElementById('stagedFilesArea');
-
+        // State
         let chatHistory = [];
         let serverAvailable = false;
         let messageCounter = 0;
@@ -496,149 +898,154 @@
         let currentAbortController = null;
         let stagedFiles = [];
 
-        function handleStopGeneration() {
-            if (currentAbortController) {
-                console.log("Stop button clicked. Aborting request...");
-                showStatus("Cancelling request...", false, true);
-                currentAbortController.abort();
-
-            }
-        }
-
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
+        // Initialize
         function initialize() {
             loadServerUrl();
             setupEventListeners();
             initializeTheme();
             configureMarked();
             checkServerStatus();
-            populateSessionDropdown();
+            populateSessions();
             startNewSession();
             updateSendButtonState();
-            updateSessionButtonStates();
         }
 
-         function configureMarked() {
-             marked.setOptions({
+        function configureMarked() {
+            marked.setOptions({
                 highlight: function(code, lang) {
                     const language = hljs.getLanguage(lang) ? lang : 'plaintext';
                     try {
-                        // Return the highlighted code *without* wrapping in <pre><code>
                         const result = hljs.highlight(code, { language, ignoreIllegals: true });
                         return result.value;
                     } catch (e) {
-                        console.warn("Highlight.js error:", e, "- Using auto-detection fallback. Lang:", lang);
-                        try {
-                           // Return the highlighted code *without* wrapping in <pre><code>
-                           const result = hljs.highlightAuto(code);
-                           return result.value;
-                       } catch (e2) {
-                            console.error("Highlight.js auto-detection failed:", e2);
-                            return escapeHtml(code); // Return escaped code on failure
-                       }
+                        console.warn("Highlight.js error:", e);
+                        return escapeHtml(code);
                     }
                 },
                 gfm: true,
                 breaks: true,
-                // Use langPrefix to ensure highlight.js CSS classes are applied correctly
                 langPrefix: 'hljs language-',
             });
         }
 
         function setupEventListeners() {
-
-            sendButton.addEventListener('click', handleSendPrompt);
-
-            clearButton.addEventListener('click', () => {
+            elements.sendButton.addEventListener('click', handleSendPrompt);
+            elements.newChatBtn.addEventListener('click', () => {
                 if (currentAbortController) {
-                   handleStopGeneration();
+                    handleStopGeneration();
                 }
                 startNewSession();
+                closeMobileSidebar();
             });
-            themeSwitcher.addEventListener('click', toggleTheme);
-            rememberServerUrlCheckbox.addEventListener('change', handleRememberUrlChange);
-            serverUrlInput.addEventListener('input', handleServerUrlInput);
-
-            promptInput.addEventListener('input', updateSendButtonState);
-
-            promptInput.addEventListener('keydown', (event) => {
+            
+            elements.themeSwitcher.addEventListener('click', toggleTheme);
+            elements.rememberServerUrl.addEventListener('change', handleRememberUrlChange);
+            elements.serverUrl.addEventListener('input', handleServerUrlInput);
+            elements.chatInput.addEventListener('input', () => {
+                updateSendButtonState();
+                autoResizeTextarea(elements.chatInput);
+            });
+            
+            elements.chatInput.addEventListener('keydown', (event) => {
                 if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && !event.shiftKey && !event.altKey) {
                     event.preventDefault();
-                    if (!sendButton.disabled && sendButton.textContent === 'Send') {
+                    if (!elements.sendButton.disabled && elements.sendButton.textContent.includes('Send')) {
                         handleSendPrompt();
                     }
                 }
             });
 
-            saveSessionButton.addEventListener('click', handleSaveSession);
-            sessionSelect.addEventListener('change', handleLoadSession);
-            deleteSessionButton.addEventListener('click', handleDeleteSession);
+            elements.fileInput.addEventListener('change', handleFileSelection);
+            elements.stagedFilesArea.addEventListener('click', handleRemoveStagedFile);
+            elements.settingsBtn.addEventListener('click', () => {
+                elements.settingsModal.classList.add('active');
+            });
+            elements.closeSettings.addEventListener('click', () => {
+                elements.settingsModal.classList.remove('active');
+            });
+            elements.settingsModal.addEventListener('click', (e) => {
+                if (e.target === elements.settingsModal) {
+                    elements.settingsModal.classList.remove('active');
+                }
+            });
+            elements.mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
 
-            fileInput.addEventListener('change', handleFileSelection);
-
-            stagedFilesArea.addEventListener('click', handleRemoveStagedFile);
-
-            // --- Event Delegation for Code Buttons ---
-            chatContainer.addEventListener('click', function(event) {
+            // Event delegation for code buttons and session items
+            elements.chatContainer.addEventListener('click', function(event) {
                 if (event.target.classList.contains('copy-code-button')) {
                     handleCopyCodeClick(event.target);
                 } else if (event.target.classList.contains('download-code-button')) {
                     handleDownloadCodeClick(event.target);
                 }
             });
+
+            elements.sessionsList.addEventListener('click', function(event) {
+                const sessionItem = event.target.closest('.session-item');
+                const deleteBtn = event.target.closest('.delete-btn');
+                
+                if (deleteBtn && sessionItem) {
+                    event.stopPropagation();
+                    handleDeleteSession(sessionItem.dataset.sessionId);
+                } else if (sessionItem) {
+                    handleLoadSession(sessionItem.dataset.sessionId);
+                    closeMobileSidebar();
+                }
+            });
+        }
+
+        function toggleMobileSidebar() {
+            elements.sidebar.classList.toggle('open');
+        }
+
+        function closeMobileSidebar() {
+            if (window.innerWidth <= 768) {
+                elements.sidebar.classList.remove('open');
+            }
+        }
+
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
         }
 
         function loadServerUrl() {
             const rememberedUrl = localStorage.getItem('llamaServerUrl');
             const shouldRemember = localStorage.getItem('rememberLlamaServerUrl') === 'true';
-            rememberServerUrlCheckbox.checked = shouldRemember;
+            elements.rememberServerUrl.checked = shouldRemember;
             if (shouldRemember && rememberedUrl) {
-                serverUrlInput.value = rememberedUrl;
-                console.info("Server URL loaded from Local Storage.");
+                elements.serverUrl.value = rememberedUrl;
             }
         }
+
         function handleRememberUrlChange() {
-            const url = serverUrlInput.value.trim();
-            if (rememberServerUrlCheckbox.checked) {
+            const url = elements.serverUrl.value.trim();
+            if (elements.rememberServerUrl.checked) {
                 if (url) {
                     localStorage.setItem('llamaServerUrl', url);
                     localStorage.setItem('rememberLlamaServerUrl', 'true');
-                    console.info("Server URL saved to Local Storage.");
                 } else {
-                    rememberServerUrlCheckbox.checked = false;
+                    elements.rememberServerUrl.checked = false;
                     localStorage.removeItem('llamaServerUrl');
                     localStorage.removeItem('rememberLlamaServerUrl');
                 }
             } else {
                 localStorage.removeItem('llamaServerUrl');
                 localStorage.removeItem('rememberLlamaServerUrl');
-                console.info("Server URL removed from Local Storage.");
             }
         }
+
         let serverUrlDebounceTimer;
         function handleServerUrlInput() {
-             handleRememberUrlChange();
+            handleRememberUrlChange();
+            clearTimeout(serverUrlDebounceTimer);
+            serverUrlDebounceTimer = setTimeout(() => {
+                checkServerStatus();
+                updateSendButtonState();
+            }, 500);
+        }
 
-             clearTimeout(serverUrlDebounceTimer);
-             serverUrlDebounceTimer = setTimeout(() => {
-                 checkServerStatus();
-                 updateSendButtonState();
-             }, 500);
-         }
-
-         async function checkServerStatus() {
-            const serverUrl = serverUrlInput.value.trim();
+        async function checkServerStatus() {
+            const serverUrl = elements.serverUrl.value.trim();
             if (!isValidHttpUrl(serverUrl)) {
                 showStatus("Invalid server URL format.", true);
                 serverAvailable = false;
@@ -646,7 +1053,6 @@
                 return;
             }
 
-            // Simplified check - just assume valid URL means ready
             showStatus("Server URL looks valid. Ready to send.", false, false, true);
             serverAvailable = true;
             updateSendButtonState();
@@ -654,15 +1060,14 @@
 
         function updateSendButtonState() {
             if (currentAbortController) {
-                sendButton.disabled = false; // Stop button should always be enabled
+                elements.sendButton.disabled = false;
                 return;
             }
 
-            const urlValid = isValidHttpUrl(serverUrlInput.value.trim());
-            const isLoading = statusDiv.querySelector('.loader') !== null;
-
-            const canSend = urlValid && !isLoading && (promptInput.value.trim().length > 0 || stagedFiles.length > 0);
-            sendButton.disabled = !canSend;
+            const urlValid = isValidHttpUrl(elements.serverUrl.value.trim());
+            const isLoading = elements.statusBar.querySelector('.loader') !== null;
+            const canSend = urlValid && !isLoading && (elements.chatInput.value.trim().length > 0 || stagedFiles.length > 0);
+            elements.sendButton.disabled = !canSend;
         }
 
         function isValidHttpUrl(string) {
@@ -679,17 +1084,18 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             setTheme(savedTheme);
         }
+
         function setTheme(theme) {
             const html = document.documentElement;
             html.setAttribute('data-theme', theme);
-            themeSwitcher.textContent = theme === 'dark' ? 'Light' : 'Dark';
-            themeSwitcher.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-
-            const lightThemeUrl = getComputedStyle(html).getPropertyValue('--highlight-style-light').trim().replace(/['"]/g,'');
-            const darkThemeUrl = getComputedStyle(html).getPropertyValue('--highlight-style-dark').trim().replace(/['"]/g,'');
-            highlightThemeLink.href = theme === 'dark' ? darkThemeUrl : lightThemeUrl;
+            elements.themeSwitcher.textContent = theme === 'dark' ? '☀️' : '🌙';
+            
+            const lightThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+            const darkThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+            elements.highlightTheme.href = theme === 'dark' ? darkThemeUrl : lightThemeUrl;
             localStorage.setItem('theme', theme);
         }
+
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -707,7 +1113,7 @@
             );
 
             if (newFiles.length !== files.length) {
-                 showStatus("Some duplicate filenames were ignored.", false, true);
+                showStatus("Some duplicate filenames were ignored.", false, true);
             }
 
             if (newFiles.length === 0) {
@@ -733,7 +1139,7 @@
                     fileData.content = e.target.result;
                     filesProcessed++;
                     if (filesProcessed === totalFilesToProcess) {
-                       finishFileProcessing();
+                        finishFileProcessing();
                     }
                 };
 
@@ -747,153 +1153,128 @@
                 };
 
                 if (fileData.type.startsWith('text/') || /\.(txt|md|py|js|html|css|json|xml|csv|log)$/i.test(fileData.name)) {
-                     reader.readAsText(file);
+                    reader.readAsText(file);
                 } else {
-                    reader.readAsDataURL(file); // Read images/binary as Base64 data URLs
+                    reader.readAsDataURL(file);
                 }
             });
 
-             renderStagedFiles();
-             // Clear the input value to allow selecting the same file again
-             event.target.value = null;
+            renderStagedFiles();
+            event.target.value = null;
         }
 
         function finishFileProcessing() {
-             renderStagedFiles(); // Update UI in case of errors during read
-             showLoading(false);
-             updateSendButtonState();
-             promptInput.focus();
+            renderStagedFiles();
+            showLoading(false);
+            updateSendButtonState();
+            elements.chatInput.focus();
         }
 
         function renderStagedFiles() {
-            stagedFilesArea.innerHTML = '';
+            elements.stagedFilesArea.innerHTML = '';
             if (stagedFiles.length === 0) {
-                stagedFilesArea.style.display = 'none';
+                elements.stagedFilesArea.style.display = 'none';
                 updateSendButtonState();
                 return;
             }
 
-            stagedFilesArea.style.display = 'flex';
+            elements.stagedFilesArea.style.display = 'flex';
 
             stagedFiles.forEach((fileData, index) => {
                 const item = document.createElement('div');
                 item.className = 'staged-file-item';
-                item.title = fileData.name + (fileData.error ? ` (Error: ${fileData.error})` : ` (${fileData.type})`);
+                item.title = fileData.name + (fileData.error ? ` (Error: ${fileData.error})` : '');
 
                 const nameSpan = document.createElement('span');
-                nameSpan.className = 'staged-file-name';
                 nameSpan.textContent = fileData.name;
-
-                const typeSpan = document.createElement('span');
-                typeSpan.className = 'file-type';
-                typeSpan.textContent = `(${(fileData.type || 'unknown').split('/')[1]})`; // Show subtype
-                nameSpan.appendChild(typeSpan);
-
                 if (fileData.error) {
-                    item.style.borderColor = 'var(--error-color)'; // Maybe add border for error?
-                    nameSpan.style.color = 'var(--error-color)';
-                    typeSpan.textContent = '(Error)';
-                } else if (fileData.content === null) {
-                    // Optionally indicate loading state per file
-                    typeSpan.textContent = '(loading...)';
+                    nameSpan.style.color = 'var(--button-danger)';
                 }
 
                 const removeButton = document.createElement('button');
                 removeButton.className = 'remove-file-button';
-                removeButton.innerHTML = '&times;'; // Use multiplication sign '×'
-                removeButton.title = `Remove ${fileData.name}`;
-                removeButton.setAttribute('aria-label', `Remove ${fileData.name}`);
-                removeButton.dataset.index = index; // Store index for removal
+                removeButton.innerHTML = '&times;';
+                removeButton.dataset.index = index;
 
                 item.appendChild(nameSpan);
                 item.appendChild(removeButton);
-                stagedFilesArea.appendChild(item);
+                elements.stagedFilesArea.appendChild(item);
             });
             updateSendButtonState();
         }
 
         function handleRemoveStagedFile(event) {
-             // Use event delegation to catch clicks on remove buttons
-             if (event.target.classList.contains('remove-file-button')) {
+            if (event.target.classList.contains('remove-file-button')) {
                 const indexToRemove = parseInt(event.target.dataset.index, 10);
-                 if (!isNaN(indexToRemove) && indexToRemove >= 0 && indexToRemove < stagedFiles.length) {
-                    stagedFiles.splice(indexToRemove, 1); // Remove file from array
-                    renderStagedFiles(); // Re-render the list
-                 }
-             }
-         }
+                if (!isNaN(indexToRemove) && indexToRemove >= 0 && indexToRemove < stagedFiles.length) {
+                    stagedFiles.splice(indexToRemove, 1);
+                    renderStagedFiles();
+                }
+            }
+        }
 
-         function clearStagedFiles() {
-             stagedFiles = [];
-             renderStagedFiles(); // Update UI
-             // Reset the file input visually, although its internal files list is already cleared
-             fileInput.value = null;
-         }
+        function clearStagedFiles() {
+            stagedFiles = [];
+            renderStagedFiles();
+            elements.fileInput.value = null;
+        }
 
         async function handleSendPrompt() {
-            // Change button state to 'Stop' immediately
-            sendButton.removeEventListener('click', handleSendPrompt);
-            sendButton.removeEventListener('click', handleStopGeneration); // Ensure no duplicate listeners
+            // Change button state to 'Stop'
+            elements.sendButton.removeEventListener('click', handleSendPrompt);
+            elements.sendButton.innerHTML = '<span>Stop</span>';
+            elements.sendButton.classList.add('stop-button');
+            elements.sendButton.addEventListener('click', handleStopGeneration);
+            elements.sendButton.disabled = false;
+            elements.chatInput.disabled = true;
 
-            sendButton.textContent = 'Stop';
-            sendButton.classList.add('stop-button');
-            sendButton.title = 'Cancel Generation';
-            sendButton.addEventListener('click', handleStopGeneration);
-            sendButton.disabled = false; // Stop button should be clickable
-            promptInput.disabled = true; // Disable input while processing
-
-            const serverUrl = serverUrlInput.value.trim();
-            let promptText = promptInput.value.trim();
-            const temperature = parseFloat(temperatureInput.value);
-            const nPredict = parseInt(nPredictInput.value, 10);
-            const topP = parseFloat(topPInput.value);
-            const topK = parseInt(topKInput.value, 10);
-            const stopSequences = stopSequencesInput.value.split(',')
-                                      .map(s => s.trim())
-                                      .filter(s => s.length > 0);
+            const serverUrl = elements.serverUrl.value.trim();
+            let promptText = elements.chatInput.value.trim();
+            const temperature = parseFloat(elements.temperature.value);
+            const nPredict = parseInt(elements.nPredict.value, 10);
+            const topP = parseFloat(elements.topP.value);
+            const topK = parseInt(elements.topK.value, 10);
+            const stopSequences = elements.stopSequences.value.split(',')
+                .map(s => s.trim())
+                .filter(s => s.length > 0);
 
             if (!promptText && stagedFiles.length === 0) {
                 showStatus("Error: Message cannot be empty and no files attached.", true);
-                 resetButtonToSendState();
-                 promptInput.disabled = false;
-                 updateSendButtonState(); // Re-enable if needed
+                resetButtonToSendState();
+                elements.chatInput.disabled = false;
+                updateSendButtonState();
                 return;
             }
 
-            // Check for file errors before sending
+            // Check for file errors
             const filesWithError = stagedFiles.filter(f => f.error);
-             if (filesWithError.length > 0) {
+            if (filesWithError.length > 0) {
                 showStatus(`Error: Cannot send due to errors reading files: ${filesWithError.map(f => f.name).join(', ')}`, true);
-                 resetButtonToSendState();
-                 promptInput.disabled = false;
-                 updateSendButtonState();
+                resetButtonToSendState();
+                elements.chatInput.disabled = false;
+                updateSendButtonState();
                 return;
-             }
+            }
 
             // Check if files are still loading
             const filesLoading = stagedFiles.filter(f => f.content === null && !f.error);
             if (filesLoading.length > 0) {
                 showStatus(`Please wait, files are still processing: ${filesLoading.map(f => f.name).join(', ')}`, false, true);
-                 resetButtonToSendState();
-                 promptInput.disabled = false;
-                 updateSendButtonState();
+                resetButtonToSendState();
+                elements.chatInput.disabled = false;
+                updateSendButtonState();
                 return;
             }
 
-            // --- Prepare user message including file info ---
+            // Prepare user message including file info
             let fileInfoForPrompt = "";
             if (stagedFiles.length > 0) {
                 fileInfoForPrompt = "Attached Files:\n";
                 stagedFiles.forEach(fileData => {
                     fileInfoForPrompt += `[File: ${fileData.name} (${fileData.type})]\n`;
-                    // Embed small text files directly (optional, adjust size limit)
                     if (fileData.type.startsWith('text/') && fileData.content && fileData.content.length < MAX_TEXT_FILE_EMBED_SIZE) {
                         fileInfoForPrompt += `Content:\n---\n${fileData.content}\n---\n`;
-                    }
-                    // Indicate non-text or large files without embedding content
-                    else if (!fileData.type.startsWith('text/') && fileData.content?.startsWith('data:')) {
-                        // For data URLs (images, etc.), just mention it.
-                        // The actual data URL isn't added here, but might be sent differently if the API supports it.
+                    } else if (!fileData.type.startsWith('text/') && fileData.content?.startsWith('data:')) {
                         fileInfoForPrompt += `(File is binary/image - content not embedded in text prompt)\n`;
                     } else if (fileData.type.startsWith('text/') && fileData.content && fileData.content.length >= MAX_TEXT_FILE_EMBED_SIZE) {
                         fileInfoForPrompt += `(Text file content too large to embed in prompt)\n`;
@@ -903,108 +1284,90 @@
             }
 
             const fullUserContent = fileInfoForPrompt + promptText;
-            // --- End Prepare user message ---
 
             // Abort previous request if any
             if (currentAbortController) {
-                console.warn("Aborting previous fetch request.");
                 currentAbortController.abort();
             }
             currentAbortController = new AbortController();
             const signal = currentAbortController.signal;
 
+            // Add user message
             const userMessageId = `msg-${messageCounter++}`;
             const userMessage = { role: 'user', content: fullUserContent, id: userMessageId };
             chatHistory.push(userMessage);
-            renderChatHistory(); // Render user message immediately
+            renderChatHistory();
             scrollToBottom();
-            promptInput.value = ''; // Clear input after sending
-            clearStagedFiles(); // Clear staged files after sending
+            elements.chatInput.value = '';
+            autoResizeTextarea(elements.chatInput);
+            clearStagedFiles();
             showLoading(true, "Connecting...");
-            updateSessionButtonStates(); // Disable session buttons during request
 
-            // Prepare placeholder for model response
+            // Add placeholder for model response
             const modelMessageId = `msg-${messageCounter++}`;
             const modelMessage = { role: 'model', content: '', id: modelMessageId };
             chatHistory.push(modelMessage);
-            const modelBubble = createChatBubbleElement(modelMessage); // Create empty bubble
-            chatContainer.appendChild(modelBubble); // Add to DOM
-            updateChatPlaceholder(); // Ensure placeholder is removed
+            renderChatHistory();
             scrollToBottom();
 
-            // Prepare prompt for llama.cpp server format
-            const fullPromptForLlama = formatChatHistoryForLlama(chatHistory.slice(0, -1)); // Exclude the empty model message
+            // Prepare prompt for llama.cpp server
+            const fullPromptForLlama = formatChatHistoryForLlama(chatHistory.slice(0, -1));
             const apiUrl = `${serverUrl}/completion`;
             const requestBody = {
                 prompt: fullPromptForLlama,
                 temperature: temperature,
-                n_predict: nPredict === -1 ? -1 : Math.max(1, nPredict), // Ensure n_predict is valid
+                n_predict: nPredict === -1 ? -1 : Math.max(1, nPredict),
                 top_p: topP,
                 top_k: topK,
                 stop: stopSequences,
-                stream: true // Always use streaming
-                // Add image_data if server supports it and files are images
-                // image_data: stagedFiles.filter(f => f.type.startsWith('image/')).map(f => ({ data: f.content.split(',')[1], id: /* some unique id */ }))
+                stream: true
             };
 
             console.log("Sending API Request to:", apiUrl);
-            console.log("Request Body (prompt truncated):", JSON.stringify({...requestBody, prompt: requestBody.prompt.substring(0, 500) + (requestBody.prompt.length > 500 ? '...' : '') }, null, 2));
-            console.log(`Using message IDs: User=${userMessageId}, Model=${modelMessageId}`);
 
-            // Debounced rendering for smoother UI during streaming
             const debouncedRender = debounce(() => {
-                updateModelBubbleContent(modelMessageId, modelMessage.content, false); // Final render after debounce period
+                updateModelBubbleContent(modelMessageId, modelMessage.content, false);
                 scrollToBottom();
-            }, 250); // Adjust debounce time as needed
+            }, 250);
 
             let responseOk = false;
-            let wasAborted = false; // Flag to track if fetch was aborted
+            let wasAborted = false;
 
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(requestBody),
-                    signal: signal, // Pass the abort signal
+                    signal: signal,
                 });
 
-                responseOk = response.ok; // Store response status
+                responseOk = response.ok;
 
                 if (!response.ok || !response.body) {
                     let errorText = `API Error: ${response.status} ${response.statusText}`;
-                     try {
-                         // Try to parse JSON error from server
-                         const errorData = await response.json();
-                         console.error("API Error Response Body:", errorData);
-                         if (errorData?.content) errorText += ` - ${errorData.content}`; // llama.cpp server format?
-                         else if (errorData?.error) errorText += ` - ${errorData.error}`;
-                         else { // Fallback to text if not JSON or unknown format
-                            const textResponse = await response.text();
-                            errorText += ` - Server Response: ${textResponse.substring(0, 300)}${textResponse.length > 300 ? '...' : ''}`;
-                         }
-                     } catch (e) { /* Ignore if response is not JSON */ }
-                     throw new Error(errorText);
+                    try {
+                        const errorData = await response.json();
+                        if (errorData?.content) errorText += ` - ${errorData.content}`;
+                        else if (errorData?.error) errorText += ` - ${errorData.error}`;
+                    } catch (e) { /* Ignore */ }
+                    throw new Error(errorText);
                 }
 
                 showLoading(true, "Receiving response...");
-                serverAvailable = true; // Server responded successfully
+                serverAvailable = true;
 
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let buffer = '';
-                let finalData = null; // To store the last data chunk with stats
+                let finalData = null;
 
                 while (true) {
                     const { value, done } = await reader.read();
-                    if (done) {
-                        console.log("Stream finished.");
-                        break;
-                    }
+                    if (done) break;
 
                     buffer += decoder.decode(value, { stream: true });
-                    // Process Server-Sent Events (SSE)
                     let lines = buffer.split('\n\n');
-                    buffer = lines.pop(); // Keep the potentially incomplete last part
+                    buffer = lines.pop();
 
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
@@ -1012,359 +1375,268 @@
                             if (jsonData) {
                                 try {
                                     const data = JSON.parse(jsonData);
-                                    // Append content chunks
                                     if (typeof data.content === 'string') {
                                         modelMessage.content += data.content;
-                                        // Update bubble immediately for responsiveness (optional, but good UX)
-                                        updateModelBubbleContent(modelMessageId, modelMessage.content, true); // Indicate streaming
-                                        debouncedRender(); // Schedule a full re-render
+                                        updateModelBubbleContent(modelMessageId, modelMessage.content, true);
+                                        debouncedRender();
                                     }
-                                    // Check for stop signal and store final data
                                     if (data.stop === true) {
-                                        console.log("Stop signal received in stream:", data);
-                                        finalData = data; // Store the final chunk containing metrics
-
-                                        // Ensure any remaining buffer is decoded
-                                         buffer += decoder.decode(undefined, { stream: false }); // Decode final part
-                                         // Check if the final buffer part also contains 'data:'
-                                         if (buffer.startsWith('data: ')) {
-                                             const lastJsonData = buffer.substring(6).trim();
-                                             if(lastJsonData) {
-                                                  try {
-                                                     const lastData = JSON.parse(lastJsonData);
-                                                      if (lastData.stop === true) finalData = lastData; // Update if this is the real last one
-                                                  } catch(e) { console.error("Error parsing final buffer chunk:", e); }
-                                             }
-                                         }
-                                        buffer = ''; // Clear buffer after processing final part
+                                        finalData = data;
                                     }
                                 } catch (e) {
-                                    console.error("Error parsing stream JSON:", e, "Data:", jsonData);
+                                    console.error("Error parsing stream JSON:", e);
                                 }
                             }
                         }
                     }
-                } // End while loop
+                }
 
-                // Final update after stream ends
                 updateModelBubbleContent(modelMessageId, modelMessage.content, false);
                 scrollToBottom();
 
-                // Display final status with metrics if available
                 let statusMessage = "Response complete.";
-                let tokensPerSecond = 0;
                 if (finalData) {
-                     console.log("Final data chunk:", finalData); // Log final metrics
-                     if (finalData.timings && finalData.tokens_predicted > 0 && finalData.timings.predicted_ms > 0) {
-                         tokensPerSecond = finalData.tokens_predicted / (finalData.timings.predicted_ms / 1000);
-                         statusMessage += ` Speed: ${tokensPerSecond.toFixed(1)} t/s.`; // Add token speed
-                     }
-                     // Or just show total time if speed cannot be calculated
-                    else if(finalData.timings && finalData.timings.predicted_ms > 0) { // Add prompt eval time too
-                         statusMessage += ` Time: ${((finalData.timings.prompt_ms + finalData.timings.predicted_ms)/1000).toFixed(2)}s.`
+                    if (finalData.timings && finalData.tokens_predicted > 0 && finalData.timings.predicted_ms > 0) {
+                        const tokensPerSecond = finalData.tokens_predicted / (finalData.timings.predicted_ms / 1000);
+                        statusMessage += ` Speed: ${tokensPerSecond.toFixed(1)} t/s.`;
                     }
-
-                    if (finalData.stopped_eos) statusMessage += ` (Stopped: EOS)`;
-                    if (finalData.stopped_word) statusMessage += ` (Stopped: Word)`;
-                    if (finalData.stopped_limit) statusMessage += ` (Stopped: Limit)`; // Indicate if max tokens hit
+                    if (finalData.stopped_limit) statusMessage += ` (Stopped: Limit)`;
                 }
-                showStatus(statusMessage, false, finalData?.stopped_limit); // Show warning if stopped by limit
+                showStatus(statusMessage, false, finalData?.stopped_limit);
 
             } catch (error) {
                 if (error.name === 'AbortError') {
-                    wasAborted = true; // Set the flag
-                    console.log("Fetch aborted by user.");
-                    showStatus("Request cancelled by user.", false, false, true); // Info status for cancellation
-
-                    // Optional: Remove very short/empty model bubble if cancelled early
+                    wasAborted = true;
+                    showStatus("Request cancelled by user.", false, false, true);
+                    
                     const modelBubbleIndex = chatHistory.findIndex(m => m.id === modelMessageId);
-                    if (modelBubbleIndex > -1 && chatHistory[modelBubbleIndex].content.length < 15) { // Threshold for removal
-                        console.log("Removing very short cancelled model message.");
-                        chatHistory.splice(modelBubbleIndex, 1); // Remove the empty model message
-                        messageCounter--; // Adjust counter
-                        renderChatHistory(); // Re-render without the bubble
+                    if (modelBubbleIndex > -1 && chatHistory[modelBubbleIndex].content.length < 15) {
+                        chatHistory.splice(modelBubbleIndex, 1);
+                        messageCounter--;
+                        renderChatHistory();
                     } else if (modelBubbleIndex > -1) {
-                        // Ensure the final partial content is rendered correctly even if aborted
-                         updateModelBubbleContent(modelMessageId, modelMessage.content, false);
+                        updateModelBubbleContent(modelMessageId, modelMessage.content, false);
                     }
-
                 } else {
-                     // Handle other errors (network, API, etc.)
-                     console.error("API Call Failed:", error);
-                     let displayError = error.message || 'An unknown error occurred.';
-                     // Specific message for connection errors
-                     if (!responseOk && (displayError.includes('Failed to fetch') || displayError.includes('NetworkError') || displayError.includes('ERR_CONNECTION_REFUSED'))) {
-                         displayError = `Connection Error: Could not connect to server at ${serverUrl}. Is it running?`;
-                         serverAvailable = false; // Mark server as unavailable
-                     }
-                     // Rollback: Remove the user and model messages added for this failed attempt
-                     const userMsgIndex = chatHistory.findIndex(m => m.id === userMessageId);
-                     if (userMsgIndex !== -1) {
-                        // Remove user message and the placeholder model message
+                    console.error("API Call Failed:", error);
+                    let displayError = error.message || 'An unknown error occurred.';
+                    if (!responseOk && (displayError.includes('Failed to fetch') || displayError.includes('NetworkError'))) {
+                        displayError = `Connection Error: Could not connect to server at ${serverUrl}. Is it running?`;
+                        serverAvailable = false;
+                    }
+                    const userMsgIndex = chatHistory.findIndex(m => m.id === userMessageId);
+                    if (userMsgIndex !== -1) {
                         chatHistory.splice(userMsgIndex, 2);
-                        messageCounter -= 2; // Adjust counter
-                     }
-                     renderChatHistory(); // Re-render without the failed messages
-                     showStatus(`Error: ${displayError}`, true); // Show error status
+                        messageCounter -= 2;
+                    }
+                    renderChatHistory();
+                    showStatus(`Error: ${displayError}`, true);
                 }
             } finally {
-                // --- Cleanup regardless of success, failure, or abort ---
-                resetButtonToSendState(); // Reset button to 'Send' state
-                showLoading(false); // Hide loader
-                promptInput.disabled = false; // Re-enable input
-                currentAbortController = null; // Clear the controller
-                updateSendButtonState(); // Update button state based on input/files
-                updateSessionButtonStates(); // Re-enable session buttons
-                if (!wasAborted) { // Only refocus if not aborted (user might not want focus after cancelling)
-                   promptInput.focus();
+                resetButtonToSendState();
+                showLoading(false);
+                elements.chatInput.disabled = false;
+                currentAbortController = null;
+                updateSendButtonState();
+                updateSessionButtonStates();
+                if (!wasAborted) {
+                    elements.chatInput.focus();
                 }
+            }
+        }
+
+        function handleStopGeneration() {
+            if (currentAbortController) {
+                console.log("Stop button clicked. Aborting request...");
+                showStatus("Cancelling request...", false, true);
+                currentAbortController.abort();
             }
         }
 
         function resetButtonToSendState() {
-             sendButton.removeEventListener('click', handleStopGeneration); // Remove stop listener
-             sendButton.textContent = 'Send';
-             sendButton.classList.remove('stop-button');
-             sendButton.title = 'Send Message';
-             sendButton.addEventListener('click', handleSendPrompt); // Add send listener back
-             // State (disabled/enabled) will be handled by updateSendButtonState
+            elements.sendButton.removeEventListener('click', handleStopGeneration);
+            elements.sendButton.innerHTML = '<span>Send</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
+            elements.sendButton.classList.remove('stop-button');
+            elements.sendButton.addEventListener('click', handleSendPrompt);
         }
 
-         // Formats chat history for llama.cpp /completion endpoint
         function formatChatHistoryForLlama(history) {
-            // This format assumes a simple USER:/ASSISTANT: turn structure.
-            // Adjust if your model expects a different format (e.g., ChatML, Alpaca).
             let formattedPrompt = "";
-            // Optional: Add a system prompt if needed
-            // formattedPrompt += "SYSTEM: You are a helpful assistant.\n";
-
             history.forEach(message => {
                 if (message.role === 'user') {
-                    // Add user message, ensuring newline separation
                     formattedPrompt += `USER: ${message.content}\n`;
                 } else if (message.role === 'model') {
-                    // Add assistant message, ensuring newline separation
                     formattedPrompt += `ASSISTANT: ${message.content}\n`;
                 }
-                // Ignore other roles or potentially add them if the model supports it
             });
-
-            // Add the final prompt for the assistant to start generating
-            formattedPrompt += "ASSISTANT:"; // Important: The model continues from here
+            formattedPrompt += "ASSISTANT:";
             return formattedPrompt;
         }
 
         function showLoading(isLoading, message = "Processing request...") {
-             const currentStatusText = statusDiv.querySelector('span')?.textContent || '';
-             const isError = statusDiv.classList.contains('error');
-             const isWarning = statusDiv.classList.contains('warning');
-             const isInfo = statusDiv.classList.contains('info');
-             const loaderElement = statusDiv.querySelector('.loader');
-
-             if (isLoading) {
-                 if (!loaderElement) {
-                    // Insert loader + message
-                    statusDiv.innerHTML = `<div class="loader"></div><span>${escapeHtml(message)}</span>`;
-                    // Preserve existing status type if possible
-                    if (isError) statusDiv.classList.add('error');
-                    else if (isWarning) statusDiv.classList.add('warning');
-                    else if (isInfo) statusDiv.classList.add('info');
-                    else statusDiv.classList.remove('error', 'warning', 'info'); // Default to normal
-                 } else {
-                    // Update message if loader already exists
-                    const statusSpan = statusDiv.querySelector('span');
-                    if(statusSpan) statusSpan.textContent = escapeHtml(message);
-                 }
-                 // Disable input/buttons while loading
-                 promptInput.disabled = true; // Ensure input is disabled
-                 updateSessionButtonStates(); // Update session buttons state
-             } else {
-                 // Remove loader if present
-                 if (loaderElement) loaderElement.remove();
-                 const statusSpan = statusDiv.querySelector('span');
-                 // Clear status message only if it was a loading message
-                 if (statusSpan && /Processing|Connecting|Receiving|Processing files/.test(statusSpan.textContent)) {
-                      statusDiv.innerHTML = ''; // Clear the temporary loading message
-                      statusDiv.classList.remove('error', 'warning', 'info'); // Clear status type
-                 }
-                 // Re-enable input/buttons
-                 promptInput.disabled = false; // Re-enable input
-                 updateSendButtonState(); // Update send button based on content
-                 updateSessionButtonStates(); // Update session buttons state
-             }
-         }
-
-        function showStatus(message, isError = false, isWarning = false, isInfo = false, clearNormal = false) {
-             const loaderElement = statusDiv.querySelector('.loader');
-             const loaderHtml = loaderElement ? loaderElement.outerHTML : ''; // Preserve loader if showing status during loading
-
-             // Option to clear non-error/warning/info messages completely
-             if (clearNormal && !isError && !isWarning && !isInfo && !loaderHtml) {
-                 statusDiv.innerHTML = '';
-                 statusDiv.classList.remove('error', 'warning', 'info');
-                 return;
-             }
-
-             statusDiv.classList.remove('error', 'warning', 'info'); // Clear previous types
-             statusDiv.innerHTML = `${loaderHtml}<span>${escapeHtml(message)}</span>`; // Show message (and loader if present)
-
-             if (isError) statusDiv.classList.add('error');
-             else if (isWarning) statusDiv.classList.add('warning');
-             else if (isInfo) statusDiv.classList.add('info');
-         }
-
-        function createChatBubbleElement(message) {
-            const bubble = document.createElement('div');
-            bubble.classList.add('chat-bubble');
-            bubble.dataset.messageId = message.id; // Assign ID for later updates
-
-            if (message.role === 'user') {
-                bubble.classList.add('user-bubble');
-                // Use textContent for user messages to prevent XSS from file names/content snippets
-                bubble.textContent = message.content;
-            } else if (message.role === 'model') {
-                bubble.classList.add('model-bubble');
-                // Use marked.parse for model messages, which contain markdown
-                bubble.innerHTML = message.content ? marked.parse(message.content) : ''; // Initial render
-                if (message.content) {
-                    // Add code actions *after* the element is potentially in the DOM
-                     requestAnimationFrame(() => addCodeActionsToBubble(bubble));
+            if (isLoading) {
+                const loaderHtml = '<div class="loader"></div>';
+                elements.statusBar.innerHTML = `${loaderHtml}<span>${escapeHtml(message)}</span>`;
+            } else {
+                const loaderElement = elements.statusBar.querySelector('.loader');
+                if (loaderElement) {
+                    elements.statusBar.innerHTML = '';
                 }
             }
-            return bubble;
+        }
+
+        function showStatus(message, isError = false, isWarning = false, isInfo = false) {
+            const loaderElement = elements.statusBar.querySelector('.loader');
+            const loaderHtml = loaderElement ? loaderElement.outerHTML : '';
+
+            elements.statusBar.classList.remove('error', 'warning', 'info');
+            elements.statusBar.innerHTML = `${loaderHtml}<span>${escapeHtml(message)}</span>`;
+
+            if (isError) elements.statusBar.classList.add('error');
+            else if (isWarning) elements.statusBar.classList.add('warning');
+            else if (isInfo) elements.statusBar.classList.add('info');
+        }
+
+        function createMessageElement(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${message.role}-message`;
+            messageDiv.dataset.messageId = message.id;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'message-avatar';
+            avatarDiv.textContent = message.role === 'user' ? 'U' : 'L';
+
+            const bodyDiv = document.createElement('div');
+            bodyDiv.className = 'message-body';
+
+            if (message.role === 'user') {
+                bodyDiv.textContent = message.content;
+            } else if (message.role === 'model') {
+                bodyDiv.innerHTML = message.content ? marked.parse(message.content) : '';
+                if (message.content) {
+                    requestAnimationFrame(() => addCodeActionsToBubble(bodyDiv));
+                }
+            }
+
+            contentDiv.appendChild(avatarDiv);
+            contentDiv.appendChild(bodyDiv);
+            messageDiv.appendChild(contentDiv);
+
+            return messageDiv;
         }
 
         function renderChatHistory() {
-            chatContainer.innerHTML = ''; // Clear existing bubbles
             if (chatHistory.length === 0) {
-                 updateChatPlaceholder(); // Show placeholder if empty
-                 updateSendButtonState(); // Update button state
+                elements.chatContainer.innerHTML = `
+                    <div class="empty-state">
+                        <h2>LlamaHTML</h2>
+                        <p>Start a conversation with your local Llama model</p>
+                    </div>
+                `;
+                updateSendButtonState();
                 return;
             }
 
+            elements.chatContainer.innerHTML = '';
             chatHistory.forEach(message => {
-                 // Basic validation for message structure
-                 if (!message || !message.role || typeof message.content !== 'string') {
-                     console.warn("Skipping rendering invalid message:", message);
-                     return;
-                 }
-                 const bubble = createChatBubbleElement(message);
-                 chatContainer.appendChild(bubble);
-             });
-             updateChatPlaceholder(); // Hide placeholder if needed
-             updateSessionButtonStates(); // Update session buttons
-             updateSendButtonState(); // Update send button
-         }
+                if (!message || !message.role || typeof message.content !== 'string') {
+                    console.warn("Skipping rendering invalid message:", message);
+                    return;
+                }
+                const messageElement = createMessageElement(message);
+                elements.chatContainer.appendChild(messageElement);
+            });
+            updateSessionButtonStates();
+            updateSendButtonState();
+        }
 
-         // Updates the content of an existing model bubble, especially for streaming
-         function updateModelBubbleContent(messageId, newContent, isStreamingUpdate = false) {
-             const bubble = chatContainer.querySelector(`.model-bubble[data-message-id="${messageId}"]`);
-             if (!bubble) {
-                 console.error(`Bubble with ID ${messageId} not found for update.`);
-                 return;
-             }
+        function updateModelBubbleContent(messageId, newContent, isStreamingUpdate = false) {
+            const messageDiv = elements.chatContainer.querySelector(`.model-message[data-message-id="${messageId}"]`);
+            if (!messageDiv) {
+                console.error(`Message with ID ${messageId} not found for update.`);
+                return;
+            }
 
-             try {
-                 // Re-parse the entire content. Marked is fast enough for typical message sizes.
-                 bubble.innerHTML = marked.parse(newContent || (isStreamingUpdate ? "" : "[Empty Model Response]"));
-                 // Re-add code actions after updating innerHTML, as they might have been wiped out
-                 addCodeActionsToBubble(bubble); // Ensure buttons are present/updated
-             } catch (e) {
-                 console.error("Markdown parsing/rendering error during update:", e);
-                 // Fallback to text content on error
-                 bubble.textContent = newContent || "[Error rendering response]";
-             }
-         }
+            const bodyDiv = messageDiv.querySelector('.message-body');
+            if (!bodyDiv) return;
 
-        // --- Function to Add Copy/Download Buttons ---
-        function addCodeActionsToBubble(bubble) {
-            const preBlocks = bubble.querySelectorAll('pre');
+            try {
+                bodyDiv.innerHTML = marked.parse(newContent || (isStreamingUpdate ? "" : "[Empty Model Response]"));
+                addCodeActionsToBubble(bodyDiv);
+            } catch (e) {
+                console.error("Markdown parsing/rendering error during update:", e);
+                bodyDiv.textContent = newContent || "[Error rendering response]";
+            }
+        }
+
+        function addCodeActionsToBubble(container) {
+            const preBlocks = container.querySelectorAll('pre');
             preBlocks.forEach(pre => {
-                if (pre.querySelector('.code-actions')) return; // Don't add if already present
+                if (pre.querySelector('.code-actions')) return;
 
                 const codeElement = pre.querySelector('code');
-                if (!codeElement) return; // Should have a code element
+                if (!codeElement) return;
 
                 const actionsContainer = document.createElement('div');
                 actionsContainer.className = 'code-actions';
 
-                // Copy Button
                 const copyButton = document.createElement('button');
                 copyButton.textContent = 'Copy';
                 copyButton.className = 'code-action-button copy-code-button';
                 copyButton.title = 'Copy code to clipboard';
-                copyButton.setAttribute('aria-label', 'Copy code block');
                 actionsContainer.appendChild(copyButton);
 
-                // Download Button
                 const downloadButton = document.createElement('button');
                 downloadButton.textContent = 'Download';
                 downloadButton.className = 'code-action-button download-code-button';
                 downloadButton.title = 'Download code block as file';
-                downloadButton.setAttribute('aria-label', 'Download code block');
                 actionsContainer.appendChild(downloadButton);
 
-                // Prepend the actions container to the <pre> block
-                 if (pre.firstChild) {
+                if (pre.firstChild) {
                     pre.insertBefore(actionsContainer, pre.firstChild);
-                 } else {
-                    pre.appendChild(actionsContainer);
-                 }
-
-                // Ensure highlight.js runs if marked didn't do it (e.g., no language specified)
-                // Check if the hljs class is already there
-                if (!codeElement.classList.contains('hljs')) {
-                   try {
-                      // Only highlight if not already highlighted
-                      hljs.highlightElement(codeElement);
-                   }
-                   catch(e) {
-                      console.warn("Highlighting failed for element", codeElement, e);
-                   }
                 } else {
-                   // console.log("Code element already highlighted:", codeElement);
+                    pre.appendChild(actionsContainer);
+                }
+
+                if (!codeElement.classList.contains('hljs')) {
+                    try {
+                        hljs.highlightElement(codeElement);
+                    } catch(e) {
+                        console.warn("Highlighting failed for element", codeElement, e);
+                    }
                 }
             });
         }
 
-        function updateChatPlaceholder() {
-             const placeholder = chatContainer.querySelector('.chat-placeholder');
-             if (chatHistory.length === 0 && !placeholder) {
-                 // Add placeholder if chat is empty and it doesn't exist
-                 chatContainer.innerHTML = '<div class="chat-placeholder">Conversation will appear here...</div>';
-             } else if (chatHistory.length > 0 && placeholder) {
-                 // Remove placeholder if chat has messages and it exists
-                 placeholder.remove();
-             }
-         }
+        function handleCopyCodeClick(button) {
+            const pre = button.closest('pre');
+            const code = pre?.querySelector('code');
+            if (!code) return;
+            
+            const codeToCopy = code.textContent || '';
+            navigator.clipboard.writeText(codeToCopy).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                button.disabled = true;
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                    button.disabled = false;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy code: ', err);
+                button.textContent = 'Error';
+                button.disabled = true;
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.disabled = false;
+                }, 2000);
+            });
+        }
 
-         // --- Click Handler for Copy Button ---
-         function handleCopyCodeClick(button) {
-             const pre = button.closest('pre');
-             const code = pre?.querySelector('code');
-             if (!code) return;
-             const codeToCopy = code.textContent || '';
-             navigator.clipboard.writeText(codeToCopy).then(() => {
-                 button.textContent = 'Copied!';
-                 button.classList.add('copied');
-                 button.disabled = true; // Briefly disable
-                 setTimeout(() => {
-                     button.textContent = 'Copy';
-                     button.classList.remove('copied');
-                     button.disabled = false;
-                 }, 2000); // Reset after 2 seconds
-             }).catch(err => {
-                 console.error('Failed to copy code: ', err);
-                 button.textContent = 'Error'; // Indicate error
-                 button.disabled = true;
-                 setTimeout(() => {
-                     button.textContent = 'Copy';
-                     button.disabled = false;
-                 }, 2000);
-             });
-         }
-
-        // --- Click Handler for Download Button ---
         function handleDownloadCodeClick(button) {
             const pre = button.closest('pre');
             const code = pre?.querySelector('code');
@@ -1372,30 +1644,14 @@
 
             const codeContent = code.textContent || '';
             let language = 'plaintext';
-            let extension = '.txt'; // Default extension
+            let extension = '.txt';
 
-            // 1. Try to detect language from highlight.js class (most reliable)
-            // Check both code and pre elements for 'language-xyz' or 'hljs language-xyz'
             const langClass = Array.from(code.classList).find(cls => cls.startsWith('language-'))
                            || Array.from(pre.classList).find(cls => cls.startsWith('language-'));
             if (langClass) {
-                // Extract language name (e.g., 'python' from 'language-python')
-                language = langClass.replace('language-', '').split(' ')[0]; // Take first part if multiple classes like "hljs language-js"
-            } else {
-                // 2. Basic content sniffing as a fallback
-                if (/^\s*<\!DOCTYPE html>|<html.*>/i.test(codeContent.substring(0,100))) language = 'html';
-                else if (/^\s*\{.*\}\s*$/.test(codeContent) || /^\s*\[.*\]\s*$/.test(codeContent)) language = 'json'; // Basic JSON check
-                else if (codeContent.includes('def ') && codeContent.includes(':')) language = 'python';
-                else if (codeContent.includes('function') && (codeContent.includes('{') || codeContent.includes('=>'))) language = 'javascript'; // Broader JS check
-                else if (codeContent.includes('public class') || codeContent.includes('import java')) language = 'java';
-                else if (codeContent.includes('#include') && codeContent.includes('main(')) language = 'cpp'; // C/C++ guess
-                else if (codeContent.includes('<?php')) language = 'php';
-                else if (codeContent.includes('FROM ') && codeContent.includes('RUN ')) language = 'dockerfile';
-                else if (/^\s*---/.test(codeContent)) language = 'yaml';
-                 else if (/^\s*SELECT .* FROM /i.test(codeContent)) language = 'sql';
+                language = langClass.replace('language-', '').split(' ')[0];
             }
 
-            // 3. Map language name to file extension
             const extensionMap = {
                 python: '.py', py: '.py',
                 javascript: '.js', js: '.js',
@@ -1416,81 +1672,78 @@
                 php: '.php',
                 rust: '.rs', rs: '.rs',
                 sql: '.sql',
-                dockerfile: 'Dockerfile', // Dockerfile often has no extension
-                ini: '.ini',
-                toml: '.toml',
+                dockerfile: 'Dockerfile',
                 plaintext: '.txt', text: '.txt', txt: '.txt',
-                // Add more mappings as needed
             };
-            extension = extensionMap[language.toLowerCase()] || extension; // Use mapped extension or default .txt
-            const filename = `code-${language}${extension === 'Dockerfile' ? '' : extension}`; // Construct filename
+            
+            extension = extensionMap[language.toLowerCase()] || extension;
+            const filename = `code-${language}${extension === 'Dockerfile' ? '' : extension}`;
 
-            // 4. Create Blob and trigger download
             try {
-                const blob = new Blob([codeContent], { type: 'application/octet-stream' }); // Use octet-stream to force download
+                const blob = new Blob([codeContent], { type: 'application/octet-stream' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = filename;
-                document.body.appendChild(a); // Append needed for Firefox
+                document.body.appendChild(a);
                 a.click();
-                document.body.removeChild(a); // Clean up
-                URL.revokeObjectURL(url); // Free memory
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
 
-                // Feedback
                 button.textContent = 'Downloaded';
                 button.disabled = true;
-                 setTimeout(() => { button.textContent = 'Download'; button.disabled = false; }, 2000);
+                setTimeout(() => { 
+                    button.textContent = 'Download'; 
+                    button.disabled = false; 
+                }, 2000);
             } catch (err) {
                 console.error('Failed to create download: ', err);
-                 button.textContent = 'Error';
-                 button.disabled = true;
-                  setTimeout(() => { button.textContent = 'Download'; button.disabled = false; }, 2000);
+                button.textContent = 'Error';
+                button.disabled = true;
+                setTimeout(() => { 
+                    button.textContent = 'Download'; 
+                    button.disabled = false; 
+                }, 2000);
             }
         }
 
-
         function escapeHtml(unsafe) {
-             if (typeof unsafe !== 'string') return '';
-             return unsafe
-                  .replace(/&/g, "&amp;")
-                  .replace(/</g, "&lt;")
-                  .replace(/>/g, "&gt;")
-                  .replace(/"/g, "&quot;")
-                  .replace(/'/g, "&#039;");
-         }
+            if (typeof unsafe !== 'string') return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
         function scrollToBottom() {
             requestAnimationFrame(() => {
-                // Scroll down if user is already near the bottom or if it's the initial load
-                const isNearBottom = responseArea.scrollHeight - responseArea.scrollTop - responseArea.clientHeight < 250; // Adjust threshold if needed
-                 if (isNearBottom) {
-                     responseArea.scrollTop = responseArea.scrollHeight;
-                 }
+                const isNearBottom = elements.chatContainer.scrollHeight - elements.chatContainer.scrollTop - elements.chatContainer.clientHeight < 250;
+                if (isNearBottom) {
+                    elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
+                }
             });
         }
 
-        // --- Session Management ---
-
+        // Session Management
         function getSessionIndex() {
             try {
                 const indexJson = localStorage.getItem(SESSION_INDEX_KEY);
                 if (!indexJson) return [];
                 const index = JSON.parse(indexJson);
-                // Filter out invalid entries just in case
                 return Array.isArray(index) ? index.filter(s => s && s.id && s.name) : [];
             } catch (e) {
                 console.error("Error reading session index from Local Storage:", e);
-                localStorage.removeItem(SESSION_INDEX_KEY); // Clear corrupted index
+                localStorage.removeItem(SESSION_INDEX_KEY);
                 return [];
             }
         }
 
         function saveSessionIndex(index) {
             try {
-                 // Ensure index is valid and sorted before saving
-                 const validIndex = index.filter(s => s && s.id && s.name);
-                 validIndex.sort((a, b) => (a.name || "").localeCompare(b.name || "")); // Sort alphabetically by name
+                const validIndex = index.filter(s => s && s.id && s.name);
+                validIndex.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
                 localStorage.setItem(SESSION_INDEX_KEY, JSON.stringify(validIndex));
             } catch (e) {
                 console.error("Error saving session index to Local Storage:", e);
@@ -1498,53 +1751,56 @@
             }
         }
 
-        function populateSessionDropdown() {
+        function populateSessions() {
             const sessions = getSessionIndex();
-            sessionSelect.innerHTML = ''; // Clear existing options
+            elements.sessionsList.innerHTML = '';
 
-            // Add "New Chat" option first
-            const newOption = document.createElement('option');
-            newOption.value = ""; // Use empty value for "New Chat"
-            newOption.textContent = "--- New Chat ---";
-            sessionSelect.appendChild(newOption);
-
-            // Add saved sessions
             sessions.forEach(session => {
-                 const option = document.createElement('option');
-                 option.value = session.id;
-                 option.textContent = session.name; // Display session name
-                 sessionSelect.appendChild(option);
+                const sessionItem = document.createElement('div');
+                sessionItem.className = 'session-item';
+                sessionItem.dataset.sessionId = session.id;
+                sessionItem.innerHTML = `
+                    <span>${escapeHtml(session.name)}</span>
+                    <button class="delete-btn" title="Delete session">&times;</button>
+                `;
+                
+                if (session.id === currentSessionId) {
+                    sessionItem.classList.add('active');
+                }
+                
+                elements.sessionsList.appendChild(sessionItem);
             });
 
-            // Select the current session or "New Chat"
-            sessionSelect.value = currentSessionId || "";
-            updateSessionButtonStates(); // Update button states after populating
+            updateSessionButtonStates();
         }
 
         function startNewSession() {
-             // Abort any ongoing request safely
-             if (currentAbortController) {
+            if (currentAbortController) {
                 currentAbortController.abort();
-                currentAbortController = null; // Clear controller
+                currentAbortController = null;
             }
-            promptInput.value = '';
+            elements.chatInput.value = '';
+            autoResizeTextarea(elements.chatInput);
             chatHistory = [];
-            currentSessionId = null; // No session loaded
-            messageCounter = 0; // Reset message IDs
-            clearStagedFiles(); // Clear any leftover staged files
-            renderChatHistory(); // Render the empty state (shows placeholder)
-            showStatus("", false, false, false, true); // Clear status bar
-            sessionSelect.value = ""; // Set dropdown to "New Chat"
-            updateSessionButtonStates(); // Update buttons (Save disabled, Delete disabled)
-            promptInput.disabled = false; // Ensure input is enabled
-            resetButtonToSendState(); // Ensure button is 'Send'
-            updateSendButtonState(); // Update send button state (likely disabled)
-            promptInput.focus(); // Focus input for user
+            currentSessionId = null;
+            messageCounter = 0;
+            clearStagedFiles();
+            renderChatHistory();
+            showStatus("", false, false, false);
+            updateSessionButtonStates();
+            elements.chatInput.disabled = false;
+            resetButtonToSendState();
+            updateSendButtonState();
+            elements.chatInput.focus();
+            
+            // Update active session in sidebar
+            document.querySelectorAll('.session-item').forEach(item => {
+                item.classList.remove('active');
+            });
         }
 
         function handleSaveSession() {
-            // Prevent saving if empty or loading
-             const isLoading = statusDiv.querySelector('.loader') !== null;
+            const isLoading = elements.statusBar.querySelector('.loader') !== null;
             if ((chatHistory.length === 0 && stagedFiles.length === 0) || isLoading) {
                 showStatus("Cannot save an empty chat or while loading.", false, true);
                 return;
@@ -1554,134 +1810,104 @@
             let defaultName = `Chat ${new Date().toLocaleString()}`;
             let existingSession = null;
 
-            // If currently in a saved session, suggest its name
             if (currentSessionId) {
                 existingSession = sessions.find(s => s.id === currentSessionId);
                 if (existingSession) {
-                    defaultName = existingSession.name; // Suggest current session name for overwrite
+                    defaultName = existingSession.name;
                 }
             }
 
             const sessionName = prompt("Enter a name for this session:", defaultName);
 
-            if (sessionName === null) { // User cancelled prompt
+            if (sessionName === null) {
                 showStatus("Save cancelled.", false, false, true);
                 return;
             }
 
             const trimmedName = sessionName.trim();
             if (!trimmedName) {
-                 showStatus("Session name cannot be empty.", true);
-                 return;
-             }
-
-             // Check if the name (excluding the current session if overwriting) already exists
-             const nameExists = sessions.some(s => s.name === trimmedName && s.id !== currentSessionId);
-             if (nameExists) {
-                 const conflictingSession = sessions.find(s => s.name === trimmedName);
-                 // Confirm overwrite if name exists and belongs to a *different* session ID
-                 if (!confirm(`A session named "${trimmedName}" already exists. Overwrite it?`)) {
-                     showStatus("Save cancelled.", false, false, true);
-                     return;
-                 }
-                 // If confirmed, remove the old conflicting session data and index entry
-                 if (conflictingSession) {
-                     try { localStorage.removeItem(`${SESSION_DATA_PREFIX}${conflictingSession.id}`); }
-                     catch (e) { console.error(`Error removing conflicting session data ${conflictingSession.id}:`, e); }
-                     // Remove from index array before saving the new one
-                     const conflictIndex = sessions.findIndex(s => s.id === conflictingSession.id);
-                     if (conflictIndex > -1) sessions.splice(conflictIndex, 1);
-                 }
-             }
-
-            try {
-                // Serialize current chat history
-                const historyJson = JSON.stringify(chatHistory);
-                let sessionIdToSave = currentSessionId;
-
-                if (existingSession) { // Overwriting or updating existing session
-                    if (existingSession.name !== trimmedName) {
-                        existingSession.name = trimmedName; // Update name in index if changed
-                    }
-                    existingSession.timestamp = Date.now(); // Update timestamp
-                    console.log(`Updating session: ${sessionIdToSave}`);
-                } else { // Saving as a new session
-                    // Generate a reasonably unique ID
-                    sessionIdToSave = `${SESSION_DATA_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-                    sessions.push({ id: sessionIdToSave, name: trimmedName, timestamp: Date.now() });
-                    currentSessionId = sessionIdToSave; // Update current session ID
-                    console.log(`Creating new session: ${sessionIdToSave}`);
-                }
-
-                // Save the chat data and the updated index
-                localStorage.setItem(`${SESSION_DATA_PREFIX}${sessionIdToSave}`, historyJson);
-                saveSessionIndex(sessions); // Save the potentially modified index
-                populateSessionDropdown(); // Refresh dropdown
-                sessionSelect.value = sessionIdToSave; // Select the newly saved/updated session
-                showStatus(`Session "${trimmedName}" saved successfully.`, false, false, true);
-                updateSessionButtonStates(); // Update button states (Delete might become enabled)
-
-            } catch (e) {
-                 console.error("Error saving session data:", e);
-                 // Check for QuotaExceededError
-                 if (e.name === 'QuotaExceededError' || (e.message && e.message.toLowerCase().includes('quota'))) {
-                    showStatus("Error: Failed to save session. Local Storage is full. Please delete older sessions.", true);
-                 } else {
-                    showStatus("Error: Failed to save session data.", true);
-                 }
-            }
-        }
-
-        function handleLoadSession() {
-            const selectedId = sessionSelect.value;
-
-            if (!selectedId) { // User selected "--- New Chat ---"
-                 // Check for unsaved changes before starting new chat
-                 const hasUnsavedChanges = (chatHistory.length > 0 || stagedFiles.length > 0) && currentSessionId === null;
-                 if (hasUnsavedChanges) {
-                     if (!confirm("You have an unsaved chat/files. Start a new chat anyway? Changes will be lost.")) {
-                         sessionSelect.value = currentSessionId || ""; // Revert dropdown selection
-                         return;
-                     }
-                 }
-                startNewSession();
+                showStatus("Session name cannot be empty.", true);
                 return;
             }
 
-             // Avoid reloading the same session
-             if (selectedId === currentSessionId) return;
-
-             // Check for unsaved changes if switching *from* a "New Chat" state
-             const hasUnsavedChanges = (chatHistory.length > 0 || stagedFiles.length > 0) && currentSessionId === null;
-             if (hasUnsavedChanges) {
-                 if (!confirm("You have an unsaved chat/files. Load selected session anyway? Changes will be lost.")) {
-                     sessionSelect.value = currentSessionId || ""; // Revert dropdown selection
-                     return;
-                 }
-             }
+            const nameExists = sessions.some(s => s.name === trimmedName && s.id !== currentSessionId);
+            if (nameExists) {
+                const conflictingSession = sessions.find(s => s.name === trimmedName);
+                if (!confirm(`A session named "${trimmedName}" already exists. Overwrite it?`)) {
+                    showStatus("Save cancelled.", false, false, true);
+                    return;
+                }
+                if (conflictingSession) {
+                    try { 
+                        localStorage.removeItem(`${SESSION_DATA_PREFIX}${conflictingSession.id}`); 
+                    } catch (e) { 
+                        console.error(`Error removing conflicting session data ${conflictingSession.id}:`, e); 
+                    }
+                    const conflictIndex = sessions.findIndex(s => s.id === conflictingSession.id);
+                    if (conflictIndex > -1) sessions.splice(conflictIndex, 1);
+                }
+            }
 
             try {
-                const historyJson = localStorage.getItem(`${SESSION_DATA_PREFIX}${selectedId}`);
+                const historyJson = JSON.stringify(chatHistory);
+                let sessionIdToSave = currentSessionId;
+
+                if (existingSession) {
+                    if (existingSession.name !== trimmedName) {
+                        existingSession.name = trimmedName;
+                    }
+                    existingSession.timestamp = Date.now();
+                } else {
+                    sessionIdToSave = `${SESSION_DATA_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+                    sessions.push({ id: sessionIdToSave, name: trimmedName, timestamp: Date.now() });
+                    currentSessionId = sessionIdToSave;
+                }
+
+                localStorage.setItem(`${SESSION_DATA_PREFIX}${sessionIdToSave}`, historyJson);
+                saveSessionIndex(sessions);
+                populateSessions();
+                showStatus(`Session "${trimmedName}" saved successfully.`, false, false, true);
+                updateSessionButtonStates();
+
+            } catch (e) {
+                console.error("Error saving session data:", e);
+                if (e.name === 'QuotaExceededError' || (e.message && e.message.toLowerCase().includes('quota'))) {
+                    showStatus("Error: Failed to save session. Local Storage is full. Please delete older sessions.", true);
+                } else {
+                    showStatus("Error: Failed to save session data.", true);
+                }
+            }
+        }
+
+        function handleLoadSession(sessionId) {
+            if (sessionId === currentSessionId) return;
+
+            const hasUnsavedChanges = (chatHistory.length > 0 || stagedFiles.length > 0) && currentSessionId === null;
+            if (hasUnsavedChanges) {
+                if (!confirm("You have an unsaved chat/files. Load selected session anyway? Changes will be lost.")) {
+                    return;
+                }
+            }
+
+            try {
+                const historyJson = localStorage.getItem(`${SESSION_DATA_PREFIX}${sessionId}`);
                 if (!historyJson) {
-                    throw new Error(`Session data not found for ID: ${selectedId}. It might have been corrupted or deleted.`);
+                    throw new Error(`Session data not found for ID: ${sessionId}.`);
                 }
                 const loadedHistory = JSON.parse(historyJson);
-                 // Validate loaded data structure
-                 if (!Array.isArray(loadedHistory)) {
-                    throw new Error(`Invalid chat history format for ID: ${selectedId}.`);
-                 }
+                if (!Array.isArray(loadedHistory)) {
+                    throw new Error(`Invalid chat history format for ID: ${sessionId}.`);
+                }
 
-                // Abort any ongoing request before loading
                 if (currentAbortController) {
                     currentAbortController.abort();
                     currentAbortController = null;
                 }
 
                 chatHistory = loadedHistory;
-                currentSessionId = selectedId; // Update current session ID
-                clearStagedFiles(); // Clear any files staged before loading
+                currentSessionId = sessionId;
+                clearStagedFiles();
 
-                // Reset message counter based on loaded IDs (important for unique IDs)
                 let maxIdNum = -1;
                 chatHistory.forEach(msg => {
                     if (msg && msg.id && msg.id.startsWith('msg-')) {
@@ -1689,61 +1915,58 @@
                         if (!isNaN(numPart) && numPart > maxIdNum) maxIdNum = numPart;
                     }
                 });
-                messageCounter = maxIdNum + 1; // Start next ID after the highest loaded one
-                console.log(`Message counter reset to ${messageCounter} after loading session '${selectedId}'.`);
+                messageCounter = maxIdNum + 1;
 
-                renderChatHistory(); // Display the loaded chat
-                showStatus(`Session "${sessionSelect.options[sessionSelect.selectedIndex].text}" loaded.`, false, false, true);
-                updateSessionButtonStates(); // Update buttons (Save enabled, Delete enabled)
-                resetButtonToSendState(); // Ensure button is 'Send'
-                updateSendButtonState(); // Update send button state
-                scrollToBottom(); // Scroll to the end of loaded chat
+                renderChatHistory();
+                const session = getSessionIndex().find(s => s.id === sessionId);
+                showStatus(`Session "${session?.name || 'Unknown'}" loaded.`, false, false, true);
+                updateSessionButtonStates();
+                resetButtonToSendState();
+                updateSendButtonState();
+                scrollToBottom();
+                
+                // Update active session in sidebar
+                populateSessions();
 
             } catch (e) {
                 console.error("Error loading session:", e);
                 showStatus(`Error: Failed to load session. ${e.message}`, true);
-                // Attempt recovery: remove bad session data and index entry
-                 localStorage.removeItem(`${SESSION_DATA_PREFIX}${selectedId}`);
-                 const sessions = getSessionIndex().filter(s => s.id !== selectedId);
-                 saveSessionIndex(sessions);
-                 startNewSession(); // Go back to a clean state
-                 populateSessionDropdown(); // Refresh dropdown without the bad entry
+                localStorage.removeItem(`${SESSION_DATA_PREFIX}${sessionId}`);
+                const sessions = getSessionIndex().filter(s => s.id !== sessionId);
+                saveSessionIndex(sessions);
+                startNewSession();
+                populateSessions();
             }
         }
 
-        function handleDeleteSession() {
-            const selectedId = sessionSelect.value;
-             const isLoading = statusDiv.querySelector('.loader') !== null;
-
-            // Cannot delete "New Chat" or while loading
-            if (!selectedId || isLoading) {
-                showStatus("Select a session to delete first (cannot delete while loading).", false, true);
+        function handleDeleteSession(sessionId) {
+            const isLoading = elements.statusBar.querySelector('.loader') !== null;
+            if (!sessionId || isLoading) {
+                showStatus("Cannot delete while loading.", false, true);
                 return;
             }
 
-            const sessionName = sessionSelect.options[sessionSelect.selectedIndex].text;
-            if (!confirm(`Are you sure you want to delete the session "${sessionName}"? This cannot be undone.`)) {
+            const sessions = getSessionIndex();
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+
+            if (!confirm(`Are you sure you want to delete the session "${session.name}"? This cannot be undone.`)) {
                 showStatus("Deletion cancelled.", false, false, true);
                 return;
             }
 
             try {
-                // Remove session data
-                localStorage.removeItem(`${SESSION_DATA_PREFIX}${selectedId}`);
-                // Remove session from index
-                const sessions = getSessionIndex();
-                const updatedSessions = sessions.filter(s => s.id !== selectedId);
+                localStorage.removeItem(`${SESSION_DATA_PREFIX}${sessionId}`);
+                const updatedSessions = sessions.filter(s => s.id !== sessionId);
                 saveSessionIndex(updatedSessions);
 
-                showStatus(`Session "${sessionName}" deleted.`, false, false, true);
+                showStatus(`Session "${session.name}" deleted.`, false, false, true);
 
-                // If the deleted session was the active one, start a new chat
-                if (currentSessionId === selectedId) {
-                    startNewSession(); // This also repopulates the dropdown
-                } else {
-                     populateSessionDropdown(); // Just repopulate dropdown if a different session was deleted
-                     updateSessionButtonStates(); // Update button states
+                if (currentSessionId === sessionId) {
+                    startNewSession();
                 }
+                
+                populateSessions();
 
             } catch (e) {
                 console.error("Error deleting session:", e);
@@ -1752,19 +1975,38 @@
         }
 
         function updateSessionButtonStates() {
-             const isLoading = statusDiv.querySelector('.loader') !== null || currentAbortController !== null; // Check active request too
-
-             // Can save if not loading and chat is not empty (or has staged files)
-             const canSave = !isLoading && (chatHistory.length > 0 || stagedFiles.length > 0);
-             // Can delete if not loading and a specific session (not "New Chat") is selected
-             const isSessionSelected = sessionSelect.value !== "";
-
-             saveSessionButton.disabled = !canSave;
-             deleteSessionButton.disabled = isLoading || !isSessionSelected;
-             sessionSelect.disabled = isLoading; // Disable dropdown during requests
+            const isLoading = elements.statusBar.querySelector('.loader') !== null || currentAbortController !== null;
+            const canSave = !isLoading && (chatHistory.length > 0 || stagedFiles.length > 0);
+            
+            // Update save button text based on state
+            if (elements.saveSessionButton) {
+                elements.saveSessionButton.disabled = !canSave;
+            }
         }
 
-        // --- Initialize Application ---
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Add save session button to new chat button area
+        const saveSessionButton = document.createElement('button');
+        saveSessionButton.id = 'saveSessionButton';
+        saveSessionButton.className = 'new-chat-btn';
+        saveSessionButton.innerHTML = '<span style="font-size: 18px; font-weight: 400; margin-right: 8px;">💾</span>Save chat';
+        saveSessionButton.style.marginTop = '8px';
+        saveSessionButton.addEventListener('click', handleSaveSession);
+        elements.sessionsList.parentNode.insertBefore(saveSessionButton, elements.sessionsList);
+        elements.saveSessionButton = saveSessionButton;
+
+        // Initialize
         initialize();
 
     </script>
