@@ -1,347 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LlamaHTML</title>
-
+    <title>LlamaHTML </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="highlight-theme">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="highlight-theme">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
     <style>
-        :root {
-            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            --transition-speed: 0.2s ease;
-
-            /* Light theme */
-            --bg-primary: #ffffff;
-            --bg-secondary: #f7f7f8;
-            --bg-tertiary: #ececf1;
-            --text-primary: #2d2d2d;
-            --text-secondary: #666666;
-            --text-tertiary: #999999;
-            --border-color: #e5e5e5;
-            --sidebar-bg: #f7f7f8;
-            --sidebar-hover: #e5e5e5;
-            --input-bg: #ffffff;
-            --input-border: #e5e5e5;
-            --input-focus-border: #10a37f;
-            --button-primary: #10a37f;
-            --button-primary-hover: #0d8f6f;
-            --button-secondary: #f7f7f8;
-            --button-secondary-hover: #e5e5e5;
-            --button-danger: #ef4444;
-            --button-danger-hover: #dc2626;
-            --user-message-bg: #f7f7f8;
-            --assistant-message-bg: #ffffff;
-            --code-bg: #f6f8fa;
-            --scrollbar-bg: transparent;
-            --scrollbar-thumb: #d1d5db;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        html[data-theme='dark'] {
-            --bg-primary: #212121;
-            --bg-secondary: #2a2a2a;
-            --bg-tertiary: #303030;
-            --text-primary: #ececf1;
-            --text-secondary: #a9a9a9;
-            --text-tertiary: #6e6e6e;
-            --border-color: #444444;
-            --sidebar-bg: #171717;
-            --sidebar-hover: #2a2a2a;
-            --input-bg: #2a2a2a;
-            --input-border: #444444;
-            --input-focus-border: #10a37f;
-            --button-primary: #10a37f;
-            --button-primary-hover: #0d8f6f;
-            --button-secondary: #2a2a2a;
-            --button-secondary-hover: #3a3a3a;
-            --button-danger: #ef4444;
-            --button-danger-hover: #dc2626;
-            --user-message-bg: #2a2a2a;
-            --assistant-message-bg: #212121;
-            --code-bg: #1a1a1a;
-            --scrollbar-bg: transparent;
-            --scrollbar-thumb: #4a4a4a;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+        html, body {
             height: 100vh;
-            overflow: hidden;
-            transition: background-color var(--transition-speed), color var(--transition-speed);
+            overflow: hidden; 
         }
-
-        /* Main Layout */
         .app-container {
-            display: flex;
             height: 100vh;
         }
-
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            transition: all var(--transition-speed);
-        }
-
-        .sidebar-header {
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .new-chat-btn {
-            width: 100%;
-            padding: 12px 16px;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all var(--transition-speed);
-        }
-
-        .new-chat-btn:hover {
-            background-color: var(--bg-tertiary);
-        }
-
-        .new-chat-btn::before {
-            content: '+';
-            font-size: 18px;
-            font-weight: 400;
-        }
-
-        .sessions-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px;
-        }
-
-        .session-item {
-            padding: 12px 16px;
-            margin-bottom: 2px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all var(--transition-speed);
-            position: relative;
-        }
-
-        .session-item:hover {
-            background-color: var(--sidebar-hover);
-        }
-
-        .session-item.active {
-            background-color: var(--sidebar-hover);
-            font-weight: 500;
-        }
-
-        .session-item .delete-btn {
-            opacity: 0;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: all var(--transition-speed);
-        }
-
-        .session-item:hover .delete-btn {
-            opacity: 1;
-        }
-
-        .session-item .delete-btn:hover {
-            color: var(--button-danger);
-            background-color: rgba(239, 68, 68, 0.1);
-        }
-
-        .sidebar-footer {
-            padding: 12px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .server-config {
-            margin-bottom: 12px;
-        }
-
-        .server-input {
-            width: 100%;
-            padding: 8px 12px;
-            background-color: var(--input-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
-            font-size: 13px;
-            transition: all var(--transition-speed);
-        }
-
-        .server-input:focus {
-            outline: none;
-            border-color: var(--input-focus-border);
-        }
-
-        .sidebar-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .sidebar-actions button {
-            flex: 1;
-            padding: 8px 12px;
-            background-color: var(--button-secondary);
-            color: var(--text-primary);
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all var(--transition-speed);
-        }
-
-        .sidebar-actions button:hover {
-            background-color: var(--button-secondary-hover);
-        }
-
-        /* Main Content */
         .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
+            height: 100vh; 
+            overflow: hidden; 
         }
-
-        /* Chat Area */
         .chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 0;
-            background-color: var(--bg-primary);
+            flex-grow: 1; 
+            overflow-y: auto; 
+            min-height: 0; 
         }
-
-        .chat-message {
-            padding: 24px 0;
-            border-bottom: 1px solid var(--border-color);
+        .chat-input-container {
+            flex-shrink: 0; 
         }
-
-        .chat-message:last-child {
-            border-bottom: none;
+        .user-message .message-body {
+            background-color: var(--bs-primary-bg-subtle);
+            border-color: var(--bs-primary-border-subtle);
         }
-
-        .message-content {
-            max-width: 768px;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            gap: 24px;
-        }
-
-        .message-avatar {
-            flex-shrink: 0;
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .user-message .message-avatar {
-            background-color: var(--button-primary);
-            color: white;
-        }
-
-        .assistant-message .message-avatar {
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-
-        .message-body {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .message-body h1, .message-body h2, .message-body h3 {
-            margin-top: 1em;
-            margin-bottom: 0.5em;
-        }
-
-        .message-body p {
-            margin-bottom: 1em;
-        }
-
-        .message-body p:last-child {
-            margin-bottom: 0;
-        }
-
-        .message-body ul, .message-body ol {
-            margin-left: 24px;
-            margin-bottom: 1em;
-        }
-
-        .message-body li {
-            margin-bottom: 0.5em;
-        }
-
-        .message-body code:not(pre code) {
-            background-color: var(--code-bg);
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-size: 0.875em;
-        }
-
         .message-body pre {
             position: relative;
-            background-color: var(--code-bg);
-            border-radius: 6px;
-            padding: 16px;
             padding-top: 40px;
-            overflow-x: auto;
-            margin: 1em 0;
         }
-
-        .message-body pre code {
-            background: none;
-            padding: 0;
-            font-size: 0.875em;
-            white-space: pre;
-        }
-
-        .message-body blockquote {
-            border-left: 3px solid var(--border-color);
-            padding-left: 16px;
-            margin: 1em 0;
-            color: var(--text-secondary);
-        }
-
-        /* Code Action Buttons */
         .code-actions {
             position: absolute;
             top: 8px;
@@ -349,522 +43,106 @@
             display: flex;
             gap: 8px;
         }
-
         .code-action-button {
             padding: 4px 8px;
             font-size: 12px;
-            background-color: var(--button-secondary);
-            color: var(--text-primary);
-            border: none;
+            background-color: var(--bs-secondary-bg);
+            border: 1px solid var(--bs-border-color);
             border-radius: 4px;
             cursor: pointer;
             opacity: 0.8;
-            transition: all var(--transition-speed);
+            transition: all 0.2s ease;
         }
-
         .code-action-button:hover {
             opacity: 1;
-            background-color: var(--button-secondary-hover);
+            background-color: var(--bs-tertiary-bg);
         }
-
         .code-action-button.copied {
-            background-color: var(--button-primary);
+            background-color: var(--bs-success);
             color: white;
         }
-
-        /* Chat Input */
-        .chat-input-container {
-            border-top: 1px solid var(--border-color);
-            background-color: var(--bg-primary);
-            padding: 16px 0;
-        }
-
-        .chat-input-wrapper {
-            max-width: 768px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .input-area {
-            position: relative;
-            background-color: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 12px;
-            padding: 12px;
-            transition: all var(--transition-speed);
-        }
-
-        .input-area:focus-within {
-            border-color: var(--input-focus-border);
-        }
-
-        .staged-files {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .staged-file-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            background-color: var(--bg-tertiary);
-            border-radius: 4px;
-            font-size: 13px;
-            color: var(--text-primary);
-        }
-
-        .remove-file-button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 0 2px;
-            font-size: 16px;
-            line-height: 1;
-        }
-
-        .remove-file-button:hover {
-            color: var(--button-danger);
-        }
-
-        .input-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .chat-input {
-            flex: 1;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 15px;
+        #chatInput {
             resize: none;
-            outline: none;
-            min-height: 24px;
-            max-height: 200px;
-            overflow-y: auto;
-            font-family: inherit;
-            line-height: 1.5;
         }
-
-        .input-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .file-upload-label {
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: color var(--transition-speed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-        }
-
-        .file-upload-label:hover {
-            color: var(--text-primary);
-            background-color: var(--bg-tertiary);
-        }
-
-        .file-upload-label svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .send-button {
-            padding: 8px 16px;
-            background-color: var(--button-primary);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all var(--transition-speed);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .send-button:hover:not(:disabled) {
-            background-color: var(--button-primary-hover);
-        }
-
-        .send-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .send-button.stop-button {
-            background-color: var(--button-danger);
-        }
-
-        .send-button.stop-button:hover:not(:disabled) {
-            background-color: var(--button-danger-hover);
-        }
-
-        /* Status Bar */
-        .status-bar {
-            padding: 8px 24px;
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-secondary);
-            min-height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .status-bar.error {
-            color: var(--button-danger);
-        }
-
-        .status-bar.warning {
-            color: #f59e0b;
-        }
-
-        .status-bar.info {
-            color: var(--button-primary);
-        }
-
-        /* Settings Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all var(--transition-speed);
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background-color: var(--bg-primary);
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 480px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-md);
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 4px;
-            font-size: 24px;
-            line-height: 1;
-        }
-
-        .modal-close:hover {
-            color: var(--text-primary);
-        }
-
-        .settings-group {
-            margin-bottom: 20px;
-        }
-
-        .settings-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .settings-group input[type="number"],
-        .settings-group input[type="text"] {
-            width: 100%;
-            padding: 8px 12px;
-            background-color: var(--input-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .settings-group small {
-            display: block;
-            margin-top: 4px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* Loader */
-        .loader {
-            border: 2px solid var(--border-color);
-            border-top: 2px solid var(--button-primary);
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--scrollbar-bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--scrollbar-thumb);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                left: -260px;
-                height: 100%;
-                z-index: 100;
-                box-shadow: var(--shadow-md);
-            }
-
-            .sidebar.open {
-                left: 0;
-            }
-
-            .mobile-menu-btn {
-                position: fixed;
-                top: 16px;
-                left: 16px;
-                z-index: 101;
-                background-color: var(--bg-primary);
-                border: 1px solid var(--border-color);
-                border-radius: 6px;
-                padding: 8px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .message-content {
-                padding: 0 16px;
-            }
-
-            .chat-input-wrapper {
-                padding: 0 16px;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .mobile-menu-btn {
-                display: none;
-            }
-        }
-
-        /* Hide file input */
-        input[type="file"] {
-            display: none;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 48px 24px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state h2 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-
-        .empty-state p {
-            font-size: 16px;
+        #sidebar {
+            transition: transform .3s ease-in-out, width .3s ease-in-out;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 12h18M3 6h18M3 18h18"></path>
+    <div class="app-container d-flex">
+        <button class="btn btn-light d-md-none m-2 position-fixed" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" style="z-index: 1045; top: 0; left: 0;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
             </svg>
         </button>
-
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <button class="new-chat-btn" id="newChatBtn">New chat</button>
+        <aside class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary offcanvas-md offcanvas-start" tabindex="-1" id="sidebar" style="width: 280px;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">LlamaHTML Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
             </div>
-            
-            <div class="sessions-list" id="sessionsList">
-                <!-- Sessions will be populated here -->
+            <div class="d-grid gap-2 mb-3" id="sidebar-header">
+                <button class="btn btn-primary" id="newChatBtn">New chat</button>
             </div>
-
-            <div class="sidebar-footer">
-                <div class="server-config">
-                    <input 
-                        type="url" 
-                        class="server-input" 
-                        id="serverUrl" 
-                        placeholder="Server URL (e.g., http://127.0.0.1:8080)"
-                        value="http://127.0.0.1:8080"
-                    >
+            <div class="list-group list-group-flush border-bottom scrollarea flex-grow-1" id="sessionsList">
+            </div>
+            <div class="mt-3">
+                <div class="server-config mb-3">
+                    <input type="url" class="form-control" id="serverUrl" placeholder="Server URL" value="http://127.0.0.1:8080">
                 </div>
-                <div class="sidebar-actions">
-                    <button id="settingsBtn">Settings</button>
-                    <button id="themeSwitcher">🌙</button>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-secondary" id="settingsBtn" data-bs-toggle="modal" data-bs-target="#settingsModal">Settings</button>
+                    <button class="btn btn-outline-secondary" id="themeSwitcher">🌙</button>
                 </div>
             </div>
         </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Chat Container -->
-            <div class="chat-container" id="chatContainer">
-                <div class="empty-state">
-                    <h2>LlamaHTML</h2>
-                    <p>Start a conversation with your local Llama model</p>
+        <main class="main-content flex-grow-1 d-flex flex-column">
+            <div class="chat-container p-3" id="chatContainer">
+                <div class="empty-state text-center h-100 d-flex flex-column justify-content-center align-items-center">
+                    <div>
+                        <h2>LlamaHTML</h2>
+                        <p class="lead text-body-secondary">Start a conversation with your local Llama model</p>
+                    </div>
                 </div>
             </div>
-
-            <!-- Chat Input -->
-            <div class="chat-input-container">
-                <div class="chat-input-wrapper">
-                    <div class="input-area">
-                        <div class="staged-files" id="stagedFilesArea" style="display: none;">
-                            <!-- Staged files will appear here -->
-                        </div>
-                        <div class="input-row">
-                            <textarea 
-                                class="chat-input" 
-                                id="chatInput" 
-                                placeholder="Message Llama..."
-                                rows="1"
-                            ></textarea>
-                            <div class="input-actions">
-                                <label for="fileInput" class="file-upload-label" title="Attach files">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-                                    </svg>
-                                </label>
-                                <input type="file" id="fileInput" multiple accept="text/*,image/*,application/pdf,.md,.py,.js,.html,.css,.json,.xml,.csv,.log">
-                                <button class="send-button" id="sendButton">
-                                    <span>Send</span>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+            <div class="chat-input-container p-3 bg-body-tertiary border-top">
+                <div class="input-area">
+                    <div id="stagedFilesArea" class="d-flex flex-wrap gap-2 mb-2" style="display: none;">
                     </div>
-                    <div class="status-bar" id="statusBar"></div>
+                    <div class="input-group">
+                        <textarea class="form-control" id="chatInput" placeholder="Message Llama..." rows="1"></textarea>
+                        <label for="fileInput" class="btn btn-outline-secondary" title="Attach files">📎</label>
+                        <input type="file" id="fileInput" multiple class="d-none">
+                        <button class="btn btn-primary" id="sendButton">Send</button>
+                    </div>
+                    <div class="status-bar text-center text-body-secondary small mt-2" id="statusBar"></div>
                 </div>
             </div>
         </main>
     </div>
-
-    <!-- Settings Modal -->
-    <div class="modal-overlay" id="settingsModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Settings</h3>
-                <button class="modal-close" id="closeSettings">&times;</button>
-            </div>
-            
-            <div class="settings-group">
-                <label for="temperature">Temperature</label>
-                <input type="number" id="temperature" min="0" max="2" step="0.1" value="0.7">
-                <small>Controls randomness. Higher values make output more random.</small>
-            </div>
-
-            <div class="settings-group">
-                <label for="nPredict">Max Tokens</label>
-                <input type="number" id="nPredict" min="1" step="1" value="2048">
-                <small>Maximum number of tokens to generate. Use -1 for unlimited.</small>
-            </div>
-
-            <div class="settings-group">
-                <label for="topP">Top P</label>
-                <input type="number" id="topP" min="0" max="1" step="0.01" value="0.95">
-                <small>Nucleus sampling parameter.</small>
-            </div>
-
-            <div class="settings-group">
-                <label for="topK">Top K</label>
-                <input type="number" id="topK" min="1" step="1" value="40">
-                <small>Top-k sampling parameter.</small>
-            </div>
-
-            <div class="settings-group">
-                <label for="stopSequences">Stop Sequences</label>
-                <input type="text" id="stopSequences" value="USER:, \nUSER:, <|user|>">
-                <small>Comma-separated strings to stop generation.</small>
-            </div>
-
-            <div class="settings-group">
-                <label>
-                    <input type="checkbox" id="rememberServerUrl">
-                    Remember Server URL
-                </label>
-                <small>Save URL in browser storage</small>
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3"><label for="temperature" class="form-label">Temperature</label><input type="number" class="form-control" id="temperature" min="0" max="2" step="0.1" value="0.7"><small class="form-text text-muted">Controls randomness.</small></div>
+                    <div class="mb-3"><label for="nPredict" class="form-label">Max Tokens</label><input type="number" class="form-control" id="nPredict" min="1" step="1" value="2048"><small class="form-text text-muted">Max tokens to generate.</small></div>
+                    <div class="mb-3"><label for="topP" class="form-label">Top P</label><input type="number" class="form-control" id="topP" min="0" max="1" step="0.01" value="0.95"><small class="form-text text-muted">Nucleus sampling.</small></div>
+                    <div class="mb-3"><label for="topK" class="form-label">Top K</label><input type="number" class="form-control" id="topK" min="1" step="1" value="40"><small class="form-text text-muted">Top-k sampling.</small></div>
+                    <div class="mb-3"><label for="stopSequences" class="form-label">Stop Sequences</label><input type="text" class="form-control" id="stopSequences" value="USER:, \nUSER:, <|user|>"><small class="form-text text-muted">Comma-separated strings.</small></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="rememberServerUrl"><label class="form-check-label" for="rememberServerUrl">Remember Server URL</label></div>
+                </div>
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
-        // Constants
         const SESSION_INDEX_KEY = 'llamaChatIndex';
         const SESSION_DATA_PREFIX = 'llamaChatSession_';
         const MAX_TEXT_FILE_EMBED_SIZE = 200 * 1024;
-
-        // DOM Elements
         const elements = {
             serverUrl: document.getElementById('serverUrl'),
             rememberServerUrl: document.getElementById('rememberServerUrl'),
@@ -884,22 +162,35 @@
             stagedFilesArea: document.getElementById('stagedFilesArea'),
             settingsBtn: document.getElementById('settingsBtn'),
             settingsModal: document.getElementById('settingsModal'),
-            closeSettings: document.getElementById('closeSettings'),
             sidebar: document.getElementById('sidebar'),
-            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
             highlightTheme: document.getElementById('highlight-theme')
         };
-
-        // State
         let chatHistory = [];
         let serverAvailable = false;
         let messageCounter = 0;
         let currentSessionId = null;
         let currentAbortController = null;
         let stagedFiles = [];
-
-        // Initialize
+        let sidebarInstance = null;
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+        }
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            elements.themeSwitcher.textContent = theme === 'dark' ? '☀️' : '🌙';
+            const lightThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+            const darkThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+            elements.highlightTheme.href = theme === 'dark' ? darkThemeUrl : lightThemeUrl;
+            localStorage.setItem('theme', theme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
         function initialize() {
+            sidebarInstance = new bootstrap.Offcanvas(elements.sidebar);
             loadServerUrl();
             setupEventListeners();
             initializeTheme();
@@ -909,35 +200,24 @@
             startNewSession();
             updateSendButtonState();
         }
-
         function configureMarked() {
             marked.setOptions({
                 highlight: function(code, lang) {
                     const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                    try {
-                        const result = hljs.highlight(code, { language, ignoreIllegals: true });
-                        return result.value;
-                    } catch (e) {
-                        console.warn("Highlight.js error:", e);
-                        return escapeHtml(code);
-                    }
+                    return hljs.highlight(code, { language, ignoreIllegals: true }).value;
                 },
                 gfm: true,
                 breaks: true,
                 langPrefix: 'hljs language-',
             });
         }
-
         function setupEventListeners() {
             elements.sendButton.addEventListener('click', handleSendPrompt);
             elements.newChatBtn.addEventListener('click', () => {
-                if (currentAbortController) {
-                    handleStopGeneration();
-                }
+                if (currentAbortController) handleStopGeneration();
                 startNewSession();
                 closeMobileSidebar();
             });
-            
             elements.themeSwitcher.addEventListener('click', toggleTheme);
             elements.rememberServerUrl.addEventListener('change', handleRememberUrlChange);
             elements.serverUrl.addEventListener('input', handleServerUrlInput);
@@ -945,44 +225,23 @@
                 updateSendButtonState();
                 autoResizeTextarea(elements.chatInput);
             });
-            
             elements.chatInput.addEventListener('keydown', (event) => {
-                if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && !event.shiftKey && !event.altKey) {
+                if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && !event.shiftKey) {
                     event.preventDefault();
-                    if (!elements.sendButton.disabled && elements.sendButton.textContent.includes('Send')) {
+                    if (!elements.sendButton.disabled && !elements.sendButton.textContent.includes('Stop')) {
                         handleSendPrompt();
                     }
                 }
             });
-
             elements.fileInput.addEventListener('change', handleFileSelection);
             elements.stagedFilesArea.addEventListener('click', handleRemoveStagedFile);
-            elements.settingsBtn.addEventListener('click', () => {
-                elements.settingsModal.classList.add('active');
-            });
-            elements.closeSettings.addEventListener('click', () => {
-                elements.settingsModal.classList.remove('active');
-            });
-            elements.settingsModal.addEventListener('click', (e) => {
-                if (e.target === elements.settingsModal) {
-                    elements.settingsModal.classList.remove('active');
-                }
-            });
-            elements.mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
-
-            // Event delegation for code buttons and session items
             elements.chatContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('copy-code-button')) {
-                    handleCopyCodeClick(event.target);
-                } else if (event.target.classList.contains('download-code-button')) {
-                    handleDownloadCodeClick(event.target);
-                }
+                if (event.target.classList.contains('copy-code-button')) handleCopyCodeClick(event.target);
+                else if (event.target.classList.contains('download-code-button')) handleDownloadCodeClick(event.target);
             });
-
             elements.sessionsList.addEventListener('click', function(event) {
-                const sessionItem = event.target.closest('.session-item');
+                const sessionItem = event.target.closest('.list-group-item');
                 const deleteBtn = event.target.closest('.delete-btn');
-                
                 if (deleteBtn && sessionItem) {
                     event.stopPropagation();
                     handleDeleteSession(sessionItem.dataset.sessionId);
@@ -992,22 +251,15 @@
                 }
             });
         }
-
-        function toggleMobileSidebar() {
-            elements.sidebar.classList.toggle('open');
-        }
-
         function closeMobileSidebar() {
-            if (window.innerWidth <= 768) {
-                elements.sidebar.classList.remove('open');
+            if (window.innerWidth < 768) {
+                sidebarInstance.hide();
             }
         }
-
         function autoResizeTextarea(textarea) {
             textarea.style.height = 'auto';
             textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
         }
-
         function loadServerUrl() {
             const rememberedUrl = localStorage.getItem('llamaServerUrl');
             const shouldRemember = localStorage.getItem('rememberLlamaServerUrl') === 'true';
@@ -1016,24 +268,15 @@
                 elements.serverUrl.value = rememberedUrl;
             }
         }
-
         function handleRememberUrlChange() {
-            const url = elements.serverUrl.value.trim();
             if (elements.rememberServerUrl.checked) {
-                if (url) {
-                    localStorage.setItem('llamaServerUrl', url);
-                    localStorage.setItem('rememberLlamaServerUrl', 'true');
-                } else {
-                    elements.rememberServerUrl.checked = false;
-                    localStorage.removeItem('llamaServerUrl');
-                    localStorage.removeItem('rememberLlamaServerUrl');
-                }
+                localStorage.setItem('llamaServerUrl', elements.serverUrl.value.trim());
+                localStorage.setItem('rememberLlamaServerUrl', 'true');
             } else {
                 localStorage.removeItem('llamaServerUrl');
                 localStorage.removeItem('rememberLlamaServerUrl');
             }
         }
-
         let serverUrlDebounceTimer;
         function handleServerUrlInput() {
             handleRememberUrlChange();
@@ -1043,133 +286,76 @@
                 updateSendButtonState();
             }, 500);
         }
-
         async function checkServerStatus() {
             const serverUrl = elements.serverUrl.value.trim();
             if (!isValidHttpUrl(serverUrl)) {
-                showStatus("Invalid server URL format.", true);
+                showStatus("Invalid server URL format.", "danger");
                 serverAvailable = false;
                 updateSendButtonState();
                 return;
             }
-
-            showStatus("Server URL looks valid. Ready to send.", false, false, true);
+            showStatus("Server URL looks valid. Ready to send.", "info");
             serverAvailable = true;
             updateSendButtonState();
         }
-
         function updateSendButtonState() {
             if (currentAbortController) {
                 elements.sendButton.disabled = false;
                 return;
             }
-
             const urlValid = isValidHttpUrl(elements.serverUrl.value.trim());
-            const isLoading = elements.statusBar.querySelector('.loader') !== null;
+            const isLoading = elements.statusBar.querySelector('.spinner-border') !== null;
             const canSend = urlValid && !isLoading && (elements.chatInput.value.trim().length > 0 || stagedFiles.length > 0);
             elements.sendButton.disabled = !canSend;
         }
-
         function isValidHttpUrl(string) {
-            let url;
             try {
-                url = new URL(string);
+                const url = new URL(string);
+                return url.protocol === "http:" || url.protocol === "https:";
             } catch (_) {
                 return false;
             }
-            return url.protocol === "http:" || url.protocol === "https:";
         }
-
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            setTheme(savedTheme);
-        }
-
-        function setTheme(theme) {
-            const html = document.documentElement;
-            html.setAttribute('data-theme', theme);
-            elements.themeSwitcher.textContent = theme === 'dark' ? '☀️' : '🌙';
-            
-            const lightThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
-            const darkThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
-            elements.highlightTheme.href = theme === 'dark' ? darkThemeUrl : lightThemeUrl;
-            localStorage.setItem('theme', theme);
-        }
-
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            setTheme(newTheme);
-        }
-
         function handleFileSelection(event) {
             const files = event.target.files;
             if (!files) return;
-
             showLoading(true, "Processing files...");
-
-            const newFiles = Array.from(files).filter(file =>
-                !stagedFiles.some(staged => staged.name === file.name)
-            );
-
-            if (newFiles.length !== files.length) {
-                showStatus("Some duplicate filenames were ignored.", false, true);
-            }
-
+            const newFiles = Array.from(files).filter(f => !stagedFiles.some(sf => sf.name === f.name));
+            if (newFiles.length !== files.length) showStatus("Duplicate filenames were ignored.", "warning");
             if (newFiles.length === 0) {
                 showLoading(false);
                 return;
             }
-
             let filesProcessed = 0;
-            const totalFilesToProcess = newFiles.length;
-
             newFiles.forEach(file => {
                 const reader = new FileReader();
-                const fileData = {
-                    file: file,
-                    name: file.name,
-                    type: file.type || 'application/octet-stream',
-                    content: null,
-                    error: null
-                };
+                const fileData = { file, name: file.name, type: file.type, content: null, error: null };
                 stagedFiles.push(fileData);
-
-                reader.onload = function(e) {
+                reader.onload = e => {
                     fileData.content = e.target.result;
                     filesProcessed++;
-                    if (filesProcessed === totalFilesToProcess) {
-                        finishFileProcessing();
-                    }
+                    if (filesProcessed === newFiles.length) finishFileProcessing();
                 };
-
-                reader.onerror = function(e) {
-                    console.error("Error reading file:", file.name, e);
-                    fileData.error = `Error reading file: ${e.target.error?.message || 'Unknown error'}`;
+                reader.onerror = e => {
+                    fileData.error = `Error reading file: ${e.target.error?.message || 'Unknown'}`;
                     filesProcessed++;
-                    if (filesProcessed === totalFilesToProcess) {
-                        finishFileProcessing();
-                    }
+                    if (filesProcessed === newFiles.length) finishFileProcessing();
                 };
-
-                if (fileData.type.startsWith('text/') || /\.(txt|md|py|js|html|css|json|xml|csv|log)$/i.test(fileData.name)) {
+                if (file.type.startsWith('text/') || /\.(txt|md|py|js|html|css|json|xml|csv|log)$/i.test(file.name)) {
                     reader.readAsText(file);
                 } else {
                     reader.readAsDataURL(file);
                 }
             });
-
             renderStagedFiles();
             event.target.value = null;
         }
-
         function finishFileProcessing() {
             renderStagedFiles();
             showLoading(false);
             updateSendButtonState();
             elements.chatInput.focus();
         }
-
         function renderStagedFiles() {
             elements.stagedFilesArea.innerHTML = '';
             if (stagedFiles.length === 0) {
@@ -1177,96 +363,57 @@
                 updateSendButtonState();
                 return;
             }
-
             elements.stagedFilesArea.style.display = 'flex';
-
             stagedFiles.forEach((fileData, index) => {
                 const item = document.createElement('div');
-                item.className = 'staged-file-item';
+                item.className = `badge d-flex align-items-center ${fileData.error ? 'text-bg-danger' : 'text-bg-secondary'}`;
                 item.title = fileData.name + (fileData.error ? ` (Error: ${fileData.error})` : '');
-
-                const nameSpan = document.createElement('span');
-                nameSpan.textContent = fileData.name;
-                if (fileData.error) {
-                    nameSpan.style.color = 'var(--button-danger)';
-                }
-
-                const removeButton = document.createElement('button');
-                removeButton.className = 'remove-file-button';
-                removeButton.innerHTML = '&times;';
-                removeButton.dataset.index = index;
-
-                item.appendChild(nameSpan);
-                item.appendChild(removeButton);
+                item.innerHTML = `
+                    <span class="me-2">${fileData.name}</span>
+                    <button type="button" class="btn-close btn-close-white" aria-label="Remove file" data-index="${index}"></button>
+                `;
                 elements.stagedFilesArea.appendChild(item);
             });
             updateSendButtonState();
         }
-
         function handleRemoveStagedFile(event) {
-            if (event.target.classList.contains('remove-file-button')) {
+            if (event.target.matches('[data-index]')) {
                 const indexToRemove = parseInt(event.target.dataset.index, 10);
-                if (!isNaN(indexToRemove) && indexToRemove >= 0 && indexToRemove < stagedFiles.length) {
-                    stagedFiles.splice(indexToRemove, 1);
-                    renderStagedFiles();
-                }
+                stagedFiles.splice(indexToRemove, 1);
+                renderStagedFiles();
             }
         }
-
         function clearStagedFiles() {
             stagedFiles = [];
             renderStagedFiles();
             elements.fileInput.value = null;
         }
-
         async function handleSendPrompt() {
-            // Change button state to 'Stop'
+            elements.sendButton.innerHTML = `<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Stop`;
+            elements.sendButton.classList.replace('btn-primary', 'btn-danger');
             elements.sendButton.removeEventListener('click', handleSendPrompt);
-            elements.sendButton.innerHTML = '<span>Stop</span>';
-            elements.sendButton.classList.add('stop-button');
             elements.sendButton.addEventListener('click', handleStopGeneration);
-            elements.sendButton.disabled = false;
             elements.chatInput.disabled = true;
-
             const serverUrl = elements.serverUrl.value.trim();
             let promptText = elements.chatInput.value.trim();
             const temperature = parseFloat(elements.temperature.value);
             const nPredict = parseInt(elements.nPredict.value, 10);
             const topP = parseFloat(elements.topP.value);
             const topK = parseInt(elements.topK.value, 10);
-            const stopSequences = elements.stopSequences.value.split(',')
-                .map(s => s.trim())
-                .filter(s => s.length > 0);
-
+            const stopSequences = elements.stopSequences.value.split(',').map(s => s.trim()).filter(Boolean);
             if (!promptText && stagedFiles.length === 0) {
-                showStatus("Error: Message cannot be empty and no files attached.", true);
+                showStatus("Message cannot be empty.", "warning");
                 resetButtonToSendState();
                 elements.chatInput.disabled = false;
-                updateSendButtonState();
                 return;
             }
-
-            // Check for file errors
             const filesWithError = stagedFiles.filter(f => f.error);
             if (filesWithError.length > 0) {
-                showStatus(`Error: Cannot send due to errors reading files: ${filesWithError.map(f => f.name).join(', ')}`, true);
+                showStatus(`Cannot send due to errors reading files: ${filesWithError.map(f => f.name).join(', ')}`, "danger");
                 resetButtonToSendState();
                 elements.chatInput.disabled = false;
-                updateSendButtonState();
                 return;
             }
-
-            // Check if files are still loading
-            const filesLoading = stagedFiles.filter(f => f.content === null && !f.error);
-            if (filesLoading.length > 0) {
-                showStatus(`Please wait, files are still processing: ${filesLoading.map(f => f.name).join(', ')}`, false, true);
-                resetButtonToSendState();
-                elements.chatInput.disabled = false;
-                updateSendButtonState();
-                return;
-            }
-
-            // Prepare user message including file info
             let fileInfoForPrompt = "";
             if (stagedFiles.length > 0) {
                 fileInfoForPrompt = "Attached Files:\n";
@@ -1276,739 +423,293 @@
                         fileInfoForPrompt += `Content:\n---\n${fileData.content}\n---\n`;
                     } else if (!fileData.type.startsWith('text/') && fileData.content?.startsWith('data:')) {
                         fileInfoForPrompt += `(File is binary/image - content not embedded in text prompt)\n`;
-                    } else if (fileData.type.startsWith('text/') && fileData.content && fileData.content.length >= MAX_TEXT_FILE_EMBED_SIZE) {
+                    } else if (fileData.type.startsWith('text/')) {
                         fileInfoForPrompt += `(Text file content too large to embed in prompt)\n`;
                     }
                 });
                 fileInfoForPrompt += "\nUser Message:\n";
             }
-
             const fullUserContent = fileInfoForPrompt + promptText;
-
-            // Abort previous request if any
-            if (currentAbortController) {
-                currentAbortController.abort();
-            }
+            if (currentAbortController) currentAbortController.abort();
             currentAbortController = new AbortController();
-            const signal = currentAbortController.signal;
-
-            // Add user message
-            const userMessageId = `msg-${messageCounter++}`;
-            const userMessage = { role: 'user', content: fullUserContent, id: userMessageId };
+            const userMessage = { role: 'user', content: fullUserContent, id: `msg-${messageCounter++}` };
             chatHistory.push(userMessage);
             renderChatHistory();
-            scrollToBottom();
             elements.chatInput.value = '';
             autoResizeTextarea(elements.chatInput);
             clearStagedFiles();
             showLoading(true, "Connecting...");
-
-            // Add placeholder for model response
-            const modelMessageId = `msg-${messageCounter++}`;
-            const modelMessage = { role: 'model', content: '', id: modelMessageId };
+            const modelMessage = { role: 'model', content: '', id: `msg-${messageCounter++}` };
             chatHistory.push(modelMessage);
             renderChatHistory();
-            scrollToBottom();
-
-            // Prepare prompt for llama.cpp server
             const fullPromptForLlama = formatChatHistoryForLlama(chatHistory.slice(0, -1));
-            const apiUrl = `${serverUrl}/completion`;
             const requestBody = {
-                prompt: fullPromptForLlama,
-                temperature: temperature,
+                prompt: fullPromptForLlama, stream: true,
+                temperature, top_p: topP, top_k: topK,
                 n_predict: nPredict === -1 ? -1 : Math.max(1, nPredict),
-                top_p: topP,
-                top_k: topK,
-                stop: stopSequences,
-                stream: true
+                stop: stopSequences
             };
-
-            console.log("Sending API Request to:", apiUrl);
-
-            const debouncedRender = debounce(() => {
-                updateModelBubbleContent(modelMessageId, modelMessage.content, false);
-                scrollToBottom();
-            }, 250);
-
             let responseOk = false;
-            let wasAborted = false;
-
             try {
-                const response = await fetch(apiUrl, {
+                const response = await fetch(`${serverUrl}/completion`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(requestBody),
-                    signal: signal,
+                    signal: currentAbortController.signal,
                 });
-
                 responseOk = response.ok;
-
-                if (!response.ok || !response.body) {
-                    let errorText = `API Error: ${response.status} ${response.statusText}`;
-                    try {
-                        const errorData = await response.json();
-                        if (errorData?.content) errorText += ` - ${errorData.content}`;
-                        else if (errorData?.error) errorText += ` - ${errorData.error}`;
-                    } catch (e) { /* Ignore */ }
-                    throw new Error(errorText);
-                }
-
+                if (!response.ok || !response.body) throw new Error(`API Error: ${response.status} ${response.statusText}`);
                 showLoading(true, "Receiving response...");
-                serverAvailable = true;
-
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
-                let buffer = '';
-                let finalData = null;
-
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
-
-                    buffer += decoder.decode(value, { stream: true });
-                    let lines = buffer.split('\n\n');
-                    buffer = lines.pop();
-
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n\n').filter(Boolean);
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
-                            const jsonData = line.substring(6).trim();
-                            if (jsonData) {
-                                try {
-                                    const data = JSON.parse(jsonData);
-                                    if (typeof data.content === 'string') {
-                                        modelMessage.content += data.content;
-                                        updateModelBubbleContent(modelMessageId, modelMessage.content, true);
-                                        debouncedRender();
-                                    }
-                                    if (data.stop === true) {
-                                        finalData = data;
-                                    }
-                                } catch (e) {
-                                    console.error("Error parsing stream JSON:", e);
-                                }
-                            }
+                            const data = JSON.parse(line.substring(6));
+                            if (data.content) modelMessage.content += data.content;
+                            if (data.stop) break;
                         }
                     }
+                    updateModelBubbleContent(modelMessage.id, modelMessage.content, true);
                 }
-
-                updateModelBubbleContent(modelMessageId, modelMessage.content, false);
-                scrollToBottom();
-
-                let statusMessage = "Response complete.";
-                if (finalData) {
-                    if (finalData.timings && finalData.tokens_predicted > 0 && finalData.timings.predicted_ms > 0) {
-                        const tokensPerSecond = finalData.tokens_predicted / (finalData.timings.predicted_ms / 1000);
-                        statusMessage += ` Speed: ${tokensPerSecond.toFixed(1)} t/s.`;
-                    }
-                    if (finalData.stopped_limit) statusMessage += ` (Stopped: Limit)`;
-                }
-                showStatus(statusMessage, false, finalData?.stopped_limit);
-
+                showStatus("Response complete.", "success");
             } catch (error) {
                 if (error.name === 'AbortError') {
-                    wasAborted = true;
-                    showStatus("Request cancelled by user.", false, false, true);
-                    
-                    const modelBubbleIndex = chatHistory.findIndex(m => m.id === modelMessageId);
-                    if (modelBubbleIndex > -1 && chatHistory[modelBubbleIndex].content.length < 15) {
-                        chatHistory.splice(modelBubbleIndex, 1);
-                        messageCounter--;
-                        renderChatHistory();
-                    } else if (modelBubbleIndex > -1) {
-                        updateModelBubbleContent(modelMessageId, modelMessage.content, false);
-                    }
+                    showStatus("Request cancelled by user.", "info");
+                    if (chatHistory[chatHistory.length - 1].content.length < 15) chatHistory.pop();
                 } else {
-                    console.error("API Call Failed:", error);
-                    let displayError = error.message || 'An unknown error occurred.';
-                    if (!responseOk && (displayError.includes('Failed to fetch') || displayError.includes('NetworkError'))) {
-                        displayError = `Connection Error: Could not connect to server at ${serverUrl}. Is it running?`;
-                        serverAvailable = false;
-                    }
-                    const userMsgIndex = chatHistory.findIndex(m => m.id === userMessageId);
-                    if (userMsgIndex !== -1) {
-                        chatHistory.splice(userMsgIndex, 2);
-                        messageCounter -= 2;
-                    }
-                    renderChatHistory();
-                    showStatus(`Error: ${displayError}`, true);
+                    const errorMsg = !responseOk ? `Connection Error: Could not connect to server.` : error.message;
+                    showStatus(`Error: ${errorMsg}`, "danger");
+                    chatHistory.pop(); 
+                    chatHistory.pop(); 
                 }
+                renderChatHistory();
             } finally {
+                updateModelBubbleContent(modelMessage.id, modelMessage.content, false);
                 resetButtonToSendState();
                 showLoading(false);
                 elements.chatInput.disabled = false;
                 currentAbortController = null;
                 updateSendButtonState();
-                updateSessionButtonStates();
-                if (!wasAborted) {
-                    elements.chatInput.focus();
-                }
+                elements.chatInput.focus();
             }
         }
-
         function handleStopGeneration() {
-            if (currentAbortController) {
-                console.log("Stop button clicked. Aborting request...");
-                showStatus("Cancelling request...", false, true);
-                currentAbortController.abort();
-            }
+            if (currentAbortController) currentAbortController.abort();
         }
-
         function resetButtonToSendState() {
+            elements.sendButton.innerHTML = 'Send';
+            elements.sendButton.classList.replace('btn-danger', 'btn-primary');
             elements.sendButton.removeEventListener('click', handleStopGeneration);
-            elements.sendButton.innerHTML = '<span>Send</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
-            elements.sendButton.classList.remove('stop-button');
             elements.sendButton.addEventListener('click', handleSendPrompt);
         }
-
         function formatChatHistoryForLlama(history) {
-            let formattedPrompt = "";
-            history.forEach(message => {
-                if (message.role === 'user') {
-                    formattedPrompt += `USER: ${message.content}\n`;
-                } else if (message.role === 'model') {
-                    formattedPrompt += `ASSISTANT: ${message.content}\n`;
-                }
-            });
-            formattedPrompt += "ASSISTANT:";
-            return formattedPrompt;
+            return history.map(msg => {
+                if (msg.role === 'user') return `USER: ${msg.content}`;
+                if (msg.role === 'model') return `ASSISTANT: ${msg.content}`;
+                return '';
+            }).join('\n') + '\nASSISTANT:';
         }
-
-        function showLoading(isLoading, message = "Processing request...") {
+        function showLoading(isLoading, message = "") {
             if (isLoading) {
-                const loaderHtml = '<div class="loader"></div>';
-                elements.statusBar.innerHTML = `${loaderHtml}<span>${escapeHtml(message)}</span>`;
+                elements.statusBar.innerHTML = `<div class="spinner-border spinner-border-sm me-2" role="status"></div><span>${escapeHtml(message)}</span>`;
             } else {
-                const loaderElement = elements.statusBar.querySelector('.loader');
-                if (loaderElement) {
-                    elements.statusBar.innerHTML = '';
+                if (!elements.statusBar.classList.contains('text-bg-danger')) {
+                     elements.statusBar.innerHTML = '';
                 }
             }
         }
-
-        function showStatus(message, isError = false, isWarning = false, isInfo = false) {
-            const loaderElement = elements.statusBar.querySelector('.loader');
-            const loaderHtml = loaderElement ? loaderElement.outerHTML : '';
-
-            elements.statusBar.classList.remove('error', 'warning', 'info');
-            elements.statusBar.innerHTML = `${loaderHtml}<span>${escapeHtml(message)}</span>`;
-
-            if (isError) elements.statusBar.classList.add('error');
-            else if (isWarning) elements.statusBar.classList.add('warning');
-            else if (isInfo) elements.statusBar.classList.add('info');
+        function showStatus(message, type = "info") { 
+            showLoading(false);
+            elements.statusBar.className = `status-bar text-center small mt-2 p-1 rounded-pill text-bg-${type}`;
+            elements.statusBar.textContent = message;
+            if (type !== 'danger' && type !== 'warning') {
+                setTimeout(() => {
+                    if (elements.statusBar.textContent === message) {
+                       elements.statusBar.textContent = '';
+                       elements.statusBar.className = 'status-bar text-center text-body-secondary small mt-2';
+                    }
+                }, 4000);
+            }
         }
-
         function createMessageElement(message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `chat-message ${message.role}-message`;
-            messageDiv.dataset.messageId = message.id;
-
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'message-content';
-
-            const avatarDiv = document.createElement('div');
-            avatarDiv.className = 'message-avatar';
-            avatarDiv.textContent = message.role === 'user' ? 'U' : 'L';
-
-            const bodyDiv = document.createElement('div');
-            bodyDiv.className = 'message-body';
-
-            if (message.role === 'user') {
-                bodyDiv.textContent = message.content;
-            } else if (message.role === 'model') {
-                bodyDiv.innerHTML = message.content ? marked.parse(message.content) : '';
-                if (message.content) {
-                    requestAnimationFrame(() => addCodeActionsToBubble(bodyDiv));
-                }
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = `chat-message ${message.role}-message d-flex gap-3 mb-3`;
+            messageWrapper.dataset.messageId = message.id;
+            const avatar = `<div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;">${message.role === 'user' ? 'U' : 'L'}</div>`;
+            const bodyDiv = `<div class="message-body p-3 border rounded-3 w-100">${message.content || ''}</div>`;
+            messageWrapper.innerHTML = avatar + bodyDiv;
+            const bodyElement = messageWrapper.querySelector('.message-body');
+            if (message.role === 'model' && message.content) {
+                bodyElement.innerHTML = marked.parse(message.content);
+                requestAnimationFrame(() => addCodeActionsToBubble(bodyElement));
+            } else if(message.role === 'user') {
+                bodyElement.textContent = message.content;
             }
-
-            contentDiv.appendChild(avatarDiv);
-            contentDiv.appendChild(bodyDiv);
-            messageDiv.appendChild(contentDiv);
-
-            return messageDiv;
+            return messageWrapper;
         }
-
         function renderChatHistory() {
             if (chatHistory.length === 0) {
-                elements.chatContainer.innerHTML = `
-                    <div class="empty-state">
-                        <h2>LlamaHTML</h2>
-                        <p>Start a conversation with your local Llama model</p>
-                    </div>
-                `;
-                updateSendButtonState();
-                return;
+                elements.chatContainer.innerHTML = `<div class="empty-state text-center h-100 d-flex flex-column justify-content-center align-items-center"><div><h2>LlamaHTML</h2><p class="lead text-body-secondary">Start a conversation with your local Llama model</p></div></div>`;
+            } else {
+                elements.chatContainer.innerHTML = '';
+                chatHistory.forEach(message => elements.chatContainer.appendChild(createMessageElement(message)));
+                scrollToBottom();
             }
-
-            elements.chatContainer.innerHTML = '';
-            chatHistory.forEach(message => {
-                if (!message || !message.role || typeof message.content !== 'string') {
-                    console.warn("Skipping rendering invalid message:", message);
-                    return;
-                }
-                const messageElement = createMessageElement(message);
-                elements.chatContainer.appendChild(messageElement);
-            });
-            updateSessionButtonStates();
-            updateSendButtonState();
+            updateSaveButtonState();
         }
-
         function updateModelBubbleContent(messageId, newContent, isStreamingUpdate = false) {
-            const messageDiv = elements.chatContainer.querySelector(`.model-message[data-message-id="${messageId}"]`);
-            if (!messageDiv) {
-                console.error(`Message with ID ${messageId} not found for update.`);
-                return;
-            }
-
-            const bodyDiv = messageDiv.querySelector('.message-body');
-            if (!bodyDiv) return;
-
-            try {
-                bodyDiv.innerHTML = marked.parse(newContent || (isStreamingUpdate ? "" : "[Empty Model Response]"));
-                addCodeActionsToBubble(bodyDiv);
-            } catch (e) {
-                console.error("Markdown parsing/rendering error during update:", e);
-                bodyDiv.textContent = newContent || "[Error rendering response]";
-            }
+            const messageDiv = document.querySelector(`.model-message[data-message-id="${messageId}"] .message-body`);
+            if (!messageDiv) return;
+            messageDiv.innerHTML = marked.parse(newContent || (isStreamingUpdate ? "" : "[Empty Response]"));
+            addCodeActionsToBubble(messageDiv);
+            if(isStreamingUpdate) scrollToBottom();
         }
-
         function addCodeActionsToBubble(container) {
-            const preBlocks = container.querySelectorAll('pre');
-            preBlocks.forEach(pre => {
+            container.querySelectorAll('pre').forEach(pre => {
                 if (pre.querySelector('.code-actions')) return;
-
+                pre.style.position = 'relative';
                 const codeElement = pre.querySelector('code');
                 if (!codeElement) return;
-
                 const actionsContainer = document.createElement('div');
                 actionsContainer.className = 'code-actions';
-
-                const copyButton = document.createElement('button');
-                copyButton.textContent = 'Copy';
-                copyButton.className = 'code-action-button copy-code-button';
-                copyButton.title = 'Copy code to clipboard';
-                actionsContainer.appendChild(copyButton);
-
-                const downloadButton = document.createElement('button');
-                downloadButton.textContent = 'Download';
-                downloadButton.className = 'code-action-button download-code-button';
-                downloadButton.title = 'Download code block as file';
-                actionsContainer.appendChild(downloadButton);
-
-                if (pre.firstChild) {
-                    pre.insertBefore(actionsContainer, pre.firstChild);
-                } else {
-                    pre.appendChild(actionsContainer);
-                }
-
-                if (!codeElement.classList.contains('hljs')) {
-                    try {
-                        hljs.highlightElement(codeElement);
-                    } catch(e) {
-                        console.warn("Highlighting failed for element", codeElement, e);
-                    }
-                }
+                actionsContainer.innerHTML = `
+                    <button class="code-action-button copy-code-button" title="Copy code">Copy</button>
+                    <button class="code-action-button download-code-button" title="Download code">Download</button>
+                `;
+                pre.prepend(actionsContainer);
             });
         }
-
         function handleCopyCodeClick(button) {
-            const pre = button.closest('pre');
-            const code = pre?.querySelector('code');
-            if (!code) return;
-            
-            const codeToCopy = code.textContent || '';
-            navigator.clipboard.writeText(codeToCopy).then(() => {
+            const code = button.closest('pre')?.querySelector('code')?.textContent || '';
+            navigator.clipboard.writeText(code).then(() => {
                 button.textContent = 'Copied!';
                 button.classList.add('copied');
-                button.disabled = true;
                 setTimeout(() => {
                     button.textContent = 'Copy';
                     button.classList.remove('copied');
-                    button.disabled = false;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy code: ', err);
-                button.textContent = 'Error';
-                button.disabled = true;
-                setTimeout(() => {
-                    button.textContent = 'Copy';
-                    button.disabled = false;
                 }, 2000);
             });
         }
-
         function handleDownloadCodeClick(button) {
             const pre = button.closest('pre');
             const code = pre?.querySelector('code');
             if (!code) return;
-
-            const codeContent = code.textContent || '';
-            let language = 'plaintext';
-            let extension = '.txt';
-
-            const langClass = Array.from(code.classList).find(cls => cls.startsWith('language-'))
-                           || Array.from(pre.classList).find(cls => cls.startsWith('language-'));
-            if (langClass) {
-                language = langClass.replace('language-', '').split(' ')[0];
-            }
-
-            const extensionMap = {
-                python: '.py', py: '.py',
-                javascript: '.js', js: '.js',
-                typescript: '.ts', ts: '.ts',
-                html: '.html', htm: '.html',
-                css: '.css',
-                json: '.json',
-                xml: '.xml',
-                yaml: '.yaml', yml: '.yaml',
-                markdown: '.md', md: '.md',
-                shell: '.sh', bash: '.sh', zsh: '.zsh', sh: '.sh',
-                java: '.java',
-                c: '.c',
-                cpp: '.cpp', cxx: '.cpp', 'c++': '.cpp',
-                csharp: '.cs', cs: '.cs',
-                go: '.go',
-                ruby: '.rb', rb: '.rb',
-                php: '.php',
-                rust: '.rs', rs: '.rs',
-                sql: '.sql',
-                dockerfile: 'Dockerfile',
-                plaintext: '.txt', text: '.txt', txt: '.txt',
-            };
-            
-            extension = extensionMap[language.toLowerCase()] || extension;
-            const filename = `code-${language}${extension === 'Dockerfile' ? '' : extension}`;
-
-            try {
-                const blob = new Blob([codeContent], { type: 'application/octet-stream' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                button.textContent = 'Downloaded';
-                button.disabled = true;
-                setTimeout(() => { 
-                    button.textContent = 'Download'; 
-                    button.disabled = false; 
-                }, 2000);
-            } catch (err) {
-                console.error('Failed to create download: ', err);
-                button.textContent = 'Error';
-                button.disabled = true;
-                setTimeout(() => { 
-                    button.textContent = 'Download'; 
-                    button.disabled = false; 
-                }, 2000);
-            }
+            const langClass = Array.from(code.classList).find(c => c.startsWith('language-'));
+            const lang = langClass ? langClass.replace('language-', '') : 'txt';
+            const blob = new Blob([code.textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `code-${lang}.${lang}`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
-
         function escapeHtml(unsafe) {
-            if (typeof unsafe !== 'string') return '';
-            return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
-
         function scrollToBottom() {
-            requestAnimationFrame(() => {
-                const isNearBottom = elements.chatContainer.scrollHeight - elements.chatContainer.scrollTop - elements.chatContainer.clientHeight < 250;
-                if (isNearBottom) {
-                    elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
-                }
-            });
+            elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
         }
-
-        // Session Management
         function getSessionIndex() {
             try {
-                const indexJson = localStorage.getItem(SESSION_INDEX_KEY);
-                if (!indexJson) return [];
-                const index = JSON.parse(indexJson);
-                return Array.isArray(index) ? index.filter(s => s && s.id && s.name) : [];
-            } catch (e) {
-                console.error("Error reading session index from Local Storage:", e);
-                localStorage.removeItem(SESSION_INDEX_KEY);
-                return [];
-            }
+                const index = JSON.parse(localStorage.getItem(SESSION_INDEX_KEY));
+                return Array.isArray(index) ? index : [];
+            } catch { return []; }
         }
-
         function saveSessionIndex(index) {
-            try {
-                const validIndex = index.filter(s => s && s.id && s.name);
-                validIndex.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-                localStorage.setItem(SESSION_INDEX_KEY, JSON.stringify(validIndex));
-            } catch (e) {
-                console.error("Error saving session index to Local Storage:", e);
-                showStatus("Error: Failed to save session index. Local Storage might be full.", true);
-            }
+            localStorage.setItem(SESSION_INDEX_KEY, JSON.stringify(index));
         }
-
         function populateSessions() {
             const sessions = getSessionIndex();
             elements.sessionsList.innerHTML = '';
-
             sessions.forEach(session => {
-                const sessionItem = document.createElement('div');
-                sessionItem.className = 'session-item';
-                sessionItem.dataset.sessionId = session.id;
-                sessionItem.innerHTML = `
-                    <span>${escapeHtml(session.name)}</span>
-                    <button class="delete-btn" title="Delete session">&times;</button>
-                `;
-                
-                if (session.id === currentSessionId) {
-                    sessionItem.classList.add('active');
-                }
-                
-                elements.sessionsList.appendChild(sessionItem);
+                const item = document.createElement('a');
+                item.href = '#';
+                item.className = `list-group-item list-group-item-action d-flex justify-content-between align-items-center ${session.id === currentSessionId ? 'active' : ''}`;
+                item.dataset.sessionId = session.id;
+                item.textContent = session.name;
+                item.innerHTML += `<button class="btn-close delete-btn" title="Delete session"></button>`;
+                elements.sessionsList.appendChild(item);
             });
-
-            updateSessionButtonStates();
         }
-
         function startNewSession() {
-            if (currentAbortController) {
-                currentAbortController.abort();
-                currentAbortController = null;
-            }
-            elements.chatInput.value = '';
-            autoResizeTextarea(elements.chatInput);
+            if (currentAbortController) currentAbortController.abort();
             chatHistory = [];
             currentSessionId = null;
             messageCounter = 0;
             clearStagedFiles();
             renderChatHistory();
-            showStatus("", false, false, false);
-            updateSessionButtonStates();
-            elements.chatInput.disabled = false;
-            resetButtonToSendState();
+            showStatus("");
             updateSendButtonState();
+            populateSessions(); 
             elements.chatInput.focus();
-            
-            // Update active session in sidebar
-            document.querySelectorAll('.session-item').forEach(item => {
-                item.classList.remove('active');
-            });
         }
-
         function handleSaveSession() {
-            const isLoading = elements.statusBar.querySelector('.loader') !== null;
-            if ((chatHistory.length === 0 && stagedFiles.length === 0) || isLoading) {
-                showStatus("Cannot save an empty chat or while loading.", false, true);
-                return;
-            }
-
             const sessions = getSessionIndex();
-            let defaultName = `Chat ${new Date().toLocaleString()}`;
-            let existingSession = null;
-
-            if (currentSessionId) {
-                existingSession = sessions.find(s => s.id === currentSessionId);
-                if (existingSession) {
-                    defaultName = existingSession.name;
-                }
-            }
-
+            let existingSession = currentSessionId ? sessions.find(s => s.id === currentSessionId) : null;
+            let defaultName = existingSession ? existingSession.name : `Chat ${new Date().toLocaleString()}`;
             const sessionName = prompt("Enter a name for this session:", defaultName);
-
-            if (sessionName === null) {
-                showStatus("Save cancelled.", false, false, true);
-                return;
-            }
-
+            if (!sessionName?.trim()) return;
             const trimmedName = sessionName.trim();
-            if (!trimmedName) {
-                showStatus("Session name cannot be empty.", true);
-                return;
+            if (!currentSessionId && sessions.some(s => s.name === trimmedName)) {
+                if (!confirm(`A session named "${trimmedName}" already exists. Overwrite?`)) return;
+                const conflictId = sessions.find(s => s.name === trimmedName).id;
+                localStorage.removeItem(`${SESSION_DATA_PREFIX}${conflictId}`);
+                saveSessionIndex(sessions.filter(s => s.id !== conflictId));
             }
-
-            const nameExists = sessions.some(s => s.name === trimmedName && s.id !== currentSessionId);
-            if (nameExists) {
-                const conflictingSession = sessions.find(s => s.name === trimmedName);
-                if (!confirm(`A session named "${trimmedName}" already exists. Overwrite it?`)) {
-                    showStatus("Save cancelled.", false, false, true);
-                    return;
-                }
-                if (conflictingSession) {
-                    try { 
-                        localStorage.removeItem(`${SESSION_DATA_PREFIX}${conflictingSession.id}`); 
-                    } catch (e) { 
-                        console.error(`Error removing conflicting session data ${conflictingSession.id}:`, e); 
-                    }
-                    const conflictIndex = sessions.findIndex(s => s.id === conflictingSession.id);
-                    if (conflictIndex > -1) sessions.splice(conflictIndex, 1);
-                }
+            const sessionIdToSave = currentSessionId || `${Date.now()}`;
+            if (!existingSession) {
+                sessions.push({ id: sessionIdToSave, name: trimmedName });
+                currentSessionId = sessionIdToSave;
+            } else {
+                existingSession.name = trimmedName;
             }
-
-            try {
-                const historyJson = JSON.stringify(chatHistory);
-                let sessionIdToSave = currentSessionId;
-
-                if (existingSession) {
-                    if (existingSession.name !== trimmedName) {
-                        existingSession.name = trimmedName;
-                    }
-                    existingSession.timestamp = Date.now();
-                } else {
-                    sessionIdToSave = `${SESSION_DATA_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-                    sessions.push({ id: sessionIdToSave, name: trimmedName, timestamp: Date.now() });
-                    currentSessionId = sessionIdToSave;
-                }
-
-                localStorage.setItem(`${SESSION_DATA_PREFIX}${sessionIdToSave}`, historyJson);
-                saveSessionIndex(sessions);
-                populateSessions();
-                showStatus(`Session "${trimmedName}" saved successfully.`, false, false, true);
-                updateSessionButtonStates();
-
-            } catch (e) {
-                console.error("Error saving session data:", e);
-                if (e.name === 'QuotaExceededError' || (e.message && e.message.toLowerCase().includes('quota'))) {
-                    showStatus("Error: Failed to save session. Local Storage is full. Please delete older sessions.", true);
-                } else {
-                    showStatus("Error: Failed to save session data.", true);
-                }
-            }
+            localStorage.setItem(`${SESSION_DATA_PREFIX}${sessionIdToSave}`, JSON.stringify(chatHistory));
+            saveSessionIndex(sessions);
+            populateSessions();
+            showStatus(`Session "${trimmedName}" saved.`, "success");
         }
-
         function handleLoadSession(sessionId) {
-            if (sessionId === currentSessionId) return;
-
-            const hasUnsavedChanges = (chatHistory.length > 0 || stagedFiles.length > 0) && currentSessionId === null;
-            if (hasUnsavedChanges) {
-                if (!confirm("You have an unsaved chat/files. Load selected session anyway? Changes will be lost.")) {
-                    return;
-                }
-            }
-
+            const hasUnsavedChanges = chatHistory.length > 0 && !currentSessionId;
+            if (hasUnsavedChanges && !confirm("Loading a session will discard the current unsaved chat. Continue?")) return;
             try {
                 const historyJson = localStorage.getItem(`${SESSION_DATA_PREFIX}${sessionId}`);
-                if (!historyJson) {
-                    throw new Error(`Session data not found for ID: ${sessionId}.`);
-                }
-                const loadedHistory = JSON.parse(historyJson);
-                if (!Array.isArray(loadedHistory)) {
-                    throw new Error(`Invalid chat history format for ID: ${sessionId}.`);
-                }
-
-                if (currentAbortController) {
-                    currentAbortController.abort();
-                    currentAbortController = null;
-                }
-
-                chatHistory = loadedHistory;
+                chatHistory = JSON.parse(historyJson) || [];
                 currentSessionId = sessionId;
-                clearStagedFiles();
-
-                let maxIdNum = -1;
-                chatHistory.forEach(msg => {
-                    if (msg && msg.id && msg.id.startsWith('msg-')) {
-                        const numPart = parseInt(msg.id.substring(4), 10);
-                        if (!isNaN(numPart) && numPart > maxIdNum) maxIdNum = numPart;
-                    }
-                });
-                messageCounter = maxIdNum + 1;
-
                 renderChatHistory();
-                const session = getSessionIndex().find(s => s.id === sessionId);
-                showStatus(`Session "${session?.name || 'Unknown'}" loaded.`, false, false, true);
-                updateSessionButtonStates();
-                resetButtonToSendState();
-                updateSendButtonState();
-                scrollToBottom();
-                
-                // Update active session in sidebar
                 populateSessions();
-
-            } catch (e) {
-                console.error("Error loading session:", e);
-                showStatus(`Error: Failed to load session. ${e.message}`, true);
-                localStorage.removeItem(`${SESSION_DATA_PREFIX}${sessionId}`);
-                const sessions = getSessionIndex().filter(s => s.id !== sessionId);
-                saveSessionIndex(sessions);
-                startNewSession();
-                populateSessions();
+                showStatus("Session loaded.", "info");
+            } catch(e) {
+                showStatus("Failed to load session.", "danger");
             }
         }
-
         function handleDeleteSession(sessionId) {
-            const isLoading = elements.statusBar.querySelector('.loader') !== null;
-            if (!sessionId || isLoading) {
-                showStatus("Cannot delete while loading.", false, true);
-                return;
-            }
-
             const sessions = getSessionIndex();
             const session = sessions.find(s => s.id === sessionId);
-            if (!session) return;
-
-            if (!confirm(`Are you sure you want to delete the session "${session.name}"? This cannot be undone.`)) {
-                showStatus("Deletion cancelled.", false, false, true);
-                return;
-            }
-
-            try {
-                localStorage.removeItem(`${SESSION_DATA_PREFIX}${sessionId}`);
-                const updatedSessions = sessions.filter(s => s.id !== sessionId);
-                saveSessionIndex(updatedSessions);
-
-                showStatus(`Session "${session.name}" deleted.`, false, false, true);
-
-                if (currentSessionId === sessionId) {
-                    startNewSession();
-                }
-                
-                populateSessions();
-
-            } catch (e) {
-                console.error("Error deleting session:", e);
-                showStatus("Error: Failed to delete session.", true);
-            }
+            if (!session || !confirm(`Delete session "${session.name}"? This cannot be undone.`)) return;
+            localStorage.removeItem(`${SESSION_DATA_PREFIX}${sessionId}`);
+            saveSessionIndex(sessions.filter(s => s.id !== sessionId));
+            if (currentSessionId === sessionId) startNewSession();
+            populateSessions();
+            showStatus(`Session "${session.name}" deleted.`, "info");
         }
-
-        function updateSessionButtonStates() {
-            const isLoading = elements.statusBar.querySelector('.loader') !== null || currentAbortController !== null;
-            const canSave = !isLoading && (chatHistory.length > 0 || stagedFiles.length > 0);
-            
-            // Update save button text based on state
-            if (elements.saveSessionButton) {
-                elements.saveSessionButton.disabled = !canSave;
-            }
+        function updateSaveButtonState() {
+            const canSave = chatHistory.length > 0 && !currentAbortController;
+            elements.saveSessionButton.disabled = !canSave;
         }
-
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Add save session button to new chat button area
         const saveSessionButton = document.createElement('button');
         saveSessionButton.id = 'saveSessionButton';
-        saveSessionButton.className = 'new-chat-btn';
-        saveSessionButton.innerHTML = '<span style="font-size: 18px; font-weight: 400; margin-right: 8px;">💾</span>Save chat';
-        saveSessionButton.style.marginTop = '8px';
+        saveSessionButton.className = 'btn btn-outline-primary';
+        saveSessionButton.textContent = 'Save Chat';
         saveSessionButton.addEventListener('click', handleSaveSession);
-        elements.sessionsList.parentNode.insertBefore(saveSessionButton, elements.sessionsList);
+        document.getElementById('sidebar-header').appendChild(saveSessionButton);
         elements.saveSessionButton = saveSessionButton;
-
-        // Initialize
         initialize();
-
     </script>
 </body>
 </html>
