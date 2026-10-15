@@ -83,6 +83,7 @@
             </div>
             <div class="d-grid gap-2 mb-3" id="sidebar-header">
                 <button class="btn btn-primary" id="newChatBtn">New chat</button>
+                <button class="btn btn-outline-primary" id="saveSessionButton">Save Chat</button>
             </div>
             <div class="list-group list-group-flush border-bottom scrollarea flex-grow-1" id="sessionsList">
             </div>
@@ -158,6 +159,7 @@
             stopSequences: document.getElementById('stopSequences'),
             sessionsList: document.getElementById('sessionsList'),
             newChatBtn: document.getElementById('newChatBtn'),
+            saveSessionButton: document.getElementById('saveSessionButton'),
             fileInput: document.getElementById('fileInput'),
             stagedFilesArea: document.getElementById('stagedFilesArea'),
             settingsBtn: document.getElementById('settingsBtn'),
@@ -166,7 +168,6 @@
             highlightTheme: document.getElementById('highlight-theme')
         };
         let chatHistory = [];
-        let serverAvailable = false;
         let messageCounter = 0;
         let currentSessionId = null;
         let currentAbortController = null;
@@ -195,7 +196,7 @@
             setupEventListeners();
             initializeTheme();
             configureMarked();
-            checkServerStatus();
+            validateServerUrl();
             populateSessions();
             startNewSession();
             updateSendButtonState();
@@ -212,9 +213,12 @@
             });
         }
         function setupEventListeners() {
-            elements.sendButton.addEventListener('click', handleSendPrompt);
-            elements.newChatBtn.addEventListener('click', () => {
+            elements.sendButton.addEventListener('click', () => {
                 if (currentAbortController) handleStopGeneration();
+                else handleSendPrompt();
+            });
+            elements.saveSessionButton.addEventListener('click', handleSaveSession);
+            elements.newChatBtn.addEventListener('click', () => {
                 startNewSession();
                 closeMobileSidebar();
             });
@@ -228,7 +232,7 @@
             elements.chatInput.addEventListener('keydown', (event) => {
                 if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && !event.shiftKey) {
                     event.preventDefault();
-                    if (!elements.sendButton.disabled && !elements.sendButton.textContent.includes('Stop')) {
+                    if (!elements.sendButton.disabled && !currentAbortController) {
                         handleSendPrompt();
                     }
                 }
@@ -279,23 +283,19 @@
         }
         let serverUrlDebounceTimer;
         function handleServerUrlInput() {
-            handleRememberUrlChange();
+            if (elements.rememberServerUrl.checked) {
+                localStorage.setItem('llamaServerUrl', elements.serverUrl.value.trim());
+            }
             clearTimeout(serverUrlDebounceTimer);
-            serverUrlDebounceTimer = setTimeout(() => {
-                checkServerStatus();
-                updateSendButtonState();
-            }, 500);
+            serverUrlDebounceTimer = setTimeout(validateServerUrl, 500);
         }
-        async function checkServerStatus() {
+        function validateServerUrl() {
             const serverUrl = elements.serverUrl.value.trim();
             if (!isValidHttpUrl(serverUrl)) {
                 showStatus("Invalid server URL format.", "danger");
-                serverAvailable = false;
-                updateSendButtonState();
-                return;
+            } else {
+                showStatus("Server URL looks valid. Ready to send.", "info");
             }
-            showStatus("Server URL looks valid. Ready to send.", "info");
-            serverAvailable = true;
             updateSendButtonState();
         }
         function updateSendButtonState() {
@@ -369,7 +369,7 @@
                 item.className = `badge d-flex align-items-center ${fileData.error ? 'text-bg-danger' : 'text-bg-secondary'}`;
                 item.title = fileData.name + (fileData.error ? ` (Error: ${fileData.error})` : '');
                 item.innerHTML = `
-                    <span class="me-2">${fileData.name}</span>
+                    <span class="me-2">${escapeHtml(fileData.name)}</span>
                     <button type="button" class="btn-close btn-close-white" aria-label="Remove file" data-index="${index}"></button>
                 `;
                 elements.stagedFilesArea.appendChild(item);
@@ -391,8 +391,6 @@
         async function handleSendPrompt() {
             elements.sendButton.innerHTML = `<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Stop`;
             elements.sendButton.classList.replace('btn-primary', 'btn-danger');
-            elements.sendButton.removeEventListener('click', handleSendPrompt);
-            elements.sendButton.addEventListener('click', handleStopGeneration);
             elements.chatInput.disabled = true;
             const serverUrl = elements.serverUrl.value.trim();
             let promptText = elements.chatInput.value.trim();
@@ -449,6 +447,15 @@
                 n_predict: nPredict === -1 ? -1 : Math.max(1, nPredict),
                 stop: stopSequences
             };
+            let bubbleUpdateQueued = false;
+            const queueBubbleUpdate = () => {
+                if (bubbleUpdateQueued) return;
+                bubbleUpdateQueued = true;
+                requestAnimationFrame(() => {
+                    bubbleUpdateQueued = false;
+                    if (currentAbortController) updateModelBubbleContent(modelMessage.id, modelMessage.content, true);
+                });
+            };
             let responseOk = false;
             try {
                 const response = await fetch(`${serverUrl}/completion`, {
@@ -462,19 +469,23 @@
                 showLoading(true, "Receiving response...");
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
-                while (true) {
+                const parser = createSSEParser();
+                let stopped = false;
+                while (!stopped) {
                     const { value, done } = await reader.read();
                     if (done) break;
-                    const chunk = decoder.decode(value, { stream: true });
-                    const lines = chunk.split('\n\n').filter(Boolean);
-                    for (const line of lines) {
-                        if (line.startsWith('data: ')) {
-                            const data = JSON.parse(line.substring(6));
-                            if (data.content) modelMessage.content += data.content;
-                            if (data.stop) break;
+                    for (const data of parser.push(decoder.decode(value, { stream: true }))) {
+                        if (data.content) {
+                            modelMessage.content += data.content;
+                            queueBubbleUpdate();
                         }
+                        if (data.stop) { stopped = true; break; }
                     }
-                    updateModelBubbleContent(modelMessage.id, modelMessage.content, true);
+                }
+                if (!stopped) {
+                    for (const data of parser.flush()) {
+                        if (data.content) modelMessage.content += data.content;
+                    }
                 }
                 showStatus("Response complete.", "success");
             } catch (error) {
@@ -484,8 +495,10 @@
                 } else {
                     const errorMsg = !responseOk ? `Connection Error: Could not connect to server.` : error.message;
                     showStatus(`Error: ${errorMsg}`, "danger");
-                    chatHistory.pop(); 
-                    chatHistory.pop(); 
+                    chatHistory.pop();
+                    chatHistory.pop();
+                    elements.chatInput.value = promptText;
+                    autoResizeTextarea(elements.chatInput);
                 }
                 renderChatHistory();
             } finally {
@@ -498,14 +511,34 @@
                 elements.chatInput.focus();
             }
         }
+        // Buffers partial stream events across chunks so a response is never cut off mid-event.
+        function createSSEParser() {
+            let buffer = '';
+            const parseEvent = (raw) => {
+                const line = raw.trim();
+                if (!line.startsWith('data: ')) return null;
+                try { return JSON.parse(line.substring(6)); } catch { return null; }
+            };
+            return {
+                push(text) {
+                    buffer += text;
+                    const parts = buffer.split('\n\n');
+                    buffer = parts.pop();
+                    return parts.map(parseEvent).filter(Boolean);
+                },
+                flush() {
+                    const data = parseEvent(buffer);
+                    buffer = '';
+                    return data ? [data] : [];
+                }
+            };
+        }
         function handleStopGeneration() {
             if (currentAbortController) currentAbortController.abort();
         }
         function resetButtonToSendState() {
             elements.sendButton.innerHTML = 'Send';
             elements.sendButton.classList.replace('btn-danger', 'btn-primary');
-            elements.sendButton.removeEventListener('click', handleStopGeneration);
-            elements.sendButton.addEventListener('click', handleSendPrompt);
         }
         function formatChatHistoryForLlama(history) {
             return history.map(msg => {
@@ -650,7 +683,7 @@
             elements.chatInput.focus();
         }
         function handleSaveSession() {
-            const sessions = getSessionIndex();
+            let sessions = getSessionIndex();
             let existingSession = currentSessionId ? sessions.find(s => s.id === currentSessionId) : null;
             let defaultName = existingSession ? existingSession.name : `Chat ${new Date().toLocaleString()}`;
             const sessionName = prompt("Enter a name for this session:", defaultName);
@@ -660,7 +693,8 @@
                 if (!confirm(`A session named "${trimmedName}" already exists. Overwrite?`)) return;
                 const conflictId = sessions.find(s => s.name === trimmedName).id;
                 localStorage.removeItem(`${SESSION_DATA_PREFIX}${conflictId}`);
-                saveSessionIndex(sessions.filter(s => s.id !== conflictId));
+                sessions = sessions.filter(s => s.id !== conflictId);
+                saveSessionIndex(sessions);
             }
             const sessionIdToSave = currentSessionId || `${Date.now()}`;
             if (!existingSession) {
@@ -680,6 +714,7 @@
             try {
                 const historyJson = localStorage.getItem(`${SESSION_DATA_PREFIX}${sessionId}`);
                 chatHistory = JSON.parse(historyJson) || [];
+                messageCounter = chatHistory.length;
                 currentSessionId = sessionId;
                 renderChatHistory();
                 populateSessions();
@@ -702,13 +737,6 @@
             const canSave = chatHistory.length > 0 && !currentAbortController;
             elements.saveSessionButton.disabled = !canSave;
         }
-        const saveSessionButton = document.createElement('button');
-        saveSessionButton.id = 'saveSessionButton';
-        saveSessionButton.className = 'btn btn-outline-primary';
-        saveSessionButton.textContent = 'Save Chat';
-        saveSessionButton.addEventListener('click', handleSaveSession);
-        document.getElementById('sidebar-header').appendChild(saveSessionButton);
-        elements.saveSessionButton = saveSessionButton;
         initialize();
     </script>
 </body>
