@@ -91,6 +91,13 @@
                 <div class="server-config mb-3">
                     <input type="url" class="form-control" id="serverUrl" placeholder="Server URL" value="http://127.0.0.1:8080">
                 </div>
+                <div class="model-config mb-3">
+                    <div class="small text-body-secondary mb-1">Model</div>
+                    <div class="small text-truncate mb-2" id="activeModelLabel">—</div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-secondary" id="modelsBtn" data-bs-toggle="modal" data-bs-target="#modelsModal">Manage Models</button>
+                    </div>
+                </div>
                 <div class="d-grid gap-2">
                     <button class="btn btn-outline-secondary" id="settingsBtn" data-bs-toggle="modal" data-bs-target="#settingsModal">Settings</button>
                     <button class="btn btn-outline-secondary" id="themeSwitcher">🌙</button>
@@ -139,6 +146,24 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modelsModal" tabindex="-1" aria-labelledby="modelsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modelsModalLabel">Models</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modelsList"></div>
+                    <div id="modelsNote" class="small text-body-secondary mt-2"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" id="refreshModelsBtn">Refresh</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
         const SESSION_INDEX_KEY = 'llamaChatIndex';
@@ -164,6 +189,11 @@
             stagedFilesArea: document.getElementById('stagedFilesArea'),
             settingsBtn: document.getElementById('settingsBtn'),
             settingsModal: document.getElementById('settingsModal'),
+            activeModelLabel: document.getElementById('activeModelLabel'),
+            modelsModal: document.getElementById('modelsModal'),
+            modelsList: document.getElementById('modelsList'),
+            modelsNote: document.getElementById('modelsNote'),
+            refreshModelsBtn: document.getElementById('refreshModelsBtn'),
             sidebar: document.getElementById('sidebar'),
             highlightTheme: document.getElementById('highlight-theme')
         };
@@ -197,6 +227,7 @@
             initializeTheme();
             configureMarked();
             validateServerUrl();
+            refreshModels();
             populateSessions();
             startNewSession();
             updateSendButtonState();
@@ -243,6 +274,10 @@
                 if (event.target.classList.contains('copy-code-button')) handleCopyCodeClick(event.target);
                 else if (event.target.classList.contains('download-code-button')) handleDownloadCodeClick(event.target);
             });
+            elements.modelsList.addEventListener('click', handleModelAction);
+            elements.refreshModelsBtn.addEventListener('click', refreshModels);
+            elements.modelsModal.addEventListener('shown.bs.modal', refreshModels);
+            elements.modelsModal.addEventListener('hidden.bs.modal', () => clearTimeout(modelsPollTimer));
             elements.sessionsList.addEventListener('click', function(event) {
                 const sessionItem = event.target.closest('.list-group-item');
                 const deleteBtn = event.target.closest('.delete-btn');
@@ -441,12 +476,17 @@
             chatHistory.push(modelMessage);
             renderChatHistory();
             const fullPromptForLlama = formatChatHistoryForLlama(chatHistory.slice(0, -1));
+            if (serverModels?.length && !activeModelId) {
+                const pick = serverModels.find(m => m.status === 'loaded') || serverModels[0];
+                setActiveModel(pick.id);
+            }
             const requestBody = {
                 prompt: fullPromptForLlama, stream: true,
                 temperature, top_p: topP, top_k: topK,
                 n_predict: nPredict === -1 ? -1 : Math.max(1, nPredict),
                 stop: stopSequences
             };
+            if (serverModels && activeModelId) requestBody.model = activeModelId;
             let bubbleUpdateQueued = false;
             const queueBubbleUpdate = () => {
                 if (bubbleUpdateQueued) return;
@@ -647,6 +687,201 @@
         }
         function scrollToBottom() {
             elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
+        }
+        const ACTIVE_MODEL_KEY = 'llamaActiveModel';
+        let activeModelId = localStorage.getItem(ACTIVE_MODEL_KEY) || null;
+        let serverModels = null;
+        let modelsPollTimer = null;
+        function modelStatusValue(model) {
+            if (!model.status) return null;
+            return typeof model.status === 'object' ? (model.status.value || null) : model.status;
+        }
+        function normalizeModels(payload) {
+            const list = Array.isArray(payload) ? payload : (payload?.data || []);
+            return list.filter(m => m && m.id).map(m => ({ id: m.id, status: modelStatusValue(m) }));
+        }
+        async function fetchModels() {
+            const res = await fetch(`${elements.serverUrl.value.trim()}/models`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return normalizeModels(await res.json());
+        }
+        async function modelAdminFetch(path, body) {
+            const send = () => fetch(`${elements.serverUrl.value.trim()}${path}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(sessionStorage.getItem('llamaApiKey') ? { 'Authorization': `Bearer ${sessionStorage.getItem('llamaApiKey')}` } : {})
+                },
+                body: JSON.stringify(body)
+            });
+            let res = await send();
+            if (res.status === 401) {
+                const key = prompt('This server requires an API key for model management. Enter it (kept only for this browser tab session):');
+                if (key?.trim()) {
+                    sessionStorage.setItem('llamaApiKey', key.trim());
+                    res = await send();
+                }
+            }
+            return res;
+        }
+        function setActiveModel(id) {
+            activeModelId = id;
+            if (id) localStorage.setItem(ACTIVE_MODEL_KEY, id);
+            else localStorage.removeItem(ACTIVE_MODEL_KEY);
+            updateActiveModelLabel();
+        }
+        function updateActiveModelLabel() {
+            let text = '—';
+            if (serverModels) {
+                if (activeModelId) text = activeModelId;
+                else {
+                    const loaded = serverModels.find(m => m.status === 'loaded');
+                    text = loaded ? loaded.id : 'No model loaded';
+                }
+            }
+            elements.activeModelLabel.textContent = text;
+            elements.activeModelLabel.title = text;
+        }
+        async function refreshModels() {
+            try {
+                const models = await fetchModels();
+                // A single-model (classic) server also answers /models, but its
+                // entries carry no lifecycle status. Only router mode has those.
+                if (models.length && models.every(m => m.status === null)) throw new Error('single-model server');
+                serverModels = models;
+                if (activeModelId && !serverModels.some(m => m.id === activeModelId)) setActiveModel(null);
+                renderModelsList();
+                updateActiveModelLabel();
+                scheduleModelsPoll();
+            } catch (e) {
+                serverModels = null;
+                renderClassicModelInfo();
+            }
+        }
+        function scheduleModelsPoll() {
+            clearTimeout(modelsPollTimer);
+            const anyLoading = serverModels?.some(m => m.status === 'loading');
+            if (anyLoading || elements.modelsModal.classList.contains('show')) {
+                modelsPollTimer = setTimeout(refreshModels, 2000);
+            }
+        }
+        function renderModelsList() {
+            elements.modelsList.innerHTML = '';
+            if (!serverModels || serverModels.length === 0) {
+                elements.modelsList.innerHTML = '<p class="text-body-secondary mb-0">No models reported by the server.</p>';
+                elements.modelsNote.textContent = '';
+                return;
+            }
+            serverModels.forEach(model => {
+                const row = document.createElement('div');
+                row.className = 'd-flex justify-content-between align-items-center border rounded p-2 mb-2';
+                const left = document.createElement('div');
+                left.className = 'text-truncate me-2';
+                const name = document.createElement('div');
+                name.className = 'fw-semibold text-truncate';
+                name.textContent = model.id;
+                const badge = document.createElement('span');
+                badge.className = `badge ${model.status === 'loaded' ? 'text-bg-success' : model.status === 'loading' ? 'text-bg-warning' : 'text-bg-secondary'}`;
+                badge.textContent = model.status + (model.id === activeModelId && model.status === 'loaded' ? ' · active' : '');
+                left.append(name, badge);
+                const actions = document.createElement('div');
+                actions.className = 'd-flex gap-1 flex-shrink-0';
+                const addBtn = (label, action, style = 'btn-outline-primary') => {
+                    const b = document.createElement('button');
+                    b.className = `btn btn-sm ${style}`;
+                    b.textContent = label;
+                    b.dataset.action = action;
+                    b.dataset.modelId = model.id;
+                    actions.appendChild(b);
+                };
+                if (model.status === 'loaded') {
+                    if (model.id !== activeModelId) addBtn('Use', 'use');
+                    addBtn('Reload', 'reload', 'btn-outline-secondary');
+                    addBtn('Unload', 'unload', 'btn-outline-danger');
+                } else if (model.status === 'loading') {
+                    const s = document.createElement('span');
+                    s.className = 'text-body-secondary small';
+                    s.textContent = 'Loading…';
+                    actions.appendChild(s);
+                } else {
+                    addBtn('Load', 'load');
+                }
+                row.append(left, actions);
+                elements.modelsList.appendChild(row);
+            });
+            elements.modelsNote.textContent = 'Loading a model can take a while for large files. Unloading frees its memory and stops any generation using it.';
+        }
+        async function renderClassicModelInfo() {
+            elements.modelsList.innerHTML = '';
+            let current = null;
+            try {
+                const res = await fetch(`${elements.serverUrl.value.trim()}/props`);
+                if (res.ok) {
+                    const props = await res.json();
+                    if (props.model_path) current = props.model_path.split('/').pop();
+                }
+            } catch (e) { /* server unreachable or no /props */ }
+            const p = document.createElement('p');
+            p.className = 'mb-0';
+            p.textContent = current ? `Current model: ${current}` : 'Could not read model information from the server.';
+            elements.modelsList.appendChild(p);
+            elements.modelsNote.textContent = 'This server is running in single-model mode, so models cannot be loaded, unloaded, or restarted from the browser. To switch models here, start llama-server in router mode instead, for example: llama-server --models-dir /path/to/models';
+            elements.activeModelLabel.textContent = current || '—';
+            elements.activeModelLabel.title = current || '';
+        }
+        async function pollModelStatus(id, want, timeoutMs = 180000) {
+            const start = Date.now();
+            while (Date.now() - start < timeoutMs) {
+                serverModels = await fetchModels();
+                renderModelsList();
+                updateActiveModelLabel();
+                const m = serverModels.find(x => x.id === id);
+                if (m && m.status === want) return;
+                if (m && m.status === 'error') throw new Error(`Server reported an error for ${id}`);
+                await new Promise(r => setTimeout(r, 1000));
+            }
+            throw new Error(`Timed out waiting for ${id} to become ${want}`);
+        }
+        async function handleModelAction(event) {
+            const btn = event.target.closest('[data-action]');
+            if (!btn || btn.disabled) return;
+            const { action, modelId } = btn.dataset;
+            if (action === 'use') {
+                setActiveModel(modelId);
+                renderModelsList();
+                showStatus(`Active model: ${modelId}`, 'success');
+                return;
+            }
+            btn.disabled = true;
+            try {
+                if (action === 'load') {
+                    showStatus(`Loading ${modelId}…`, 'info');
+                    const res = await modelAdminFetch('/models/load', { model: modelId });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    await pollModelStatus(modelId, 'loaded');
+                    if (!activeModelId) setActiveModel(modelId);
+                    showStatus(`Model loaded: ${modelId}`, 'success');
+                } else if (action === 'unload') {
+                    if (!confirm(`Unload ${modelId}? This frees its memory and stops any generation using it.`)) return;
+                    const res = await modelAdminFetch('/models/unload', { model: modelId });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    if (activeModelId === modelId) setActiveModel(null);
+                    showStatus(`Model unloaded: ${modelId}`, 'info');
+                } else if (action === 'reload') {
+                    showStatus(`Reloading ${modelId}…`, 'info');
+                    const un = await modelAdminFetch('/models/unload', { model: modelId });
+                    if (!un.ok) throw new Error(`HTTP ${un.status}`);
+                    await pollModelStatus(modelId, 'unloaded');
+                    const lo = await modelAdminFetch('/models/load', { model: modelId });
+                    if (!lo.ok) throw new Error(`HTTP ${lo.status}`);
+                    await pollModelStatus(modelId, 'loaded');
+                    showStatus(`Model reloaded: ${modelId}`, 'success');
+                }
+            } catch (e) {
+                showStatus(`Model action failed: ${e.message}`, 'danger');
+            } finally {
+                refreshModels();
+            }
         }
         function getSessionIndex() {
             try {
